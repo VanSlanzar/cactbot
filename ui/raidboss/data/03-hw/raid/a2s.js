@@ -82,9 +82,7 @@
 	'Boomtype Magitek Gobwalker G-VII': 'Gobblindé magitek G-VII Boumbardier',	
         'Gordian Hardhelm': 'Casque-dur gordien',
         'Gordian Hardmind': 'cerveau-dur',
-	'Gordian Sniper G-IX': '
-	'Jagd Doll': 'Poupée jagd',
-	'King Gobtank G-IV': 'Gobtank G-IV roi',
+	'Gordian Sniper G-IX': '	
 	'Magitek Gobwidow G-IX': 'Gobmygale magitek G-IX',		
       },
       'replaceText': {
@@ -96,8 +94,10 @@
         'Carpet Bomb': 'Tapis de bombes',
         'Explosion': 'Explosion',
 	'Giant Bomb': 'Bombe géante',
+	'Jagd Doll': 'Poupée jagd',
 	'Massive Explosion Enrage': 'Grosse explosion Enrage',
 	'Kaltstrahl': 'Kaltstrahl',
+	'King Gobtank G-IV': 'Gobtank G-IV roi',      
 	'Sniper': 'Sniper',
 	'Soldier': 'Soldat',
 	'Wave': 'Vague',
