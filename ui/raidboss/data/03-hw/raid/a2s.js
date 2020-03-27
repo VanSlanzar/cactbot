@@ -82,7 +82,7 @@
 	'Boomtype Magitek Gobwalker G-VII': 'Gobblindé magitek G-VII Boumbardier',	
         'Gordian Hardhelm': 'Casque-dur gordien',
         'Gordian Hardmind': 'cerveau-dur',
-	'Gordian Sniper G-IX': '	
+	'Gordian Sniper G-IX': Sniper gordien G-IX','	
 	'Magitek Gobwidow G-IX': 'Gobmygale magitek G-IX',		
       },
       'replaceText': {
