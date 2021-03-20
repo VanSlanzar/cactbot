@@ -427,6 +427,9 @@ export default {
       id: 'E12S Promise Chiseled Sculpture Tether',
       // This always directly follows the 1B: headmarker line.
       netRegex: NetRegexes.tether({ target: 'Chiseled Sculpture', id: '0011' }),
+      netRegexDe: NetRegexes.tether({ target: 'Abbild Eines Mannes', id: '0011' }),
+      netRegexFr: NetRegexes.tether({ target: 'Création Masculine', id: '0011' }),
+      netRegexJa: NetRegexes.tether({ target: '創られた男', id: '0011' }),
       condition: (data, matches) => matches.source === data.me,
       durationSeconds: (data) => {
         // Handle laser #1 differently to not collide with the rapturous reach.
@@ -503,40 +506,54 @@ export default {
         laser4: numberOutputStrings[4],
         inner: {
           en: '#${num} (Inner)',
+          de: '#${num} (innen)',
         },
         outer: {
           en: '#${num} (Outer)',
+          de: '#${num} (außen)',
         },
         unknown: {
           en: '#${num} (???)',
+          de: '#${num} (???)',
         },
       },
     },
     {
       id: 'E12S Promise Palm Of Temperance SE',
       netRegex: NetRegexes.startsUsing({ source: 'Guardian Of Eden', id: '58B4', capture: false }),
+      netRegexDe: NetRegexes.startsUsing({ source: 'Wächter Von Eden', id: '58B4', capture: false }),
+      netRegexFr: NetRegexes.startsUsing({ source: 'Gardien D\'Éden', id: '58B4', capture: false }),
+      netRegexJa: NetRegexes.startsUsing({ source: 'ガーディアン・オブ・エデン', id: '58B4', capture: false }),
       durationSeconds: 10,
       infoText: (data, _, output) => output.knockback(),
       outputStrings: {
         knockback: {
           en: 'SE Knockback',
+          de: 'SO Rückstoß',
         },
       },
     },
     {
       id: 'E12S Promise Palm Of Temperance SW',
       netRegex: NetRegexes.startsUsing({ source: 'Guardian Of Eden', id: '58B5', capture: false }),
+      netRegexDe: NetRegexes.startsUsing({ source: 'Wächter Von Eden', id: '58B5', capture: false }),
+      netRegexFr: NetRegexes.startsUsing({ source: 'Gardien D\'Éden', id: '58B5', capture: false }),
+      netRegexJa: NetRegexes.startsUsing({ source: 'ガーディアン・オブ・エデン', id: '58B5', capture: false }),
       durationSeconds: 10,
       infoText: (data, _, output) => output.knockback(),
       outputStrings: {
         knockback: {
           en: 'SW Knockback',
+          de: 'SW Rückstoß',
         },
       },
     },
     {
       id: 'E12S Promise Statue 2nd/3rd/4th Laser',
       netRegex: NetRegexes.ability({ source: 'Chiseled Sculpture', id: '58B3', capture: false }),
+      netRegexDe: NetRegexes.ability({ source: 'Abbild Eines Mannes', id: '58B3', capture: false }),
+      netRegexFr: NetRegexes.ability({ source: 'Création Masculine', id: '58B3', capture: false }),
+      netRegexJa: NetRegexes.ability({ source: '創られた男', id: '58B3', capture: false }),
       condition: (data) => !data.statueLaserCount || data.statueLaserCount < 4,
       durationSeconds: 3,
       suppressSeconds: 1,
@@ -549,12 +566,15 @@ export default {
           laser4: numberOutputStrings[4],
           baitInner: {
             en: 'Bait Inner #${num}',
+            de: 'Köder innen #${num}',
           },
           baitOuter: {
             en: 'Bait Outer #${num}',
+            de: 'Köder außen #${num}',
           },
           baitUnknown: {
             en: 'Bait #${num}',
+            de: 'Köder #${num}',
           },
         };
         // Start one ahead, so that it calls out #2 after #1 has finished.
@@ -653,12 +673,15 @@ export default {
           goLeft: Outputs.left,
           goLeftBaitInner: {
             en: 'Left + Bait Inner #1',
+            de: 'Links + Köder innen #1',
           },
           goLeftBaitOuter: {
             en: 'Left + Bait Outer #1',
+            de: 'Links + Köder außen #1',
           },
           goLeftBaitUnknown: {
             en: 'Left + Bait #1',
+            de: 'Links + Köder #1',
           },
         };
 
@@ -685,12 +708,15 @@ export default {
           goRight: Outputs.right,
           goRightBaitInner: {
             en: 'Right + Bait Inner #1',
+            de: 'Rechts + Köder innen #1',
           },
           goRightBaitOuter: {
             en: 'Right + Bait Outer #1',
+            de: 'Rechts + Köder außen #1',
           },
           goRightBaitUnknown: {
             en: 'Right + Bait #1',
+            de: 'Rechts + Köder #1',
           },
         };
 
@@ -976,6 +1002,72 @@ export default {
           cn: '去脚下',
           ko: '보스 아래로',
         },
+      },
+    },
+    {
+      id: 'E12S Oracle Cataclysm',
+      netRegex: NetRegexes.startsUsing({ source: 'Oracle Of Darkness', id: '58C2' }),
+      netRegexDe: NetRegexes.startsUsing({ source: 'Orakel Der Dunkelheit', id: '58C2' }),
+      netRegexFr: NetRegexes.startsUsing({ source: 'Prêtresse Des Ténèbres', id: '58C2' }),
+      netRegexJa: NetRegexes.startsUsing({ source: '闇の巫女', id: '58C2' }),
+      delaySeconds: 0.5,
+      promise: async (data, matches, output) => {
+        // select the Oracle Of Darkness with same source id
+        let oracleData = null;
+        oracleData = await window.callOverlayHandler({
+          call: 'getCombatants',
+          ids: [parseInt(matches.sourceId, 16)],
+        });
+
+        // if we could not retrieve combatant data, the
+        // trigger will not work, so just resume promise here
+        if (oracleData === null) {
+          console.error(`Oracle Of Darkness: null data`);
+          data.safeZone = null;
+          return;
+        }
+        if (!oracleData.combatants) {
+          console.error(`Oracle Of Darkness: null combatants`);
+          data.safeZone = null;
+          return;
+        }
+        if (oracleData.combatants.length !== 1) {
+          console.error(`Oracle Of Darkness: expected 1, got ${oracleData.combatants.length}`);
+          data.safeZone = null;
+          return;
+        }
+
+        const oracle = oracleData.combatants[0];
+
+        // Snap heading to closest card and add 2 for opposite direction
+        // N = 0, E = 1, S = 2, W = 3
+        const cardinal = ((2 - Math.round(oracle.Heading * 4 / Math.PI) / 2) + 2) % 4;
+
+        const dirs = {
+          0: output.north(),
+          1: output.east(),
+          2: output.south(),
+          3: output.west(),
+        };
+
+        data.safeZone = dirs[cardinal];
+      },
+      infoText: (data, _, output) => {
+        return !data.safeZone ? output.unknown() : data.safeZone;
+      },
+      outputStrings: {
+        unknown: {
+          en: '???',
+          de: '???',
+          fr: '???',
+          ja: '???',
+          cn: '???',
+          ko: '???',
+        },
+        north: Outputs.north,
+        east: Outputs.east,
+        south: Outputs.south,
+        west: Outputs.west,
       },
     },
     {
