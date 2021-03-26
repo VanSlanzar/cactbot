@@ -89,7 +89,7 @@ export default {
       id: 'DelubrumSav Avowed Glory Of Bozja',
       regex: /Glory Of Bozja(?! Enrage)/,
       // Cast itself is 5.5 seconds, add more warning
-      beforeSeconds: 7,
+      beforeSeconds: 9,
       condition: Conditions.caresAboutAOE(),
       // Count the number of Glory of Bozja so that people alternating mitigation
       // can more easily assign themselves to even or odd glories.
@@ -121,7 +121,7 @@ export default {
       // Labyrinthine Fate is cast and 1 second later debuffs are applied
       // First set of debuffs go out 7.7 seconds before Fateful Word is cast
       // Remaining set of debuffs go out 24.3 seconds before Fateful Word is cast
-      beforeSeconds: 3.5,
+      beforeSeconds: 4,
       suppressSeconds: 1,
       alertText: (data, _, output) => {
         if (data.labyrinthineFate === '97F')
@@ -147,7 +147,7 @@ export default {
       id: 'DelubrumSav Queen Empyrean Iniquity',
       regex: /Empyrean Iniquity/,
       // Cast itself is 5 seconds, add more warning
-      beforeSeconds: 7,
+      beforeSeconds: 9,
       condition: Conditions.caresAboutAOE(),
       suppressSeconds: 1,
       response: Responses.bigAoe(),
@@ -156,7 +156,7 @@ export default {
       id: 'DelubrumSav Queen Gods Save The Queen',
       regex: /Gods Save The Queen$/,
       // Cast in the timeline is 5 seconds, but there is an additional 1 second cast before damage
-      beforeSeconds: 7,
+      beforeSeconds: 9,
       condition: Conditions.caresAboutAOE(),
       suppressSeconds: 1,
       response: Responses.aoe(),
@@ -181,6 +181,151 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ source: 'トリニティ・シーカー', id: '5AD3', capture: false }),
       condition: Conditions.caresAboutAOE(),
       response: Responses.aoe(),
+      // Clean up the swords here for consistency.  There's a raidwide between every set.
+      // TODO: we could also do this on starts casting First Mercy, which might be cleaner?
+      run: (data) => {
+        delete data.seekerSwords;
+        delete data.calledSeekerSwords;
+        delete data.seekerFirstMercy;
+      },
+    },
+    {
+      id: 'DelubrumSav Seeker First Mercy',
+      netRegex: NetRegexes.abilityFull({ source: ['Trinity Seeker', 'Seeker Avatar'], id: '5B61' }),
+      run: (data, matches) => data.seekerFirstMercy = matches,
+    },
+    {
+      id: 'DelubrumSav Seeker Mercy Swords',
+      netRegex: NetRegexes.gainsEffect({ target: ['Trinity Seeker', 'Seeker Avatar'], effectId: '808' }),
+      durationSeconds: 10,
+      alertText: (data, matches, output) => {
+        if (data.calledSeekerSwords)
+          return;
+
+        // These are deleted in Verdant Tempest for consistency.
+        data.seekerSwords = data.seekerSwords || [];
+        data.seekerSwords.push(matches.count.toUpperCase());
+        console.error(`Swords: GLOW: ${JSON.stringify(matches)}`);
+
+        if (data.seekerSwords.length <= 1 || data.seekerSwords.length >= 4)
+          return;
+
+        if (!data.seekerFirstMercy) {
+          console.error(`Swords: missing first mercy`);
+          return;
+        }
+
+        const posX = parseFloat(data.seekerFirstMercy.x) - seekerCenterX;
+        const posY = parseFloat(data.seekerFirstMercy.y) - seekerCenterY;
+
+        const isClone = Math.hypot(posX, posY) > 10;
+        const cleaves = data.seekerSwords;
+        console.log(`SWORD DEBUG: ${JSON.stringify(cleaves)}, ${posX}, ${posY}, ${isClone}`);
+
+        // Seen two cleaves, is this enough information to call??
+        // If no, we will wait until we have seen the third.
+        if (data.seekerSwords.length === 2) {
+          // Named constants for readability.
+          const dir = { north: 0, east: 1, south: 2, west: 3 };
+
+          // Find boss-relative safe zones.
+          const cleavetoSafeZones = {
+            // Front right cleave.
+            F7: [dir.south, dir.west],
+            // Back right cleave.
+            F8: [dir.west, dir.north],
+            // Back left cleave.
+            F9: [dir.north, dir.east],
+            // Front left cleave.
+            FA: [dir.east, dir.south],
+          };
+
+          const first = cleavetoSafeZones[cleaves[0]];
+          const second = cleavetoSafeZones[cleaves[1]];
+
+          const intersect = first.filter((safe) => second.includes(safe));
+          if (intersect.length === 2) {
+            console.error(`Sword: weird intersect: ${JSON.stringify(data.seekerSwords)}`);
+            return;
+          }
+          // This is a bad pattern.  Need to wait for three swords.
+          if (intersect.length === 0)
+            return;
+
+          if (isClone) {
+            // 0 = N, 1 = NE, etc
+            const heading = (4 - Math.round(data.seekerFirstMercy.heading * 4 / Math.PI) + 8) % 8;
+
+            // TODO: figure out which way the clone is facing!
+            return;
+          }
+
+          data.calledSeekerSwords = true;
+          const cardinal = intersect[0];
+          if (cardinal === dir.north)
+            return output.double({ dir1: output.north(), dir2: output.south() });
+          if (cardinal === dir.east)
+            return output.double({ dir1: output.east(), dir2: output.west() });
+          if (cardinal === dir.south)
+            return output.double({ dir1: output.south(), dir2: output.north() });
+          if (cardinal === dir.west)
+            return output.double({ dir1: output.west(), dir2: output.east() });
+          // Or not?
+          data.calledSeekerSwords = false;
+          return;
+        }
+
+
+        // Seen three clones, which means we weren't able to call with two.
+        // Try to call out something the best we can.
+        if (isClone) {
+          // TODO
+          return;
+        }
+
+        // Find the cleave we're missing and add it to the list.
+        const finalCleaveList = ['F7', 'F8', 'F9', 'FA'].filter((id) => !cleaves.includes(id));
+        if (finalCleaveList.length !== 1) {
+          console.error(`Swords: bad intersection ${JSON.stringify(data.seekerSwords)}`);
+          return;
+        }
+        cleaves.push(finalCleaveList[0]);
+
+        const cleaveToDirection = {
+          // Front right cleave.
+          F7: output.dirSW(),
+          // Back right cleave.
+          F8: output.dirNW(),
+          // Back left cleave.
+          F9: output.dirNE(),
+          // Front left cleave.
+          FA: output.dirSE(),
+        };
+
+        data.calledSeekerSwords = true;
+        const dirs = cleaves.map((id) => cleaveToDirection[id]);
+        return output.quadruple({ dir1: dirs[0], dir2: dirs[1], dir3: dirs[2], dir4: dirs[3] });
+      },
+      outputStrings: {
+        north: Outputs.north,
+        east: Outputs.east,
+        south: Outputs.south,
+        west: Outputs.west,
+        in: Outputs.in,
+        out: Outputs.out,
+        // Backup for bad patterns.
+        dirNE: Outputs.dirNE,
+        dirSE: Outputs.dirSE,
+        dirSW: Outputs.dirSW,
+        dirNW: Outputs.dirNW,
+
+        double: {
+          en: '${dir1} > ${dir2}',
+        },
+        quadruple: {
+          en: '${dir1} > ${dir2} > ${dir3} > ${dir4}',
+        },
+      },
     },
     {
       id: 'DelubrumSav Seeker Baleful Swath',
@@ -291,6 +436,34 @@ export default {
           en: 'Knockback Into Barricade',
           de: 'Rückstoß in die Barrikaden',
           ja: '柵に吹き飛ばされる',
+        },
+      },
+    },
+    {
+      id: 'DelubrumSav Seeker Merciful Moon',
+      // No cast time on this in savage, but Merciful Blooms cast is a ~3s warning.
+      netRegex: NetRegexes.startsUsing({ source: 'Trinity Seeker', id: '5ACA', capture: false }),
+      netRegexDe: NetRegexes.startsUsing({ source: 'Trinität Der Sucher', id: '5ACA', capture: false }),
+      netRegexFr: NetRegexes.startsUsing({ source: 'Trinité Soudée', id: '5ACA', capture: false }),
+      netRegexJa: NetRegexes.startsUsing({ source: 'トリニティ・シーカー', id: '5ACA', capture: false }),
+      alertText: (data, _, output) => output.text(),
+      outputStrings: {
+        text: {
+          en: 'Look Away From Orb',
+          de: 'Schau weg vom Orb',
+        },
+      },
+    },
+    {
+      id: 'DelubrumSav Seeker Merciful Blooms',
+      // Call this on the ability of Merciful Moon, it starts casting much earlier.
+      netRegex: NetRegexes.ability({ source: 'Aetherial Orb', id: '5AC9', capture: false }),
+      suppressSeconds: 1,
+      infoText: (data, _, output) => output.text(),
+      outputStrings: {
+        text: {
+          en: 'Away From Purple',
+          de: 'Schau weg von Lila',
         },
       },
     },
@@ -685,6 +858,7 @@ export default {
       netRegexDe: NetRegexes.startsUsing({ source: 'Ritter Der Königin', id: '5819', capture: false }),
       netRegexFr: NetRegexes.startsUsing({ source: 'Chevalier De La Reine', id: '5819', capture: false }),
       netRegexJa: NetRegexes.startsUsing({ source: 'クイーンズ・ナイト', id: '5819', capture: false }),
+      durationSeconds: 5,
       alertText: (data, _, output) => output.text(),
       outputStrings: {
         text: {
@@ -700,6 +874,7 @@ export default {
       netRegexDe: NetRegexes.startsUsing({ source: 'Ritter Der Königin', id: '581A', capture: false }),
       netRegexFr: NetRegexes.startsUsing({ source: 'Chevalier De La Reine', id: '581A', capture: false }),
       netRegexJa: NetRegexes.startsUsing({ source: 'クイーンズ・ナイト', id: '581A', capture: false }),
+      durationSeconds: 5,
       alertText: (data, _, output) => output.text(),
       outputStrings: {
         text: {
@@ -890,6 +1065,36 @@ export default {
       delaySeconds: (data, matches) => parseFloat(matches.castTime) - 2.5,
       durationSeconds: 5.5,
       response: Responses.moveAround('alert'),
+    },
+    {
+      id: 'DelubrumSav Guard Queen\'s Shot',
+      // 589C in Guard fight, 582D in Queen fight.
+      netRegex: NetRegexes.startsUsing({ source: 'Queen\'s Gunner', id: ['584C', '5A2D'], capture: false }),
+      netRegexDe: NetRegexes.startsUsing({ source: 'Schütze Der Königin', id: ['584C', '5A2D'], capture: false }),
+      netRegexFr: NetRegexes.startsUsing({ source: 'Fusilier De La Reine', id: ['584C', '5A2D'], capture: false }),
+      netRegexJa: NetRegexes.startsUsing({ source: 'クイーンズ・ガンナー', id: ['584C', '5A2D'], capture: false }),
+      // This has a 7 second cast time.
+      delaySeconds: 3.5,
+      alertText: (data, _, output) => output.text(),
+      outputStrings: {
+        text: {
+          // Hard to say "point the opening in the circle around you at the gunner" succintly.
+          en: 'Point at the Gunner',
+        },
+      },
+    },
+    {
+      id: 'DelubrumSav Guard Queen\'s Shot Followup',
+      netRegex: NetRegexes.ability({ source: 'Queen\'s Gunner', id: ['584C', '5A2D'], capture: false }),
+      netRegexDe: NetRegexes.ability({ source: 'Schütze Der Königin', id: ['584C', '5A2D'], capture: false }),
+      netRegexFr: NetRegexes.ability({ source: 'Fusilier De La Reine', id: ['584C', '5A2D'], capture: false }),
+      netRegexJa: NetRegexes.ability({ source: 'クイーンズ・ガンナー', id: ['584C', '5A2D'], capture: false }),
+      infoText: (data, _, output) => output.text(),
+      outputStrings: {
+        text: {
+          en: 'Point at the Turret',
+        },
+      },
     },
     {
       id: 'DelubrumSav Guard Coat of Arms',
@@ -1661,15 +1866,41 @@ export default {
       },
     },
     {
+      id: 'DelubrumSav Queen Dispel',
+      // Players with Dispel should Dispel all the buffs on The Queen.
+      // Critical Strikes = 704 is the first one.
+      netRegex: NetRegexes.gainsEffect({ target: 'The Queen', effectId: '705', capture: false }),
+      netRegexDe: NetRegexes.gainsEffect({ target: 'Kriegsgöttin', effectId: '705', capture: false }),
+      netRegexFr: NetRegexes.gainsEffect({ target: 'Garde-La-Reine', effectId: '705', capture: false }),
+      netRegexJa: NetRegexes.gainsEffect({ target: 'セイブ・ザ・クイーン', effectId: '705', capture: false }),
+      alertText: (data, _, output) => output.text(),
+      outputStrings: {
+        text: {
+          en: 'Dispel Queen',
+        },
+      },
+    },
+    {
       id: 'DelubrumSav Queen Ball Lightning',
       // Players with Reflect should destroy one for party to stand in the shield left behind
       netRegex: NetRegexes.addedCombatantFull({ npcNameId: '7974', capture: false }),
       suppressSeconds: 1,
-      infoText: (data, _, output) => output.text(),
+      alertText: (data, _, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Reflect Orbs',
           de: 'Reflektiere Orbs',
+        },
+      },
+    },
+    {
+      id: 'DelubrumSav Queen Ball Lightning Bubble',
+      netRegex: NetRegexes.wasDefeated({ target: 'Ball Lightning', capture: false }),
+      suppressSeconds: 20,
+      alertText: (data, _, output) => output.text(),
+      outputStrings: {
+        text: {
+          en: 'Get in Bubble',
         },
       },
     },
