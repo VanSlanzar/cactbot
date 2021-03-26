@@ -1424,7 +1424,7 @@ export default {
       },
       'replaceText': {
         'Advanced Relativity': 'Fortgeschrittene Relativität',
-        '(?<!(Singular|Dual|Triple) )Apocalypse': 'Apokalypse',
+        '(?<! )Apocalypse': 'Apokalypse',
         'Basic Relativity': 'Grundlegende Relativität',
         'Black Halo': 'Geschwärzter Schein',
         'Blade Of Flame': 'Flammenschwert',
@@ -1500,7 +1500,7 @@ export default {
       },
       'replaceText': {
         'Advanced Relativity': 'Relativité avancée',
-        '(?<!(Singular|Dual|Triple) )Apocalypse': 'Apocalypse',
+        '(?<! )Apocalypse': 'Apocalypse',
         'Basic Relativity': 'Relativité basique',
         'Black Halo': 'Halo de noirceur',
         'Blade Of Flame': 'Flammes de Lumière colossales',
@@ -1576,7 +1576,7 @@ export default {
       },
       'replaceText': {
         'Advanced Relativity': '時間圧縮・急',
-        '(?<!(Singular|Dual|Triple) )Apocalypse': 'アポカリプス',
+        '(?<! )Apocalypse': 'アポカリプス',
         'Basic Relativity': '時間圧縮・序',
         'Black Halo': 'ブラックヘイロー',
         'Blade Of Flame': '巨兵の光炎',
