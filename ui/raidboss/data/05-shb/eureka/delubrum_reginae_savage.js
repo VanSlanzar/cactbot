@@ -222,8 +222,11 @@ export default {
         const posY = parseFloat(data.seekerFirstMercy.y) - seekerCenterY;
 
         const isClone = Math.hypot(posX, posY) > 10;
+        // 0 = N, 1 = E, etc
+        const pos = Math.round(2 - 2 * Math.atan2(posX, posY) / Math.PI) % 4;
+        const heading = Math.round(2 - 2 * data.seekerFirstMercy.heading / Math.PI) % 4;
         const cleaves = data.seekerSwords;
-        console.log(`SWORD DEBUG: ${JSON.stringify(cleaves)}, ${posX}, ${posY}, ${isClone}`);
+        console.log(`SWORD DEBUG: ${JSON.stringify(cleaves)}, ${posX}, ${posY}, ${isClone}, ${pos}, ${heading}`);
 
         // Seen two cleaves, is this enough information to call??
         // If no, we will wait until we have seen the third.
@@ -256,10 +259,23 @@ export default {
             return;
 
           if (isClone) {
-            // 0 = N, 1 = NE, etc
-            const heading = (4 - Math.round(data.seekerFirstMercy.heading * 4 / Math.PI) + 8) % 8;
+            // intersect[0] is north===front of boss.  Rotate so that north===out.
+            const cardinal = (4 + intersect[0] - pos + heading) % 4;
 
-            // TODO: figure out which way the clone is facing!
+            // Trinity Seeker has a lot of limbs and people have a VERY hard time with
+            // left vs right at the best of times.  Use "in and out" here on the clone
+            // to make sure this doesn't get messed up.  This may mean that there is a
+            // simpler left->right pattern that could be called, but we're ignoring it
+            // for clarity of communication.
+            data.calledSeekerSwords = true;
+            if (cardinal === dir.north) {
+              data.calledSeekerSwords = true;
+              return output.double({ dir1: output.out(), dir2: output.in() });
+            } else if (cardinal === dir.south) {
+              return output.double({ dir1: output.in(), dir2: output.out() });
+            }
+
+            // We'll call it the hard way.
             return;
           }
 
@@ -279,13 +295,6 @@ export default {
         }
 
 
-        // Seen three clones, which means we weren't able to call with two.
-        // Try to call out something the best we can.
-        if (isClone) {
-          // TODO
-          return;
-        }
-
         // Find the cleave we're missing and add it to the list.
         const finalCleaveList = ['F7', 'F8', 'F9', 'FA'].filter((id) => !cleaves.includes(id));
         if (finalCleaveList.length !== 1) {
@@ -293,6 +302,28 @@ export default {
           return;
         }
         cleaves.push(finalCleaveList[0]);
+
+
+        // Seen three clones, which means we weren't able to call with two.
+        // Try to call out something the best we can.
+        if (isClone) {
+          const cardinal = (4 + intersect[0] - pos + heading) % 4;
+          data.calledSeekerSwords = true;
+
+          const cleaveToDirection = {
+            // Front right cleave.
+            F7: output.in(),
+            // Back right cleave.
+            F8: output.out(),
+            // Back left cleave.
+            F9: output.out(),
+            // Front left cleave.
+            FA: output.in(),
+          };
+
+          const dirs = cleaves.map((id) => cleaveToDirection[id]);
+          return output.quadruple({ dir1: dirs[0], dir2: dirs[1], dir3: dirs[2], dir4: dirs[3] });
+        }
 
         const cleaveToDirection = {
           // Front right cleave.
