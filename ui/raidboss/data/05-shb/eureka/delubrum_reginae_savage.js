@@ -31,6 +31,9 @@ const seekerCenterY = 277.9735;
 const avowedCenterX = -272;
 const avowedCenterY = -82;
 
+const queenCenterX = -272;
+const queenCenterY = -415;
+
 // TODO: promote something like this to Conditions?
 const tankBusterOnParty = (data, matches) => {
   if (data.target === data.me)
@@ -2102,6 +2105,170 @@ export default {
         text: {
           en: 'Multiple AOEs',
           de: 'Mehrere AoEs',
+        },
+      },
+    },
+    {
+      id: 'DelubrumSav Queen Super Chess Pre-Cleanup',
+      // On Queen's Edict cast.
+      netRegex: NetRegexes.startsUsing({ source: 'The Queen', id: '59EC', capture: false }),
+      netRegexDe: NetRegexes.startsUsing({ source: 'Kriegsgöttin', id: '59EC', capture: false }),
+      netRegexFr: NetRegexes.startsUsing({ source: 'Garde-La-Reine', id: '59EC', capture: false }),
+      netRegexJa: NetRegexes.startsUsing({ source: 'セイブ・ザ・クイーン', id: '59EC', capture: false }),
+      run: (data) => {
+
+      },
+    },
+    {
+      id: 'DelubrumSav Queen Super Chess',
+      // TODO: this would be a million times better if we could figure out where the safe spot was.
+      // https://imgur.com/a/q2tmXLi
+      netRegex: NetRegexes.gainsEffect({ target: ['Queen\'s Knight', 'Queen\'s Warrior', 'Queen\'s Soldier', 'Queen\'s Gunner'], effectId: '808', count: 'E[2-4]' }),
+      condition: (data, matches) => {
+        data.chessMatches = data.chessMatches || [];
+        data.chessMatches.push(matches);
+        console.log(`CHESS DEBUG: ${JSON.stringify(data.chessMatches)}`);
+        return data.chessMatches.length === 4;
+      },
+      promise: async (data) => {
+        const ids = data.chessMatches.map((matches) => parseInt(matches.targetId, 16));
+        const chessData = await window.callOverlayHandler({
+          call: 'getCombatants',
+          ids: ids,
+        });
+
+        if (chessData === null) {
+          console.error(`Chess: null data`);
+          return;
+        }
+        if (!chessData.combatants) {
+          console.error(`Chess: null combatants`);
+          return;
+        }
+        if (chessData.combatants.length !== 4) {
+          console.error(`Chess: expected 4, got ${chessData.combatants.length}`);
+          return;
+        }
+
+        data.chessCombatants = chessData.combatants;
+        console.log(`CHESS DEBUG: ${JSON.stringify(data.chessCombatants)}`);
+      },
+      infoText: (data, _, output) => {
+        const vfxToSteps = {
+          E2: 1,
+          E3: 2,
+          E4: 3,
+        };
+
+        const idToSteps = {};
+        for (const matches in data.chessMatches)
+          idToSteps[parseInt(matches.targetId, 16)] = vfxToSteps[matches.count];
+
+        // +x = east, +y = south
+        const findCol = (c) => Math.round((c.PosX - queenCenterX) / 10);
+        const findRow = (c) => Math.round((c.PosY - queenCenterY) / 10);
+
+        // All of them start one square from the middle/corner, and move towards the corner.
+        // the "north combatant" here is the one moving to the north.
+        const northCombatant = data.chessCombatants.find(findRow(c) === 1);
+        const eastCombatant = data.chessCombatants.find(findCol(c) === -1);
+        const southCombatant = data.chessCombatants.find(findRow(c) === -1);
+        const westCombatant = data.chessCombatants.find(findCol(c) === 1);
+
+        console.log(`CHESS DEBUG: ${JSON.stringify(northCombatant)}, ${JSON.stringify(eastCombatant)}, ${JSON.stringify(southCombatant)}, ${JSON.stringify(westCombatant)}`);
+        if (!northId || !eastId || !southId || !westId) {
+          console.log(`Chess missing id: ${JSON.stringify(northCombatant)}, ${JSON.stringify(eastCombatant)}, ${JSON.stringify(southCombatant)}, ${JSON.stringify(westCombatant)}`);
+          return;
+        }
+
+        const northSteps = idToSteps[northCombatant.ID];
+        const eastSteps = idToSteps[eastCombatant.ID];
+        const southSteps = idToSteps[southCombatant.ID];
+        const westSteps = idToSteps[westCombatant.ID];
+
+        let knownUnsafe = false;
+
+        let backStr;
+        if (northSteps !== 3 && southSteps !== 3) {
+          backStr = output.backWallSafe();
+        } else if (northSteps === 3 && southSteps === 3) {
+          knownUnsafe = true;
+          backStr = output.backWallUnsafe();
+        } else if (northSteps === 3) {
+          backStr = output.northWallUnsafe();
+        } else {
+          backStr = output.southWallUnsafe();
+        }
+
+        let sideStr;
+        if (eastSteps !== 3 && westSteps !== 3) {
+          backStr = output.sideWallSafe();
+        } else if (eastSteps === 3 && westSteps === 3) {
+          knownUnsafe = true;
+          backStr = output.sideWallUnsafe();
+        } else if (eastSteps === 3) {
+          backStr = output.eastWallUnsafe();
+        } else {
+          backStr = output.westWallUnsafe();
+        }
+
+        // The "five" followup only matters when all walls are potentially safe.
+        // It will probably be confusing if you don't know what you're doing, regardless.
+        if (knownUnsafe)
+          return output.combineNoFive({ side: sideStr, back: backStr });
+
+        // If the north combatant is not moving two, the south combatant starts on
+        // that line, so that is always safe.
+        let fiveStr;
+        if (northSteps !== 2)
+          fiveStr = output.northFive();
+        else if (northSteps !== 1 && southSteps !== 1)
+          fiveStr = output.middleFive();
+        else
+          fiveStr = output.southFive();
+
+
+        return output.combine({ side: sideStr, back: backStr, five: fiveStr });
+      },
+      outputStrings: {
+        combine: {
+          en: '${side}, ${back} (${five})',
+        },
+        combineNoFive: {
+          en: '${side}, ${back}',
+        },
+        backWallSafe: {
+          en: 'Back Wall Safe',
+        },
+        backWallUnsafe: {
+          en: 'Back Wall Unsafe',
+        },
+        northWallUnsafe: {
+          en: 'North Wall Unsafe',
+        },
+        southWallUnsafe: {
+          en: 'South Wall Unsafe',
+        },
+        sideWallSafe: {
+          en: 'Side Wall Safe',
+        },
+        sideWallUnsafe: {
+          en: 'Side Wall Unsafe',
+        },
+        eastWallUnsafe: {
+          en: 'East Wall Unsafe',
+        },
+        westWallUnsafe: {
+          en: 'West Wall Unsafe',
+        },
+        northFive: {
+          en: '5\'s north',
+        },
+        middleFive: {
+          en: '5\'s middle',
+        },
+        southFive: {
+          en: '5\'s south',
         },
       },
     },
