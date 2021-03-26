@@ -1067,6 +1067,16 @@ export default {
       response: Responses.moveAround('alert'),
     },
     {
+      id: 'DelubrumSav Guard Above Board Warning',
+      // 5826 in Guard fight, 5A0B in Queen fight.
+      netRegex: NetRegexes.startsUsing({ source: 'Queen\'s Warrior', id: ['5826', '5A0B'], capture: false }),
+      netRegexDe: NetRegexes.startsUsing({ source: 'Kriegerin Der Königin', id: ['5826', '5A0B'], capture: false }),
+      netRegexFr: NetRegexes.startsUsing({ source: 'Guerrière De La Reine', id: ['5826', '5A0B'], capture: false }),
+      netRegexJa: NetRegexes.startsUsing({ source: 'クイーンズ・ウォリアー', id: ['5826', '5A0B'], capture: false }),
+      delaySeconds: 4,
+      response: Responses.moveAway('info'),
+    },
+    {
       id: 'DelubrumSav Guard Queen\'s Shot',
       // 589C in Guard fight, 582D in Queen fight.
       netRegex: NetRegexes.startsUsing({ source: 'Queen\'s Gunner', id: ['584C', '5A2D'], capture: false }),
@@ -2035,6 +2045,42 @@ export default {
       response: Responses.moveAround('alert'),
     },
     {
+      id: 'DelubrumSav Queen Judgment Blade Right',
+      netRegex: NetRegexes.startsUsing({ source: 'The Queen', id: '59F2', capture: false }),
+      netRegexDe: NetRegexes.startsUsing({ source: 'Kriegsgöttin', id: '59F2', capture: false }),
+      netRegexFr: NetRegexes.startsUsing({ source: 'Garde-La-Reine', id: '59F2', capture: false }),
+      netRegexJa: NetRegexes.startsUsing({ source: 'セイブ・ザ・クイーン', id: '59F2', capture: false }),
+      alertText: (data, _, output) => output.text(),
+      outputStrings: {
+        text: {
+          en: 'Find Charge, Dodge Right',
+          de: 'Halte nach dem Ansturm ausschau, weiche nach rechts aus',
+          fr: 'Repérez la charge, esquivez à droite',
+          ja: '右へ、突進を避ける',
+          cn: '去右侧躲避冲锋',
+          ko: '돌진 찾고, 오른쪽 피하기',
+        },
+      },
+    },
+    {
+      id: 'DelubrumSav Queen Judgment Blade Left',
+      netRegex: NetRegexes.startsUsing({ source: 'The Queen', id: '59F1', capture: false }),
+      netRegexDe: NetRegexes.startsUsing({ source: 'Kriegsgöttin', id: '59F1', capture: false }),
+      netRegexFr: NetRegexes.startsUsing({ source: 'Garde-La-Reine', id: '59F1', capture: false }),
+      netRegexJa: NetRegexes.startsUsing({ source: 'セイブ・ザ・クイーン', id: '59F1', capture: false }),
+      alertText: (data, _, output) => output.text(),
+      outputStrings: {
+        text: {
+          en: 'Find Charge, Dodge Left',
+          de: 'Halte nach dem Ansturm ausschau, weiche nach links aus',
+          fr: 'Repérez la charge, esquivez à gauche',
+          ja: '左へ、突進を避ける',
+          cn: '去左侧躲避冲锋',
+          ko: '돌진 찾고, 왼쪽 피하기',
+        },
+      },
+    },
+    {
       id: 'DelubrumSav Queen Guard AoEs',
       // 5A16 from Queen's Warrior
       // 5A08 from Queen's Knight
@@ -2131,7 +2177,9 @@ export default {
         '--adds--': '--Adds--',
         '--bleed--': '--Blutung--',
         '--chains--': '--Ketten--',
+        '--stunned--': '--betäubt--',
         '--tethers--': '--Verbindungen--',
+        '--unstunned--': '--nicht länger betäubt--',
         '1111-Tonze Swing': '1111-Tonzen-Schwung',
         'Above Board': 'Über dem Feld',
         'Act Of Mercy': 'Schneller Stich des Dolches',
