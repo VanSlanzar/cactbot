@@ -202,8 +202,6 @@ export default {
       // There is no castbar for 5AB7, only this headmarker.
       id: 'Delubrum Seeker Merciful Arc',
       netRegex: NetRegexes.headMarker({ id: '00F3' }),
-      condition: tankBusterOnParty,
-      // TODO: is this a cleave?
       response: Responses.tankBuster(),
     },
     {
