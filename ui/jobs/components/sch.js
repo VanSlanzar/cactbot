@@ -1,4 +1,4 @@
-import { kAbility } from '../constants';
+import { kAbility } from '../constants.js';
 
 export function setup(bars) {
   const aetherflowStackBox = bars.addResourceBox({
