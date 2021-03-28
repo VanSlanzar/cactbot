@@ -21,12 +21,6 @@ module.exports = {
       },
     },
     {
-      'files': ['**/raidboss/data/**/*'],
-      'rules': {
-        'rulesdir/cactbot-output-strings': 'error',
-      },
-    },
-    {
       'files': ['**/*.ts'],
       'parser': '@typescript-eslint/parser',
       'plugins': ['@typescript-eslint'],
