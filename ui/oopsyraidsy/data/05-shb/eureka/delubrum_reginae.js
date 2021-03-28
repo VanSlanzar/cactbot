@@ -1,4 +1,4 @@
-import ZoneId from '../../../../../resources/zone_id';
+import ZoneId from '../../../../../resources/zone_id.js';
 
 // TODO: Dead Iron 5AB0 (earthshakers, but only if you take two?)
 

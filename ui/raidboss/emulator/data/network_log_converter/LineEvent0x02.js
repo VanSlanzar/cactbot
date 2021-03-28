@@ -1,4 +1,4 @@
-import LineEvent from './LineEvent';
+import LineEvent from './LineEvent.js';
 
 // Player change event
 export class LineEvent0x02 extends LineEvent {

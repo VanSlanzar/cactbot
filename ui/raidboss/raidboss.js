@@ -1,14 +1,14 @@
-import './raidboss_config';
-import '../../resources/timerbar';
+import './raidboss_config.js';
+import '../../resources/timerbar.js';
 
-import { PopupText, PopupTextGenerator } from './popup-text';
-import { TimelineController, TimelineLoader, TimelineUI } from './timeline';
+import { PopupText, PopupTextGenerator } from './popup-text.js';
+import { TimelineController, TimelineLoader, TimelineUI } from './timeline.js';
 
-import UserConfig from '../../resources/user_config';
-import { addRemotePlayerSelectUI } from '../../resources/player_override';
+import UserConfig from '../../resources/user_config.js';
+import { addRemotePlayerSelectUI } from '../../resources/player_override.js';
 import raidbossFileData from './data/manifest.txt';
 
-import Options from './raidboss_options';
+import Options from './raidboss_options.js';
 
 UserConfig.getUserConfigLocation('raidboss', Options, (e) => {
   // Query params override default and user options.

@@ -1,5 +1,5 @@
-import EffectId from '../../../resources/effect_id';
-import { kAbility } from '../constants';
+import EffectId from '../../../resources/effect_id.js';
+import { kAbility } from '../constants.js';
 
 export function setup(bars) {
   const textBox = bars.addResourceBox({

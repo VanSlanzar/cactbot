@@ -1,5 +1,5 @@
-import LineEvent from './LineEvent';
-import EmulatorCommon from '../../EmulatorCommon';
+import LineEvent from './LineEvent.js';
+import EmulatorCommon from '../../EmulatorCommon.js';
 
 // Job gauge event
 export class LineEvent0x1F extends LineEvent {

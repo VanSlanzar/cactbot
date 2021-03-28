@@ -1,5 +1,5 @@
-import Tooltip from './Tooltip';
-import EmulatorCommon from '../EmulatorCommon';
+import Tooltip from './Tooltip.js';
+import EmulatorCommon from '../EmulatorCommon.js';
 
 export default class ProgressBar {
   constructor(emulator) {

@@ -1,7 +1,7 @@
-import Conditions from '../../../../../resources/conditions';
-import NetRegexes from '../../../../../resources/netregexes';
-import { Responses } from '../../../../../resources/responses';
-import ZoneId from '../../../../../resources/zone_id';
+import Conditions from '../../../../../resources/conditions.ts';
+import NetRegexes from '../../../../../resources/netregexes.ts';
+import { Responses } from '../../../../../resources/responses.js';
+import ZoneId from '../../../../../resources/zone_id.js';
 
 // O4S - Deltascape 4.0 Savage
 export default {
@@ -28,7 +28,7 @@ export default {
   triggers: [
     // Part 1
     {
-      // Phase Tracker: Thunder III not after Dualcast.
+      // Phase Tracker: Thunder III not after Decisive Battle.
       id: 'O4S Exdeath Thunder III Counter',
       netRegex: NetRegexes.startsUsing({ id: '23F9', source: 'Exdeath', capture: false }),
       netRegexDe: NetRegexes.startsUsing({ id: '23F9', source: 'Exdeath', capture: false }),
@@ -41,7 +41,7 @@ export default {
       },
     },
     {
-      // Fire III + Dualcast.
+      // Fire III not after Decisive Battle.
       id: 'O4S Exdeath Fire III Counter',
       netRegex: NetRegexes.startsUsing({ id: '23F5', source: 'Exdeath', capture: false }),
       netRegexDe: NetRegexes.startsUsing({ id: '23F5', source: 'Exdeath', capture: false }),
@@ -62,7 +62,7 @@ export default {
       },
     },
     {
-      // Blizzard III + Dualcast.
+      // Blizzard III not after Decisive Battle.
       id: 'O4S Exdeath Blizzard III',
       netRegex: NetRegexes.startsUsing({ id: '23F7', source: 'Exdeath', capture: false }),
       netRegexDe: NetRegexes.startsUsing({ id: '23F7', source: 'Exdeath', capture: false }),
@@ -83,7 +83,7 @@ export default {
       },
     },
     {
-      // Thunder III + Dualcast.
+      // Thunder III not after Decisive Battle.
       id: 'O4S Exdeath Thunder III',
       netRegex: NetRegexes.startsUsing({ id: '23F9', source: 'Exdeath', capture: false }),
       netRegexDe: NetRegexes.startsUsing({ id: '23F9', source: 'Exdeath', capture: false }),
@@ -134,7 +134,7 @@ export default {
       },
     },
     {
-      // Fire III after Dualcast.
+      // Fire III after Decisive Battle.
       id: 'O4S Exdeath Ultimate Fire III',
       netRegex: NetRegexes.startsUsing({ id: '23FB', source: 'Exdeath', capture: false }),
       netRegexDe: NetRegexes.startsUsing({ id: '23FB', source: 'Exdeath', capture: false }),
@@ -145,7 +145,7 @@ export default {
       response: Responses.stopMoving(),
     },
     {
-      // Blizzard III after Dualcast.
+      // Blizzard III after Decisive Battle.
       id: 'O4S Exdeath Ultimate Blizzard III',
       netRegex: NetRegexes.startsUsing({ id: '23FC', source: 'Exdeath', capture: false }),
       netRegexDe: NetRegexes.startsUsing({ id: '23FC', source: 'Exdeath', capture: false }),
@@ -156,7 +156,7 @@ export default {
       response: Responses.moveAround(),
     },
     {
-      // Thunder III after Dualcast.
+      // Thunder III after Decisive Battle.
       id: 'O4S Exdeath Ultimate Thunder III',
       netRegex: NetRegexes.startsUsing({ id: '23FD', source: 'Exdeath', capture: false }),
       netRegexDe: NetRegexes.startsUsing({ id: '23FD', source: 'Exdeath', capture: false }),

@@ -1,4 +1,4 @@
-import { kAbility, kComboBreakers } from './constants';
+import { kAbility, kComboBreakers } from './constants.js';
 
 export default class ComboTracker {
   constructor(comboBreakers, callback) {
@@ -135,29 +135,6 @@ export default class ComboTracker {
     comboTracker.AddCombo([
       kAbility.DeathBlossom,
       kAbility.HakkeMujinsatsu,
-    ]);
-    // SAM
-    comboTracker.AddCombo([
-      kAbility.Hakaze,
-      kAbility.Jinpu,
-      kAbility.Gekko,
-    ]);
-    comboTracker.AddCombo([
-      kAbility.Hakaze,
-      kAbility.Shifu,
-      kAbility.Kasha,
-    ]);
-    comboTracker.AddCombo([
-      kAbility.Hakaze,
-      kAbility.Yukikaze,
-    ]);
-    comboTracker.AddCombo([
-      kAbility.Fuga,
-      kAbility.Mangetsu,
-    ]);
-    comboTracker.AddCombo([
-      kAbility.Fuga,
-      kAbility.Oka,
     ]);
     // MCH
     comboTracker.AddCombo([

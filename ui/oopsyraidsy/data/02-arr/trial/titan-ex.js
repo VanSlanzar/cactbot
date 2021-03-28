@@ -1,4 +1,4 @@
-import ZoneId from '../../../../../resources/zone_id';
+import ZoneId from '../../../../../resources/zone_id.js';
 
 // Titan Extreme
 export default {

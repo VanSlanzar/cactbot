@@ -1,4 +1,4 @@
-import LineEvent from './LineEvent';
+import LineEvent from './LineEvent.js';
 
 // Player stats event
 export class LineEvent0x0C extends LineEvent {

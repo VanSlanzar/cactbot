@@ -1,7 +1,7 @@
-import Conditions from '../../../../../resources/conditions';
-import NetRegexes from '../../../../../resources/netregexes';
-import { Responses } from '../../../../../resources/responses';
-import ZoneId from '../../../../../resources/zone_id';
+import Conditions from '../../../../../resources/conditions.ts';
+import NetRegexes from '../../../../../resources/netregexes.ts';
+import { Responses } from '../../../../../resources/responses.js';
+import ZoneId from '../../../../../resources/zone_id.js';
 
 export default {
   zoneId: ZoneId.KuganeCastle,
@@ -50,7 +50,6 @@ export default {
         text: {
           en: 'Harakiri tether on YOU',
           de: 'Harakiri Verbindung auf DIR',
-          ja: '自分にはらきり',
           cn: '切腹点名',
         },
       },
@@ -75,7 +74,6 @@ export default {
         text: {
           en: 'Grab gold piles',
           de: 'Sammle die Goldhaufen',
-          ja: '大判小判を拾う',
           cn: '捡金币',
           ko: '금화 은화 줍기',
         },
@@ -170,6 +168,7 @@ export default {
     },
     {
       'locale': 'ja',
+      'missingTranslations': true,
       'replaceSync': {
         'Daigoro': 'ダイゴロウ',
         'Dojun-Maru': 'ドウジュン丸',
@@ -182,8 +181,6 @@ export default {
         'Zuiko-Maru': 'ズイコウ丸',
       },
       'replaceText': {
-        '\\(inner\\)': '(中)',
-        '\\(outer\\)': '(外)',
         'Clearout': 'なぎ払い',
         'Clockwork Medium': 'からくり口寄せ',
         'Clockwork Raiton': 'からくり雷遁',

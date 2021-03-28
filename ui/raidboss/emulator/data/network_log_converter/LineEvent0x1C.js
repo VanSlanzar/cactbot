@@ -1,4 +1,4 @@
-import LineEvent from './LineEvent';
+import LineEvent from './LineEvent.js';
 
 // Floor waymarker event
 export class LineEvent0x1C extends LineEvent {

@@ -1,4 +1,4 @@
-import ZoneId from './zone_id';
+import ZoneId from './zone_id.js';
 
 // Ordered as per duty finder.  This is intended to be used as ordering for
 // any ui that is dealing with multiple zones / triggers.

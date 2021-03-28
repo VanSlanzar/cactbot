@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import chai from 'chai';
-import { Timeline } from '../../ui/raidboss/timeline';
-import { commonReplacement, partialCommonReplacementKeys } from '../../ui/raidboss/common_replacement';
-import Regexes from '../../resources/regexes';
+import { Timeline } from '../../ui/raidboss/timeline.js';
+import { commonReplacement, partialCommonReplacementKeys } from '../../ui/raidboss/common_replacement.js';
+import Regexes from '../../resources/regexes.ts';
 
 const { assert } = chai;
 
@@ -17,7 +17,16 @@ const parseTimelineFileFromTriggerFile = (filepath) => {
   return match.groups.timelineFile;
 };
 
+function getTestCasesWithoutPartialCommon(trans) {
+  return getTestCases(trans, true);
+}
+
 const testFiles = [];
+
+let timelineFile;
+let triggersFile;
+
+let timeline;
 
 const setup = (timelineFiles) => {
   timelineFiles.forEach((timelineFile) => {
@@ -37,7 +46,7 @@ const setup = (timelineFiles) => {
   });
 };
 
-function getTestCases(triggersFile, timeline, trans, skipPartialCommon) {
+function getTestCases(trans, skipPartialCommon) {
   const syncMap = new Map();
   for (const key in trans.replaceSync)
     syncMap.set(Regexes.parse(key), trans.replaceSync[key]);
@@ -80,24 +89,18 @@ function getTestCases(triggersFile, timeline, trans, skipPartialCommon) {
   return testCases;
 }
 
-function getTestCasesWithoutPartialCommon(triggersFile, timeline, trans) {
-  return getTestCases(triggersFile, timeline, trans, true);
-}
-
 const testTimelineFiles = (timelineFiles) => {
   describe('timeline test', () => {
     setup(timelineFiles);
 
     for (const testFile of testFiles) {
-      describe(`${testFile.timelineFile}`, () => {
-        // Capture the test file params in scoped variables so that they are not changed
-        // by the testFiles loop during the async `before` function below.
-        const timelineFile = testFile.timelineFile;
-        const triggersFile = testFile.triggersFile;
-        let timelineText;
-        let triggerSet;
-        let timeline;
+      timelineFile = testFile.timelineFile;
+      triggersFile = testFile.triggersFile;
 
+      let timelineText;
+      let triggerSet;
+
+      describe(`${timelineFile}`, () => {
         before(async () => {
           const importPath = '../../' + path.relative(process.cwd(), triggersFile).replace(/\\/g, '/');
           timelineText = String(fs.readFileSync(timelineFile));
@@ -125,7 +128,7 @@ const testTimelineFiles = (timelineFiles) => {
             assert.isDefined(locale, `${triggersFile}: missing locale in translation block`);
 
             // Note: even if translations are missing, they should not have conflicts.
-            const testCases = getTestCases(triggersFile, timeline, trans);
+            const testCases = getTestCases(trans);
 
             // For both texts and syncs...
             for (const testCase of testCases) {
@@ -203,16 +206,13 @@ const testTimelineFiles = (timelineFiles) => {
             const locale = trans.locale;
             if (!locale)
               continue;
-            // English cannot be missing translations and is always a "partial" translation.
-            if (locale === 'en')
-              continue;
 
             if (trans.missingTranslations)
               continue;
 
             // Ignore partial common translations here, as they don't
             // count towards completing missing translations.
-            const testCases = getTestCasesWithoutPartialCommon(triggersFile, timeline, trans);
+            const testCases = getTestCasesWithoutPartialCommon(trans);
 
             const ignore = timeline.GetMissingTranslationsToIgnore();
             const isIgnored = (x) => {
@@ -249,7 +249,7 @@ const testTimelineFiles = (timelineFiles) => {
             if (!locale)
               continue;
 
-            const testCases = getTestCases(triggersFile, timeline, trans);
+            const testCases = getTestCases(trans);
 
             // Text should not include ^ or $, unless preceded by \ or [
             const badRegex = [

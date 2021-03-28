@@ -1,4 +1,4 @@
-import { kAbility } from '../constants';
+import { kAbility } from '../constants.js';
 
 const cardsMap = {
   'Balance': { 'bonus': 'melee', 'seal': 'Solar' },

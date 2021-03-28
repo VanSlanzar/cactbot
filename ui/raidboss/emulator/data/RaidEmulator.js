@@ -1,5 +1,5 @@
-import EventBus from '../EventBus';
-import AnalyzedEncounter from './AnalyzedEncounter';
+import EventBus from '../EventBus.js';
+import AnalyzedEncounter from './AnalyzedEncounter.js';
 
 export default class RaidEmulator extends EventBus {
   constructor(options) {

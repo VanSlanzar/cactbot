@@ -1,5 +1,5 @@
-import LineEvent from './LineEvent';
-import EmulatorCommon from '../../EmulatorCommon';
+import LineEvent from './LineEvent.js';
+import EmulatorCommon from '../../EmulatorCommon.js';
 
 // Zone change event
 export class LineEvent0x01 extends LineEvent {

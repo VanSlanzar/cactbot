@@ -1,4 +1,4 @@
-import { PopupText } from '../../popup-text';
+import { PopupText } from '../../popup-text.js';
 
 export default class StubbedPopupText extends PopupText {
   constructor(options, timelineLoader, raidbossFileData) {

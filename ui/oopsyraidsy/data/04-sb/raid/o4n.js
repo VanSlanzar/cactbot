@@ -1,5 +1,5 @@
-import NetRegexes from '../../../../../resources/netregexes';
-import ZoneId from '../../../../../resources/zone_id';
+import NetRegexes from '../../../../../resources/netregexes.ts';
+import ZoneId from '../../../../../resources/zone_id.js';
 
 // O4N - Deltascape 4.0 Normal
 export default {

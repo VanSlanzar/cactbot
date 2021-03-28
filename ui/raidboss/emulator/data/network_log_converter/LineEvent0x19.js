@@ -1,5 +1,5 @@
-import LineEvent from './LineEvent';
-import EmulatorCommon from '../../EmulatorCommon';
+import LineEvent from './LineEvent.js';
+import EmulatorCommon from '../../EmulatorCommon.js';
 
 // Combatant defeated event
 export class LineEvent0x19 extends LineEvent {
