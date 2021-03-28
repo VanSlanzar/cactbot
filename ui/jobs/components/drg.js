@@ -1,5 +1,5 @@
-import { kAbility } from '../constants';
-import { computeBackgroundColorFrom } from '../utils';
+import { kAbility } from '../constants.js';
+import { computeBackgroundColorFrom } from '../utils.js';
 
 export function setup(bars) {
   // Boxes
