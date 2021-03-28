@@ -1,4 +1,4 @@
-import LineEvent from './LineEvent';
+import LineEvent from './LineEvent.js';
 
 // Cancel ability event
 export class LineEvent0x17 extends LineEvent {

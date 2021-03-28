@@ -1,4 +1,4 @@
-import LineEvent from './LineEvent';
+import LineEvent from './LineEvent.js';
 
 // Chat event
 export class LineEvent0x00 extends LineEvent {

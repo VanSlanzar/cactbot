@@ -235,6 +235,7 @@ export default {
         lookAway: {
           en: 'Look Away From Orb',
           de: 'Schau weg vom Orb',
+          fr: 'Ne regardez pas l\'orbe',
         },
       },
     },
@@ -251,6 +252,7 @@ export default {
         awayFromPurple: {
           en: 'Away From Purple',
           de: 'Schau weg von Lila',
+          fr: 'Éloignez-vous du violet',
         },
       },
     },

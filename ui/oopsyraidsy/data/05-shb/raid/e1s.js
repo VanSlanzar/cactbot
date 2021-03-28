@@ -1,4 +1,4 @@
-import ZoneId from '../../../../../resources/zone_id';
+import ZoneId from '../../../../../resources/zone_id.js';
 
 // TODO: failing to interrupt Mana Boost (3D8D)
 // TODO: failing to pass healer debuff?

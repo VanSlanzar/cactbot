@@ -1,7 +1,7 @@
-import ZoneId from '../../../../../resources/zone_id';
-import NetRegexes from '../../../../../resources/netregexes';
-import Conditions from '../../../../../resources/conditions';
-import { Responses } from '../../../../../resources/responses';
+import ZoneId from '../../../../../resources/zone_id.js';
+import NetRegexes from '../../../../../resources/netregexes.ts';
+import Conditions from '../../../../../resources/conditions.ts';
+import { Responses } from '../../../../../resources/responses.js';
 
 const sharedOutputStrings = {
   sharedTankStack: {

@@ -1,4 +1,4 @@
-import LineEvent from './LineEvent';
+import LineEvent from './LineEvent.js';
 
 // Waymarker
 export class LineEvent0x1D extends LineEvent {

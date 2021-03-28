@@ -1,5 +1,5 @@
-import NetRegexes from '../../../../../resources/netregexes';
-import ZoneId from '../../../../../resources/zone_id';
+import NetRegexes from '../../../../../resources/netregexes.ts';
+import ZoneId from '../../../../../resources/zone_id.js';
 
 // TODO: 561D Evil Seed hits everyone, hard to know if there's a double tap
 // TODO: falling through panel just does damage with no ability name, like a death wall

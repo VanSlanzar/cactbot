@@ -1,7 +1,7 @@
-import EmulatorCommon from '../EmulatorCommon';
-import EventBus from '../EventBus';
-import PersistorEncounter from './PersistorEncounter';
-import Encounter from './Encounter';
+import EmulatorCommon from '../EmulatorCommon.js';
+import EventBus from '../EventBus.js';
+import PersistorEncounter from './PersistorEncounter.js';
+import Encounter from './Encounter.js';
 
 export default class Persistor extends EventBus {
   constructor() {

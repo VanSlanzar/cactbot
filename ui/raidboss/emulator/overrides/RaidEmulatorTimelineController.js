@@ -1,5 +1,5 @@
-import { TimelineController } from '../../timeline';
-import RaidEmulatorTimeline from './RaidEmulatorTimeline';
+import { TimelineController } from '../../timeline.js';
+import RaidEmulatorTimeline from './RaidEmulatorTimeline.js';
 
 export default class RaidEmulatorTimelineController extends TimelineController {
   bindTo(emulator) {

@@ -1,6 +1,6 @@
-import NetRegexes from '../../../../../resources/netregexes';
-import { Responses } from '../../../../../resources/responses';
-import ZoneId from '../../../../../resources/zone_id';
+import NetRegexes from '../../../../../resources/netregexes.ts';
+import { Responses } from '../../../../../resources/responses.js';
+import ZoneId from '../../../../../resources/zone_id.js';
 
 // Seiryu Extreme
 export default {

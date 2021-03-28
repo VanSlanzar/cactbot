@@ -1,6 +1,6 @@
-import CombatantTracker from './CombatantTracker';
-import LogEventHandler from './LogEventHandler';
-import PetNamesByLang from '../../../../resources/pet_names';
+import CombatantTracker from './CombatantTracker.js';
+import LogEventHandler from './LogEventHandler.js';
+import PetNamesByLang from '../../../../resources/pet_names.js';
 
 export default class Encounter {
   constructor(encounterDay, encounterZoneId, encounterZoneName, logLines) {

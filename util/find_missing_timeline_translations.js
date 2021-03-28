@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import Regexes from '../resources/regexes';
-import { Timeline } from '../ui/raidboss/timeline';
-import { commonReplacement, partialCommonReplacementKeys } from '../ui/raidboss/common_replacement';
+import Regexes from '../resources/regexes.ts';
+import { Timeline } from '../ui/raidboss/timeline.js';
+import { commonReplacement, partialCommonReplacementKeys } from '../ui/raidboss/common_replacement.js';
 
 export async function findMissing(triggersFile, locale) {
   // Hackily assume that any file with a txt file of the same name is a trigger/timeline.

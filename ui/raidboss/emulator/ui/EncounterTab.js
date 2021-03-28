@@ -1,5 +1,5 @@
-import EmulatorCommon from '../EmulatorCommon';
-import EventBus from '../EventBus';
+import EmulatorCommon from '../EmulatorCommon.js';
+import EventBus from '../EventBus.js';
 
 export default class EncounterTab extends EventBus {
   constructor(persistor) {

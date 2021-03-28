@@ -1,5 +1,5 @@
-import NetRegexes from '../../../../../resources/netregexes';
-import ZoneId from '../../../../../resources/zone_id';
+import NetRegexes from '../../../../../resources/netregexes.ts';
+import ZoneId from '../../../../../resources/zone_id.js';
 
 // 565A/568D Sinsmoke Bound Of Faith share
 // 565E/5699 Bowshock hits target of 565D (twice) and two others
