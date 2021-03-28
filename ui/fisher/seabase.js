@@ -1,4 +1,4 @@
-import gFisherData from './static-data';
+import gFisherData from './static-data.js';
 
 export default class SeaBase {
   constructor(options) {
