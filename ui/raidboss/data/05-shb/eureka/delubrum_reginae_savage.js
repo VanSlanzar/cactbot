@@ -2095,6 +2095,11 @@ export default {
       netRegexDe: NetRegexes.gainsEffect({ target: 'Kriegsgöttin', effectId: '705', capture: false }),
       netRegexFr: NetRegexes.gainsEffect({ target: 'Garde-La-Reine', effectId: '705', capture: false }),
       netRegexJa: NetRegexes.gainsEffect({ target: 'セイブ・ザ・クイーン', effectId: '705', capture: false }),
+      condition: (data) => {
+        data.queenDispelCount = (data.queenDispelCount || 0) + 1;
+        // The third time she gains this effect is the enrage, and there's no need to dispel.
+        return data.queenDispelCount <= 2;
+      },
       alertText: (data, _, output) => output.text(),
       outputStrings: {
         text: {
