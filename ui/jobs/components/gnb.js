@@ -1,5 +1,5 @@
-import { kAbility } from '../constants';
-import { calcGCDFromStat, computeBackgroundColorFrom } from '../utils';
+import { kAbility } from '../constants.js';
+import { calcGCDFromStat, computeBackgroundColorFrom } from '../utils.js';
 
 export function setup(bars) {
   const cartridgeBox = bars.addResourceBox({
