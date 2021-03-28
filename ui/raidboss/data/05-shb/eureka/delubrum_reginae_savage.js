@@ -92,11 +92,12 @@ export default {
       id: 'DelubrumSav Avowed Glory Of Bozja',
       regex: /Glory Of Bozja(?! Enrage)/,
       // Cast itself is 5.5 seconds, add more warning
-      beforeSeconds: 9,
+      beforeSeconds: 8,
       condition: Conditions.caresAboutAOE(),
       // Count the number of Glory of Bozja so that people alternating mitigation
       // can more easily assign themselves to even or odd glories.
       preRun: (data) => data.gloryOfBozjaCount = (data.gloryOfBozjaCount || 0) + 1,
+      durationSeconds: 8,
       suppressSeconds: 1,
       alertText: (data, _, output) => output.aoeNum({ num: data.gloryOfBozjaCount }),
       outputStrings: {
@@ -152,6 +153,7 @@ export default {
       // Cast itself is 5 seconds, add more warning
       beforeSeconds: 9,
       condition: Conditions.caresAboutAOE(),
+      durationSeconds: 9,
       suppressSeconds: 1,
       response: Responses.bigAoe(),
     },
@@ -159,8 +161,9 @@ export default {
       id: 'DelubrumSav Queen Gods Save The Queen',
       regex: /Gods Save The Queen$/,
       // Cast in the timeline is 5 seconds, but there is an additional 1 second cast before damage
-      beforeSeconds: 9,
+      beforeSeconds: 7,
       condition: Conditions.caresAboutAOE(),
+      durationSeconds: 5,
       suppressSeconds: 1,
       response: Responses.aoe(),
     },
@@ -1085,7 +1088,7 @@ export default {
       netRegexDe: NetRegexes.startsUsing({ source: 'Soldat Der Königin', id: '583F' }),
       netRegexFr: NetRegexes.startsUsing({ source: 'Soldat De La Reine', id: '583F' }),
       netRegexJa: NetRegexes.startsUsing({ source: 'クイーンズ・ソルジャー', id: '583F' }),
-      delaySeconds: (data, matches) => parseFloat(matches.castTime) - 2.5,
+      delaySeconds: (data, matches) => parseFloat(matches.castTime) - 5,
       durationSeconds: 5.5,
       response: Responses.stopEverything('alarm'),
     },
@@ -1096,7 +1099,7 @@ export default {
       netRegexDe: NetRegexes.startsUsing({ source: 'Soldat Der Königin', id: '5840' }),
       netRegexFr: NetRegexes.startsUsing({ source: 'Soldat De La Reine', id: '5840' }),
       netRegexJa: NetRegexes.startsUsing({ source: 'クイーンズ・ソルジャー', id: '5840' }),
-      delaySeconds: (data, matches) => parseFloat(matches.castTime) - 2.5,
+      delaySeconds: (data, matches) => parseFloat(matches.castTime) - 5,
       durationSeconds: 5.5,
       response: Responses.moveAround('alert'),
     },
@@ -1327,115 +1330,6 @@ export default {
           de: 'Geh vor den Boss',
           ja: 'ボスの正面へ',
           ko: '정면에 서기',
-        },
-      },
-    },
-    {
-      id: 'DelubrumSav Avowed Gleaming Arrow Collect',
-      netRegex: NetRegexes.startsUsing({ source: 'Avowed Avatar', id: '594D' }),
-      run: (data, matches) => {
-        data.unseenIds = data.unseenIds || [];
-        data.unseenIds.push(parseInt(matches.sourceId, 16));
-      },
-    },
-    {
-      id: 'DelubrumSav Avowed Gleaming Arrow',
-      netRegex: NetRegexes.startsUsing({ source: 'Avowed Avatar', id: '594D' }),
-      delaySeconds: 0.5,
-      suppressSeconds: 10,
-      promise: async (data, matches) => {
-        const unseenIds = data.unseenIds;
-        const unseenData = await window.callOverlayHandler({
-          call: 'getCombatants',
-          ids: unseenIds,
-        });
-        if (unseenData && unseenData.combatants)
-          console.error(`Gleaming Arrow: combatants: ${JSON.stringify(unseenData.combatants)}`);
-
-        if (unseenData === null) {
-          console.error(`Gleaming Arrow: null data`);
-          return;
-        }
-        if (!unseenData.combatants) {
-          console.error(`Gleaming Arrow: null combatants`);
-          return;
-        }
-        if (unseenData.combatants.length !== unseenIds.length) {
-          console.error(`Gleaming Arrow: expected ${unseenIds.length}, got ${unseenData.combatants.length}`);
-          return;
-        }
-
-        data.unseenBadRows = [];
-        data.unseenBadCols = [];
-
-        for (const avatar of unseenData.combatants) {
-          const x = avatar.PosX - avowedCenterX;
-          const y = avatar.PosY - avowedCenterY;
-
-          // y=-107 = north side, x = -252, -262, -272, -282, -292
-          // x=-247 = left side, y = -62, -72, -82, -92, -102
-          // Thus, the possible deltas are -20, -10, 0, +10, +20.
-          // The other coordinate is +/-25 from center.
-          const maxDist = 22;
-
-          if (Math.abs(x) < maxDist) {
-            const col = parseInt(Math.round((x + 20) / 10));
-            data.unseenBadCols.push(col);
-          }
-          if (Math.abs(y) < maxDist) {
-            const row = parseInt(Math.round((y + 20) / 10));
-            data.unseenBadRows.push(row);
-          }
-        }
-
-        data.unseenBadRows.sort();
-        data.unseenBadCols.sort();
-      },
-      alertText: (data, _, output) => {
-        delete data.unseenIds;
-
-        const rows = data.unseenBadRows;
-        const cols = data.unseenBadCols;
-
-        if (data.avowedPhase === 'bow') {
-          // consider asserting that badCols are 0, 2, 4 here.
-          if (rows.includes(2))
-            return output.bowLight();
-          return output.bowDark();
-        }
-
-        if (data.avowedPhase !== 'staff')
-          return;
-
-        if (cols.includes(1)) {
-          if (rows.includes(1))
-            return output.staffOutsideCorner();
-          return output.staffOutsideColInsideRow();
-        }
-        if (cols.includes(0)) {
-          if (rows.includes(0))
-            return output.staffInsideCorner();
-          return output.staffInsideColOutsideRow();
-        }
-      },
-      outputStrings: {
-        bowDark: {
-          en: 'Dark (E/W of center)',
-        },
-        bowLight: {
-          en: 'Light (diagonal from center)',
-        },
-        staffOutsideCorner: {
-          en: 'Outside Corner',
-        },
-        staffInsideCorner: {
-          en: 'Inside Corner',
-        },
-        staffOutsideColInsideRow: {
-          en: 'N/S of Corner',
-        },
-        staffInsideColOutsideRow: {
-          en: 'E/W of Corner',
         },
       },
     },
@@ -2238,7 +2132,7 @@ export default {
       netRegexDe: NetRegexes.startsUsing({ source: 'Soldat Der Königin', id: '5A21' }),
       netRegexFr: NetRegexes.startsUsing({ source: 'Soldat De La Reine', id: '5A21' }),
       netRegexJa: NetRegexes.startsUsing({ source: 'クイーンズ・ソルジャー', id: '5A21' }),
-      delaySeconds: (data, matches) => parseFloat(matches.castTime) - 2.5,
+      delaySeconds: (data, matches) => parseFloat(matches.castTime) - 5,
       durationSeconds: 5.5,
       response: Responses.stopEverything('alarm'),
     },
@@ -2249,7 +2143,7 @@ export default {
       netRegexDe: NetRegexes.startsUsing({ source: 'Soldat Der Königin', id: '5A22' }),
       netRegexFr: NetRegexes.startsUsing({ source: 'Soldat De La Reine', id: '5A22' }),
       netRegexJa: NetRegexes.startsUsing({ source: 'クイーンズ・ソルジャー', id: '5A22' }),
-      delaySeconds: (data, matches) => parseFloat(matches.castTime) - 2.5,
+      delaySeconds: (data, matches) => parseFloat(matches.castTime) - 5,
       durationSeconds: 5.5,
       response: Responses.moveAround('alert'),
     },
