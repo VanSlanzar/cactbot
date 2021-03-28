@@ -1107,7 +1107,7 @@ export default {
       netRegexDe: NetRegexes.startsUsing({ source: 'Kriegerin Der Königin', id: ['5826', '5A0B'], capture: false }),
       netRegexFr: NetRegexes.startsUsing({ source: 'Guerrière De La Reine', id: ['5826', '5A0B'], capture: false }),
       netRegexJa: NetRegexes.startsUsing({ source: 'クイーンズ・ウォリアー', id: ['5826', '5A0B'], capture: false }),
-      delaySeconds: 4,
+      delaySeconds: 9.5,
       response: Responses.moveAway('info'),
     },
     {
@@ -1148,6 +1148,7 @@ export default {
       netRegexDe: NetRegexes.ability({ source: 'Schütze Der Königin', id: ['584C', '5A2D'], capture: false }),
       netRegexFr: NetRegexes.ability({ source: 'Fusilier De La Reine', id: ['584C', '5A2D'], capture: false }),
       netRegexJa: NetRegexes.ability({ source: 'クイーンズ・ガンナー', id: ['584C', '5A2D'], capture: false }),
+      suppressSeconds: 1,
       infoText: (data, _, output) => output.text(),
       outputStrings: {
         text: {
@@ -1548,10 +1549,10 @@ export default {
         const effectiveTemperature = (currentTemperature + currentBrand).toString();
 
         const tempToOutput = {
-          '-2': plusTwo,
-          '-1': plusOne,
-          '1': minusOne,
-          '2': minusTwo,
+          '-2': output.plusTwo(),
+          '-1': output.plusOne(),
+          '1': output.minusOne(),
+          '2': output.minusTwo(),
         };
         const arrowStr = effectiveTemperature in tempToOutput
           ? tempToOutput[effectiveTemperature] : output.unknownTemperature();
@@ -1617,10 +1618,10 @@ export default {
         const effectiveTemperature = (currentTemperature + currentBrand).toString();
 
         const tempToOutput = {
-          '-2': plusTwo,
-          '-1': plusOne,
-          '1': minusOne,
-          '2': minusTwo,
+          '-2': output.plusTwo(),
+          '-1': output.plusOne(),
+          '1': output.minusOne(),
+          '2': output.minusTwo(),
         };
         const meteorStr = effectiveTemperature in tempToOutput
           ? tempToOutput[effectiveTemperature] : output.unknownTemperature();
