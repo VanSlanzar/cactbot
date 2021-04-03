@@ -676,17 +676,17 @@ export default {
           goLeftBaitInner: {
             en: 'Left + Bait Inner #1',
             de: 'Links + Köder innen #1',
-            fr: 'Gauche + Orientez vers l\'intérieur #1',
+            fr: 'À gauche + Orientez vers l\'intérieur #1',
           },
           goLeftBaitOuter: {
             en: 'Left + Bait Outer #1',
             de: 'Links + Köder außen #1',
-            fr: 'Gauche + Orientez vers l\'extérieur #1',
+            fr: 'À gauche + Orientez vers l\'extérieur #1',
           },
           goLeftBaitUnknown: {
             en: 'Left + Bait #1',
             de: 'Links + Köder #1',
-            fr: 'Gauche + Orientez #1',
+            fr: 'À gauche + Orientez #1',
           },
         };
 
@@ -714,17 +714,17 @@ export default {
           goRightBaitInner: {
             en: 'Right + Bait Inner #1',
             de: 'Rechts + Köder innen #1',
-            fr: 'Droite + Orientez vers l\'intérieur #1',
+            fr: 'À droite + Orientez vers l\'intérieur #1',
           },
           goRightBaitOuter: {
             en: 'Right + Bait Outer #1',
             de: 'Rechts + Köder außen #1',
-            fr: 'Droite + Orientez vers l\'extérieur #1',
+            fr: 'À droite + Orientez vers l\'extérieur #1',
           },
           goRightBaitUnknown: {
             en: 'Right + Bait #1',
             de: 'Rechts + Köder #1',
-            fr: 'Droite + Orientez #1',
+            fr: 'À droite + Orientez #1',
           },
         };
 
@@ -1030,10 +1030,12 @@ export default {
         tankBait: {
           en: 'Bait Close',
           de: 'Köder nah',
+          fr: 'Attirez proche',
         },
         partyOut: {
           en: 'Party Out',
           de: 'Gruppe raus',
+          fr: 'Groupe au loin',
         },
       },
     },
@@ -1448,10 +1450,12 @@ export default {
         stackGroups: {
           en: 'Stack Groups',
           de: 'In Gruppen sammeln',
+          fr: 'Packez-vous en groupe',
         },
         knockbackIntoStackGroups: {
           en: 'Knockback Into Stack Groups',
           de: 'Rückstoß, dann in Gruppen sammeln',
+          fr: 'Poussée puis packez-vous en groupe',
         },
       },
     },
@@ -1476,6 +1480,7 @@ export default {
         knockbackIntoSpread: {
           en: 'Knockback Into Spread',
           de: 'Rückstoß dann verteilen',
+          fr: 'Poussée puis dispersez-vous',
         },
       },
     },
@@ -1497,6 +1502,7 @@ export default {
         text: {
           en: 'Stack Groups',
           de: 'In Gruppen sammeln',
+          fr: 'Packez-vous en groupe',
         },
       },
     },
@@ -1521,6 +1527,7 @@ export default {
         text: {
           en: 'Double Aero: ${name1}, ${name2}',
           de: 'Doppel Windga: ${name1}, ${name2}',
+          fr: 'Double Vent : ${name1}, ${name2}',
         },
       },
     },
@@ -1558,10 +1565,12 @@ export default {
         doubleAero: {
           en: 'Double Aero on YOU',
           de: 'Doppel Windga auf DIR',
+          fr: 'Double Vent sur VOUS',
         },
         spread: {
           en: 'Spread on YOU',
           de: 'Verteilen auf DIR',
+          fr: 'Dispersion sur VOUS',
         },
       },
     },
