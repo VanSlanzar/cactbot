@@ -90,11 +90,12 @@ export default {
       id: 'DelubrumSav Avowed Glory Of Bozja',
       regex: /Glory Of Bozja(?! Enrage)/,
       // Cast itself is 5.5 seconds, add more warning
-      beforeSeconds: 7,
+      beforeSeconds: 8,
       condition: Conditions.caresAboutAOE(),
       // Count the number of Glory of Bozja so that people alternating mitigation
       // can more easily assign themselves to even or odd glories.
       preRun: (data) => data.gloryOfBozjaCount = (data.gloryOfBozjaCount || 0) + 1,
+      durationSeconds: 8,
       suppressSeconds: 1,
       alertText: (data, _, output) => output.aoeNum({ num: data.gloryOfBozjaCount }),
       outputStrings: {
@@ -115,28 +116,6 @@ export default {
       response: Responses.knockback(),
     },
     {
-      id: 'DelubrumSav Lord Fateful Words',
-      regex: /Fateful Words/,
-      // Paired with trigger id 'DelubrumSav Lord Labyrinthine Fate Collect'
-      // 97E: Wanderer's Fate, Pushes outward on Fateful Word cast
-      // 97F: Sacrifice's Fate, Pulls to middle on Fateful Word cast
-      // Labyrinthine Fate is cast and 1 second later debuffs are applied
-      // First set of debuffs go out 7.7 seconds before Fateful Word is cast
-      // Remaining set of debuffs go out 24.3 seconds before Fateful Word is cast
-      beforeSeconds: 3.5,
-      suppressSeconds: 1,
-      alertText: (data, _, output) => {
-        if (data.labyrinthineFate === '97F')
-          return output.getOut();
-        else if (data.labyrinthineFate === '97E')
-          return output.getIn();
-      },
-      outputStrings: {
-        getOut: Outputs.out,
-        getIn: Outputs.in,
-      },
-    },
-    {
       id: 'DelubrumSav Lord Thunderous Discharge',
       regex: /Thunderous Discharge/,
       // Cast in the timeline is 5 seconds, but there is an additional .5 second cast before damage
@@ -149,10 +128,11 @@ export default {
       id: 'DelubrumSav Queen Empyrean Iniquity',
       regex: /Empyrean Iniquity/,
       // Cast itself is 5 seconds, add more warning
-      beforeSeconds: 7,
+      beforeSeconds: 9,
       condition: Conditions.caresAboutAOE(),
+      durationSeconds: 9,
       suppressSeconds: 1,
-      response: Responses.bigAoe(),
+      response: Responses.bigAoe('alert'),
     },
     {
       id: 'DelubrumSav Queen Gods Save The Queen',
@@ -160,6 +140,7 @@ export default {
       // Cast in the timeline is 5 seconds, but there is an additional 1 second cast before damage
       beforeSeconds: 7,
       condition: Conditions.caresAboutAOE(),
+      durationSeconds: 5,
       suppressSeconds: 1,
       response: Responses.aoe(),
     },
@@ -736,6 +717,7 @@ export default {
       netRegexDe: NetRegexes.startsUsing({ source: 'Ritter Der Königin', id: '5819', capture: false }),
       netRegexFr: NetRegexes.startsUsing({ source: 'Chevalier De La Reine', id: '5819', capture: false }),
       netRegexJa: NetRegexes.startsUsing({ source: 'クイーンズ・ナイト', id: '5819', capture: false }),
+      durationSeconds: 5,
       alertText: (data, _, output) => output.text(),
       outputStrings: {
         text: {
@@ -752,6 +734,7 @@ export default {
       netRegexDe: NetRegexes.startsUsing({ source: 'Ritter Der Königin', id: '581A', capture: false }),
       netRegexFr: NetRegexes.startsUsing({ source: 'Chevalier De La Reine', id: '581A', capture: false }),
       netRegexJa: NetRegexes.startsUsing({ source: 'クイーンズ・ナイト', id: '581A', capture: false }),
+      durationSeconds: 5,
       alertText: (data, _, output) => output.text(),
       outputStrings: {
         text: {
@@ -947,7 +930,7 @@ export default {
       netRegexDe: NetRegexes.startsUsing({ source: 'Soldat Der Königin', id: '583F' }),
       netRegexFr: NetRegexes.startsUsing({ source: 'Soldat De La Reine', id: '583F' }),
       netRegexJa: NetRegexes.startsUsing({ source: 'クイーンズ・ソルジャー', id: '583F' }),
-      delaySeconds: (data, matches) => parseFloat(matches.castTime) - 2.5,
+      delaySeconds: (data, matches) => parseFloat(matches.castTime) - 5,
       durationSeconds: 5.5,
       response: Responses.stopEverything('alarm'),
     },
@@ -958,7 +941,7 @@ export default {
       netRegexDe: NetRegexes.startsUsing({ source: 'Soldat Der Königin', id: '5840' }),
       netRegexFr: NetRegexes.startsUsing({ source: 'Soldat De La Reine', id: '5840' }),
       netRegexJa: NetRegexes.startsUsing({ source: 'クイーンズ・ソルジャー', id: '5840' }),
-      delaySeconds: (data, matches) => parseFloat(matches.castTime) - 2.5,
+      delaySeconds: (data, matches) => parseFloat(matches.castTime) - 5,
       durationSeconds: 5.5,
       response: Responses.moveAround('alert'),
     },
@@ -1206,6 +1189,20 @@ export default {
       },
     },
     {
+      id: 'DelubrumSav Avowed Hot And Cold Cleanup',
+      // On Hot and Cold casts.  This will clean up any lingering forced march from bow phase 1.
+      netRegex: NetRegexes.startsUsing({ source: 'Trinity Avowed', id: '5BB0', capture: false }),
+      netRegexDe: NetRegexes.startsUsing({ source: 'Trinität Der Eingeschworenen', id: '5BB0', capture: false }),
+      netRegexFr: NetRegexes.startsUsing({ source: 'Trinité Féale', id: '5BB0', capture: false }),
+      netRegexJa: NetRegexes.startsUsing({ source: 'トリニティ・アヴァウド', id: '595BB04F', capture: false }),
+      run: (data) => {
+        delete data.currentTemperature;
+        delete data.currentBrand;
+        delete data.forcedMarch;
+        delete data.blades;
+      },
+    },
+    {
       id: 'DelubrumSav Avowed Temperature Collect',
       // These come from Environment, Trinity Avowed, Avowed Avatar, Swirling Orb
       // 89C Normal
@@ -1246,6 +1243,16 @@ export default {
       },
     },
     {
+      id: 'DelubrumSav Avowed March Collect',
+      // 50D Forward March
+      // 50E About Face
+      // 50F Left Face
+      // 510 Right Face
+      netRegex: NetRegexes.gainsEffect({ effectId: ['50D', '50E', '50F', '510'] }),
+      condition: Conditions.targetIsYou(),
+      run: (data, matches) => data.forcedMarch = matches.effectId.toUpperCase(),
+    },
+    {
       id: 'DelubrumSav Avowed Blade of Entropy Collect',
       // Used to get whether left or right cleave is happening and temperature value
       // Trinity Avowed or Avowed Avatar cast these pairs
@@ -1277,6 +1284,147 @@ export default {
       run: (data, matches) => {
         data.blades = data.blades || {};
         data.blades[parseInt(matches.sourceId, 16)] = matches.id.toUpperCase();
+      },
+    },
+    {
+      id: 'DelubrumSav Avowed Hot And Cold Shimmering Shot',
+      netRegex: NetRegexes.startsUsing({ source: 'Trinity Avowed', id: '597F', capture: false }),
+      netRegexDe: NetRegexes.startsUsing({ source: 'Trinität Der Eingeschworenen', id: '597F', capture: false }),
+      netRegexFr: NetRegexes.startsUsing({ source: 'Trinité Féale', id: '597F', capture: false }),
+      netRegexJa: NetRegexes.startsUsing({ source: 'トリニティ・アヴァウド', id: '597F', capture: false }),
+      durationSeconds: 5,
+      alertText: (data, _, output) => {
+        const currentBrand = data.currentBrand ? data.currentBrand : 0;
+        const currentTemperature = data.currentTemperature ? data.currentTemperature : 0;
+        const effectiveTemperature = (currentTemperature + currentBrand).toString();
+
+        const tempToOutput = {
+          '-2': output.plusTwo(),
+          '-1': output.plusOne(),
+          '0': output.emptySpot(),
+          '1': output.minusOne(),
+          '2': output.minusTwo(),
+        };
+        const arrowStr = effectiveTemperature in tempToOutput
+          ? tempToOutput[effectiveTemperature] : output.unknownTemperature();
+
+        const marchStr = {
+          '50D': output.forwards(),
+          '50E': output.backwards(),
+          '50F': output.left(),
+          '510': output.right(),
+        }[data.forcedMarch];
+
+        if (marchStr)
+          return output.marchToArrow({ arrow: arrowStr, dir: marchStr });
+        return output.followArrow({ arrow: arrowStr });
+      },
+      outputStrings: {
+        plusTwo: {
+          en: '+2 Heat Arrow',
+        },
+        plusOne: {
+          en: '+1 Heat Arrow',
+        },
+        emptySpot: {
+          en: 'Empty Spot',
+        },
+        minusOne: {
+          en: '-1 Cold Arrow',
+        },
+        minusTwo: {
+          en: '-2 Cold Arrow',
+        },
+        unknownTemperature: {
+          en: 'Opposite Arrow',
+        },
+        forwards: {
+          en: 'forwards',
+        },
+        backwards: {
+          en: 'backwards',
+        },
+        left: {
+          en: 'left',
+        },
+        right: {
+          en: 'right',
+        },
+        followArrow: {
+          en: 'Follow ${arrow}',
+        },
+        marchToArrow: {
+          en: 'March ${dir} to ${arrow}',
+        },
+      },
+    },
+    {
+      id: 'DelubrumSav Avowed Hot And Cold Freedom Of Bozja',
+      netRegex: NetRegexes.startsUsing({ source: 'Trinity Avowed', id: '597C', capture: false }),
+      netRegexDe: NetRegexes.startsUsing({ source: 'Trinität Der Eingeschworenen', id: '597C', capture: false }),
+      netRegexFr: NetRegexes.startsUsing({ source: 'Trinité Féale', id: '597C', capture: false }),
+      netRegexJa: NetRegexes.startsUsing({ source: 'トリニティ・アヴァウド', id: '597C', capture: false }),
+      delaySeconds: 7,
+      durationSeconds: 5,
+      alertText: (data, _, output) => {
+        const currentBrand = data.currentBrand ? data.currentBrand : 0;
+        const currentTemperature = data.currentTemperature ? data.currentTemperature : 0;
+        const effectiveTemperature = (currentTemperature + currentBrand).toString();
+
+        const tempToOutput = {
+          '-2': output.plusTwo(),
+          '-1': output.plusOne(),
+          '1': output.minusOne(),
+          '2': output.minusTwo(),
+        };
+        const meteorStr = effectiveTemperature in tempToOutput
+          ? tempToOutput[effectiveTemperature] : output.unknownTemperature();
+
+        const marchStr = {
+          '50D': output.forwards(),
+          '50E': output.backwards(),
+          '50F': output.left(),
+          '510': output.right(),
+        }[data.forcedMarch];
+
+        if (marchStr)
+          return output.marchToMeteor({ meteor: meteorStr, dir: marchStr });
+        return output.goToMeteor({ meteor: meteorStr });
+      },
+      outputStrings: {
+        plusTwo: {
+          en: '+2 Heat Meteor',
+        },
+        plusOne: {
+          en: '+1 Heat Meteor',
+        },
+        minusOne: {
+          en: '-1 Cold Meteor',
+        },
+        minusTwo: {
+          en: '-2 Cold Meteor',
+        },
+        unknownTemperature: {
+          en: 'Opposite Meteor',
+        },
+        forwards: {
+          en: 'forwards',
+        },
+        backwards: {
+          en: 'backwards',
+        },
+        left: {
+          en: 'left',
+        },
+        right: {
+          en: 'right',
+        },
+        goToMeteor: {
+          en: 'Go to ${meteor} (watch clones)',
+        },
+        marchToMeteor: {
+          en: 'March ${dir} to ${meteor}',
+        },
       },
     },
     {
@@ -1498,7 +1646,6 @@ export default {
 
         const currentBrand = data.currentBrand ? data.currentBrand : 0;
         const currentTemperature = data.currentTemperature ? data.currentTemperature : 0;
-
         const effectiveTemperature = currentTemperature + currentBrand;
 
         // Calculate which adjacent zone to go to, if needed
@@ -1734,11 +1881,58 @@ export default {
     },
     {
       id: 'DelubrumSav Lord Labyrinthine Fate Collect',
-      // Result used by timelineTrigger id 'DelubrumSav Lord Fateful Words'
+      // 97E: Wanderer's Fate, Pushes outward on Fateful Word cast
+      // 97F: Sacrifice's Fate, Pulls to middle on Fateful Word cast
       netRegex: NetRegexes.gainsEffect({ effectId: '97[EF]' }),
       condition: Conditions.targetIsYou(),
-      run: (data, matches) => {
+      preRun: (data, matches) => {
         data.labyrinthineFate = matches.effectId.toUpperCase();
+      },
+      // This effect is given repeatedly.
+      suppressSeconds: 30,
+      infoText: (data, _, output) => {
+        // The first time this happens, there is ~2.5 seconds between debuff application
+        // and the start of the cast to execute that debuff.  Be less noisy on the first.
+        if (!data.seenLabyrinthineFate)
+          return;
+
+        if (data.labyrinthineFate === '97F')
+          return output.getOutLater();
+        if (data.labyrinthineFate === '97E')
+          return output.getInLater();
+      },
+      run: (data) => data.seenLabyrinthineFate = true,
+      outputStrings: {
+        getOutLater: {
+          en: '(sacrifice out, for later)',
+        },
+        getInLater: {
+          en: '(wanderer in, for later)',
+        },
+      },
+    },
+    {
+      id: 'DelubrumSav Lord Fateful Words',
+      netRegex: NetRegexes.startsUsing({ source: 'Stygimoloch Lord', id: '57C9', capture: false }),
+      netRegexDe: NetRegexes.startsUsing({ source: 'Anführer-Stygimoloch', id: '57C9', capture: false }),
+      netRegexFr: NetRegexes.startsUsing({ source: 'Seigneur Stygimoloch', id: '57C9', capture: false }),
+      netRegexJa: NetRegexes.startsUsing({ source: 'スティギモロク・ロード', id: '57C9', capture: false }),
+      // 97E: Wanderer's Fate, Pushes outward on Fateful Word cast
+      // 97F: Sacrifice's Fate, Pulls to middle on Fateful Word cast
+      // Labyrinthine Fate is cast and 1 second later debuffs are applied
+      // First set of debuffs go out 7.7 seconds before Fateful Word is cast
+      // Remaining set of debuffs go out 24.3 seconds before Fateful Word is cast
+      alertText: (data, _, output) => {
+        if (data.labyrinthineFate === '97F')
+          return output.getOut();
+        if (data.labyrinthineFate === '97E')
+          return output.getIn();
+      },
+      // In case you die and don't get next debuff, clean this up so it doesn't call again.
+      run: (data) => delete data.labyrinthineFate,
+      outputStrings: {
+        getOut: Outputs.out,
+        getIn: Outputs.in,
       },
     },
     {
@@ -1863,12 +2057,23 @@ export default {
       },
     },
     {
+      id: 'DelubrumSav Queen Ball Lightning Bubble',
+      netRegex: NetRegexes.wasDefeated({ target: 'Ball Lightning', capture: false }),
+      suppressSeconds: 20,
+      alertText: (data, _, output) => output.text(),
+      outputStrings: {
+        text: {
+          en: 'Get in Bubble',
+        },
+      },
+    },
+    {
       id: 'DelubrumSav Queen Fiery Portent',
       netRegex: NetRegexes.startsUsing({ source: 'Queen\'s Soldier', id: '5A21' }),
       netRegexDe: NetRegexes.startsUsing({ source: 'Soldat Der Königin', id: '5A21' }),
       netRegexFr: NetRegexes.startsUsing({ source: 'Soldat De La Reine', id: '5A21' }),
       netRegexJa: NetRegexes.startsUsing({ source: 'クイーンズ・ソルジャー', id: '5A21' }),
-      delaySeconds: (data, matches) => parseFloat(matches.castTime) - 2.5,
+      delaySeconds: (data, matches) => parseFloat(matches.castTime) - 5,
       durationSeconds: 5.5,
       response: Responses.stopEverything('alarm'),
     },
@@ -1879,7 +2084,7 @@ export default {
       netRegexDe: NetRegexes.startsUsing({ source: 'Soldat Der Königin', id: '5A22' }),
       netRegexFr: NetRegexes.startsUsing({ source: 'Soldat De La Reine', id: '5A22' }),
       netRegexJa: NetRegexes.startsUsing({ source: 'クイーンズ・ソルジャー', id: '5A22' }),
-      delaySeconds: (data, matches) => parseFloat(matches.castTime) - 2.5,
+      delaySeconds: (data, matches) => parseFloat(matches.castTime) - 5,
       durationSeconds: 5.5,
       response: Responses.moveAround('alert'),
     },
