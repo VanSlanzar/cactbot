@@ -55,7 +55,7 @@ export default {
     {
       id: 'Heroes Gauntlet Spectral White Mage Absolute Protect',
       netRegex: NetRegexes.startsUsing({ id: '524D', source: 'Spectral White Mage' }),
-      netRegexDe: NetRegexes.startsUsing({ id: '524D', source: 'Phantom-Weißmagier' }),
+      netRegexDe: NetRegexes.startsUsing({ id: '524D', source: 'Phantom-Weißmagierin' }),
       netRegexFr: NetRegexes.startsUsing({ id: '524D', source: 'Mage Blanc Spectral' }),
       netRegexJa: NetRegexes.startsUsing({ id: '524D', source: '幻光の白魔道士' }),
       netRegexCn: NetRegexes.startsUsing({ id: '524D', source: '幻光白魔法师' }),
@@ -216,7 +216,7 @@ export default {
         'Spectral Berserker': 'Phantom-Berserker',
         'Spectral Necromancer': 'Phantom-Nekromantin',
         'Spectral Thief': 'Phantom-Dieb',
-        'Spectral White Mage': 'Phantom-Weißmagier',
+        'Spectral White Mage': 'Phantom-Weißmagierin',
         'The Illuminated Plaza': 'Platz der Erleuchteten',
         'The Mount Argai Mines': 'Minen des Argai',
         'The Summer Ballroom': 'Ballsaal der Grasgrummel',

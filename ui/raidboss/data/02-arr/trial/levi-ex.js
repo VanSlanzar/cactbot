@@ -1,20 +1,108 @@
-import Conditions from '../../../../../resources/conditions';
 import NetRegexes from '../../../../../resources/netregexes';
-import { Responses } from '../../../../../resources/responses';
 import Util from '../../../../../resources/util';
 import ZoneId from '../../../../../resources/zone_id';
+import { callOverlayHandler } from '../../../../../resources/overlay_plugin_api';
+import Outputs from '../../../../../resources/outputs';
 
 // TODO: we could consider a timeline trigger for the Tidal Roar raidwide,
 // but it barely does 25% health, has no startsUsing, and the timeline for
 // this fight is not reliable enough to use.
 
-// TODO: we could consider doing some getCombatants shenanigans to call
-// out which side to run to for all of the dives.
+// TODO: it'd be nice to call out the dives too, but there is no log line
+// or combatant in the right place until ~4.5s after the nameplate toggles.
+// This is about 1-2s after the splash appears, and so feels really late.
+// Unfortunately the dives also have multiple combatants in plausible
+// positions (+/-7, +/-20) and so more work would need to be done to tell
+// them apart.
 
 export default {
   zoneId: ZoneId.TheWhorleaterExtreme,
   timelineFile: 'levi-ex.txt',
   triggers: [
+    {
+      id: 'LeviEx Dive Counter Tidal Wave Reset',
+      netRegex: NetRegexes.ability({ source: 'Leviathan', id: '82E', capture: false }),
+      netRegexDe: NetRegexes.ability({ source: 'Leviathan', id: '82E', capture: false }),
+      netRegexFr: NetRegexes.ability({ source: 'Léviathan', id: '82E', capture: false }),
+      netRegexJa: NetRegexes.ability({ source: 'リヴァイアサン', id: '82E', capture: false }),
+      netRegexCn: NetRegexes.ability({ source: '利维亚桑', id: '82E', capture: false }),
+      netRegexKo: NetRegexes.ability({ source: '리바이어선', id: '82E', capture: false }),
+      run: (data) => {
+        // There's always a slam after Tidal Wave.
+        data.diveCounter = 1;
+        // If you are running this unsynced and don't hit the button,
+        // then prevent "Hit the Button" calls on future dives.
+        data.converter = false;
+      },
+    },
+    {
+      id: 'LeviEx Dive Counter Body Slam Reset',
+      netRegex: NetRegexes.ability({ source: 'Leviathan', id: '82A', capture: false }),
+      netRegexDe: NetRegexes.ability({ source: 'Leviathan', id: '82A', capture: false }),
+      netRegexFr: NetRegexes.ability({ source: 'Léviathan', id: '82A', capture: false }),
+      netRegexJa: NetRegexes.ability({ source: 'リヴァイアサン', id: '82A', capture: false }),
+      netRegexCn: NetRegexes.ability({ source: '利维亚桑', id: '82A', capture: false }),
+      netRegexKo: NetRegexes.ability({ source: '리바이어선', id: '82A', capture: false }),
+      // Redundant, but this will keep things on track if anything goes awry.
+      run: (data) => data.diveCounter = 1,
+    },
+    {
+      id: 'LeviEx Dive Counter Wave Spume Adjust',
+      netRegex: NetRegexes.addedCombatant({ name: 'Wave Spume', capture: false }),
+      netRegexDe: NetRegexes.addedCombatant({ name: 'Gischtwelle', capture: false }),
+      netRegexFr: NetRegexes.addedCombatant({ name: 'Écume Ondulante', capture: false }),
+      netRegexJa: NetRegexes.addedCombatant({ name: 'ウェイブ・スピューム', capture: false }),
+      netRegexCn: NetRegexes.addedCombatant({ name: '巨浪泡沫', capture: false }),
+      netRegexKo: NetRegexes.addedCombatant({ name: '파도치는 물거품', capture: false }),
+      suppressSeconds: 5,
+      // Usually the pattern is slam / dive / dive / slam, but after wave spumes appear,
+      // there is a single dive then a slam.  Adjust for this one-off case here.
+      run: (data) => data.diveCounter = 2,
+    },
+    {
+      id: 'LeviEx Slam Location',
+      netRegex: NetRegexes.nameToggle({ name: 'Leviathan', toggle: '00', capture: false }),
+      netRegexDe: NetRegexes.nameToggle({ name: 'Leviathan', toggle: '00', capture: false }),
+      netRegexFr: NetRegexes.nameToggle({ name: 'Léviathan', toggle: '00', capture: false }),
+      netRegexJa: NetRegexes.nameToggle({ name: 'リヴァイアサン', toggle: '00', capture: false }),
+      netRegexCn: NetRegexes.nameToggle({ name: '利维亚桑', toggle: '00', capture: false }),
+      netRegexKo: NetRegexes.nameToggle({ name: '리바이어선', toggle: '00', capture: false }),
+      condition: (data) => {
+        data.diveCounter = (data.diveCounter || 0) + 1;
+        return data.diveCounter % 3 === 1;
+      },
+      // Actor moves between 4.6s and 4.7s; add a tiny bit of time for certainty.
+      delaySeconds: 5,
+      promise: async (data) => {
+        const callData = await callOverlayHandler({
+          call: 'getCombatants',
+        });
+        if (!callData || !callData.combatants || !callData.combatants.length) {
+          console.error('Dive: failed to get combatants: ${JSON.stringify(callData)}');
+          return;
+        }
+        // This is the real levi, according to hp.
+        data.slamLevis = callData.combatants.filter((c) => c.BNpcID === 2802);
+      },
+      alertText: (data, _, output) => {
+        // Slams happen at +/-~14.6 +/-~13.
+        const filtered = data.slamLevis.filter((c) => {
+          const offsetX = Math.abs(Math.abs(c.PosX) - 14.6);
+          const offsetY = Math.abs(Math.abs(c.PosY) - 13);
+          return offsetX < 1 && offsetY < 1;
+        });
+        if (filtered.length !== 1)
+          return;
+        const levi = filtered[0];
+        if (levi.PosY > 0)
+          return output.north();
+        return output.south();
+      },
+      outputStrings: {
+        north: Outputs.north,
+        south: Outputs.south,
+      },
+    },
     {
       id: 'LeviEx Veil of the Whorl',
       netRegex: NetRegexes.ability({ source: 'Leviathan', id: '875', capture: false }),
@@ -30,6 +118,8 @@ export default {
         text: {
           en: 'Attack Tail Only',
           de: 'Nur den Schwanz angreifen',
+          fr: 'Attaquez seulement la queue',
+          cn: '攻击尾巴',
         },
       },
     },
@@ -48,19 +138,108 @@ export default {
         text: {
           en: 'Attack Head Only',
           de: 'Nur den Kopf angreifen',
+          fr: 'Attaquez seulement la tête',
+          cn: '攻击头部',
         },
       },
     },
     {
-      id: 'LeviEx Dreadwash',
-      netRegex: NetRegexes.startsUsing({ source: 'Wavetooth Sahagin', id: '749' }),
-      netRegexDe: NetRegexes.startsUsing({ source: 'Wellenzahn-Sahagin', id: '749' }),
-      netRegexFr: NetRegexes.startsUsing({ source: 'Sahuagin Dent-Du-Ressac', id: '749' }),
-      netRegexJa: NetRegexes.startsUsing({ source: 'ウェイブトゥース・サハギン', id: '749' }),
-      netRegexCn: NetRegexes.startsUsing({ source: '波齿鱼人', id: '749' }),
-      netRegexKo: NetRegexes.startsUsing({ source: '물결이빨 사하긴', id: '749' }),
-      condition: (data) => data.CanStun(),
-      response: Responses.stun('alarm'),
+      id: 'LeviEx Wavespine Sahagin Add',
+      netRegex: NetRegexes.addedCombatant({ name: 'Wavespine Sahagin', capture: false }),
+      netRegexDe: NetRegexes.addedCombatant({ name: 'Wellendorn-Sahagin', capture: false }),
+      netRegexFr: NetRegexes.addedCombatant({ name: 'Sahuagin Épine-Du-Ressac', capture: false }),
+      netRegexJa: NetRegexes.addedCombatant({ name: 'ウェイブスパイン・サハギン', capture: false }),
+      netRegexCn: NetRegexes.addedCombatant({ name: '波棘鱼人', capture: false }),
+      netRegexKo: NetRegexes.addedCombatant({ name: '물결등뼈 사하긴', capture: false }),
+      suppressSeconds: 5,
+      infoText: (data, _, output) => output.text(),
+      outputStrings: {
+        text: {
+          en: 'Kill Adds',
+          de: 'Besiege Adds',
+          fr: 'Tuez les adds',
+          cn: '击杀小怪',
+        },
+      },
+    },
+    {
+      id: 'LeviEx Wavetooth Sahagin Add',
+      netRegex: NetRegexes.addedCombatant({ name: 'Wavetooth Sahagin', capture: false }),
+      netRegexDe: NetRegexes.addedCombatant({ name: 'Wellenzahn-Sahagin', capture: false }),
+      netRegexFr: NetRegexes.addedCombatant({ name: 'Sahuagin Dent-Du-Ressac', capture: false }),
+      netRegexJa: NetRegexes.addedCombatant({ name: 'ウェイブトゥース・サハギン', capture: false }),
+      netRegexCn: NetRegexes.addedCombatant({ name: '波齿鱼人', capture: false }),
+      netRegexKo: NetRegexes.addedCombatant({ name: '물결이빨 사하긴', capture: false }),
+      infoText: (data, _, output) => output.text(),
+      outputStrings: {
+        text: {
+          en: 'Kill Wavetooth Add',
+          de: 'Besiege Wellenzahn Add',
+          fr: 'Tuez l\'add Dent-du-ressac',
+          cn: '优先击杀波齿鱼人',
+        },
+      },
+    },
+    {
+      id: 'LeviEx Gyre Spume',
+      netRegex: NetRegexes.addedCombatant({ name: 'Gyre Spume', capture: false }),
+      netRegexDe: NetRegexes.addedCombatant({ name: 'Gischtblase', capture: false }),
+      netRegexFr: NetRegexes.addedCombatant({ name: 'Écume Concentrique', capture: false }),
+      netRegexJa: NetRegexes.addedCombatant({ name: 'ジャイヤ・スピューム', capture: false }),
+      netRegexCn: NetRegexes.addedCombatant({ name: '游涡泡沫', capture: false }),
+      netRegexKo: NetRegexes.addedCombatant({ name: '소용돌이치는 물거품', capture: false }),
+      suppressSeconds: 5,
+      infoText: (data, _, output) => output.text(),
+      outputStrings: {
+        text: {
+          en: 'Kill Gyre Spumes',
+          de: 'Besiege Gischtblase',
+          fr: 'Tuez les écumes concentriques',
+          cn: '打黄泡泡',
+        },
+      },
+    },
+    {
+      id: 'LeviEx Wave Spume',
+      netRegex: NetRegexes.addedCombatant({ name: 'Wave Spume', capture: false }),
+      netRegexDe: NetRegexes.addedCombatant({ name: 'Gischtwelle', capture: false }),
+      netRegexFr: NetRegexes.addedCombatant({ name: 'Écume Ondulante', capture: false }),
+      netRegexJa: NetRegexes.addedCombatant({ name: 'ウェイブ・スピューム', capture: false }),
+      netRegexCn: NetRegexes.addedCombatant({ name: '巨浪泡沫', capture: false }),
+      netRegexKo: NetRegexes.addedCombatant({ name: '파도치는 물거품', capture: false }),
+      suppressSeconds: 5,
+      infoText: (data, _, output) => output.text(),
+      outputStrings: {
+        text: {
+          en: 'Wave Spume Adds',
+          de: 'Gischtwelle Adds',
+          fr: 'Tuez les écumes ondulantes',
+          cn: '蓝泡泡出现',
+        },
+      },
+    },
+    {
+      id: 'LeviEx Wave Spume Explosion',
+      netRegex: NetRegexes.addedCombatant({ name: 'Wave Spume', capture: false }),
+      netRegexDe: NetRegexes.addedCombatant({ name: 'Gischtwelle', capture: false }),
+      netRegexFr: NetRegexes.addedCombatant({ name: 'Écume Ondulante', capture: false }),
+      netRegexJa: NetRegexes.addedCombatant({ name: 'ウェイブ・スピューム', capture: false }),
+      netRegexCn: NetRegexes.addedCombatant({ name: '巨浪泡沫', capture: false }),
+      netRegexKo: NetRegexes.addedCombatant({ name: '파도치는 물거품', capture: false }),
+      // ~35.2 seconds from added combatant until :Aqua Burst:888: explosion.
+      // Tell everybody because not much else going on in this fight,
+      // and other people need to get away.
+      delaySeconds: 30,
+      suppressSeconds: 5,
+      alertText: (data, _, output) => output.text(),
+      outputStrings: {
+        text: {
+          en: 'Burst Soon',
+          de: 'Gischtwelle platzen gleich',
+          fr: 'Burst bientôt',
+          cn: '黄泡泡即将爆炸',
+        },
+      },
     },
     {
       id: 'LeviEx Elemental Converter',
@@ -91,6 +270,8 @@ export default {
         text: {
           en: 'Hit The Button!',
           de: 'Mit Elementarumwandler interagieren!',
+          fr: 'Activez la barrière !',
+          cn: '打开开关！',
         },
       },
     },
@@ -102,8 +283,10 @@ export default {
         'Elemental Converter': 'Elementarumwandler',
         'Leviathan(?!\'s)': 'Leviathan',
         'Leviathan\'s Tail': 'Leviathans Schwanz',
+        'Gyre Spume': 'Gischtblase',
         'Wave Spume': 'Gischtwelle',
         'Wavetooth Sahagin': 'Wellenzahn-Sahagin',
+        'Wavespine Sahagin': 'Wellendorn-Sahagin',
       },
       'replaceText': {
         'Aqua Breath': 'Aqua-Atem',
@@ -131,10 +314,13 @@ export default {
         'Elemental Converter': 'activateur de la barrière',
         'Leviathan(?!\'s)': 'Léviathan',
         'Leviathan\'s Tail': 'queue de Léviathan',
+        'Gyre Spume': 'écume concentrique',
         'Wave Spume': 'écume ondulante',
         'Wavetooth Sahagin': 'Sahuagin dent-du-ressac',
+        'Wavespine Sahagin': 'Sahuagin épine-du-ressac',
       },
       'replaceText': {
+        '\\(NW\\)': '(NO)',
         'Aqua Breath': 'Aquasouffle',
         'Aqua Burst': 'Explosion aquatique',
         'Body Slam': 'Charge physique',
@@ -160,8 +346,10 @@ export default {
         'Elemental Converter': '魔法障壁発動器',
         'Leviathan(?!\'s)': 'リヴァイアサン',
         'Leviathan\'s Tail': 'リヴァイアサン・テール',
+        'Gyre Spume': 'ジャイヤ・スピューム',
         'Wave Spume': 'ウェイブ・スピューム',
         'Wavetooth Sahagin': 'ウェイブトゥース・サハギン',
+        'Wavespine Sahagin': 'ウェイブスパイン・サハギン',
       },
       'replaceText': {
         'Aqua Breath': 'アクアブレス',
@@ -189,8 +377,10 @@ export default {
         'Elemental Converter': '魔法障壁发动器',
         'Leviathan(?!\'s)': '利维亚桑',
         'Leviathan\'s Tail': '利维亚桑的尾巴',
+        'Gyre Spume': '游涡泡沫',
         'Wave Spume': '巨浪泡沫',
         'Wavetooth Sahagin': '波齿鱼人',
+        'Wavespine Sahagin': '波棘鱼人',
       },
       'replaceText': {
         'Aqua Breath': '水流吐息',
@@ -218,8 +408,10 @@ export default {
         'Elemental Converter': '마법 장벽 발동기',
         'Leviathan(?!\'s)': '리바이어선',
         'Leviathan\'s Tail': '리바이어선 꼬리',
+        'Gyre Spume': '소용돌이치는 물거품',
         'Wave Spume': '파도치는 물거품',
         'Wavetooth Sahagin': '물결이빨 사하긴',
+        'Wavespine Sahagin': '물결등뼈 사하긴',
       },
       'replaceText': {
         'Aqua Breath': '물의 숨결',

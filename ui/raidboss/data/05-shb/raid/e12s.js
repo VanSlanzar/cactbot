@@ -1,6 +1,7 @@
 import Conditions from '../../../../../resources/conditions';
 import NetRegexes from '../../../../../resources/netregexes';
 import Outputs from '../../../../../resources/outputs';
+import { callOverlayHandler } from '../../../../../resources/overlay_plugin_api';
 import { Responses } from '../../../../../resources/responses';
 import ZoneId from '../../../../../resources/zone_id';
 
@@ -439,7 +440,7 @@ export default {
         data.statueDir = 'unknown';
 
         // Calculate distance to center to determine inner vs outer
-        const statueData = await window.callOverlayHandler({
+        const statueData = await callOverlayHandler({
           call: 'getCombatants',
           ids: data.statueIds,
         });
@@ -504,18 +505,21 @@ export default {
           de: '#${num} (innen)',
           fr: '#${num} (Intérieur)',
           cn: '#${num} (内)',
+          ko: '#${num} (안쪽)',
         },
         outer: {
           en: '#${num} (Outer)',
           de: '#${num} (außen)',
           fr: '#${num} (Extérieur)',
           cn: '#${num} (外)',
+          ko: '#${num} (바깥쪽)',
         },
         unknown: {
           en: '#${num} (???)',
           de: '#${num} (???)',
           fr: '#${num} (???)',
           cn: '#${num} (???)',
+          ko: '#${num} (???)',
         },
       },
     },
@@ -534,6 +538,7 @@ export default {
           de: 'SO Rückstoß',
           fr: 'SE Poussée',
           cn: '右下（东南）击退',
+          ko: '남동쪽(5시)에서 넉백',
         },
       },
     },
@@ -552,6 +557,7 @@ export default {
           de: 'SW Rückstoß',
           fr: 'SO Poussée',
           cn: '左下（西南）击退',
+          ko: '남서쪽(7시)에서 넉백',
         },
       },
     },
@@ -578,18 +584,21 @@ export default {
             de: 'Köder innen #${num}',
             fr: 'Orientez vers l\'intérieur #${num}',
             cn: '向内诱导 #${num}',
+            ko: '내부 유도 #${num}',
           },
           baitOuter: {
             en: 'Bait Outer #${num}',
             de: 'Köder außen #${num}',
             fr: 'Orientez vers l\'extérieur #${num}',
-            cn: '向内诱导 #${num}',
+            cn: '向外诱导 #${num}',
+            ko: '외부 유도 #${num}',
           },
           baitUnknown: {
             en: 'Bait #${num}',
             de: 'Köder #${num}',
             fr: 'Orientez #${num}',
             cn: '诱导 #${num}',
+            ko: '유도 #${num}',
           },
         };
         // Start one ahead, so that it calls out #2 after #1 has finished.
@@ -694,18 +703,21 @@ export default {
             de: 'Links + Köder innen #1',
             fr: 'À gauche + Orientez vers l\'intérieur #1',
             cn: '左 + 向内诱导 #1',
+            ko: '왼쪽 + 내부 유도 #1',
           },
           goLeftBaitOuter: {
             en: 'Left + Bait Outer #1',
             de: 'Links + Köder außen #1',
             fr: 'À gauche + Orientez vers l\'extérieur #1',
             cn: '左 + 向外诱导 #1',
+            ko: '왼쪽 + 외부 유도 #1',
           },
           goLeftBaitUnknown: {
             en: 'Left + Bait #1',
             de: 'Links + Köder #1',
             fr: 'À gauche + Orientez #1',
             cn: '左 + 诱导 #1',
+            ko: '왼쪽 + 유도 #1',
           },
         };
 
@@ -736,18 +748,21 @@ export default {
             de: 'Rechts + Köder innen #1',
             fr: 'À droite + Orientez vers l\'intérieur #1',
             cn: '右 + 向内诱导 #1',
+            ko: '오른쪽 + 내부 유도 #1',
           },
           goRightBaitOuter: {
             en: 'Right + Bait Outer #1',
             de: 'Rechts + Köder außen #1',
             fr: 'À droite + Orientez vers l\'extérieur #1',
             cn: '右 + 向外诱导 #1',
+            ko: '오른쪽 + 외부 유도 #1',
           },
           goRightBaitUnknown: {
             en: 'Right + Bait #1',
             de: 'Rechts + Köder #1',
             fr: 'À droite + Orientez #1',
             cn: '右 + 诱导 #1',
+            ko: '오른쪽 + 유도 #1',
           },
         };
 
@@ -1036,7 +1051,7 @@ export default {
           de: 'Ködern - Weit weg',
           fr: 'Attirez au loin',
           ja: '遠くに誘導',
-          cn: '向外诱导',
+          cn: '远诱导',
           ko: '멀리 유도하기',
         },
         partyUnder: {
@@ -1068,13 +1083,15 @@ export default {
           en: 'Bait Close',
           de: 'Köder nah',
           fr: 'Attirez proche',
-          cn: '靠近诱导',
+          cn: '近诱导',
+          ko: '가까이 붙기',
         },
         partyOut: {
           en: 'Party Out',
           de: 'Gruppe raus',
           fr: 'Groupe au loin',
-          cn: '去人群外',
+          cn: '不要靠近BOSS',
+          ko: '탱보다 멀리 있기',
         },
       },
     },
@@ -1089,7 +1106,7 @@ export default {
       promise: async (data, matches, output) => {
         // select the Oracle Of Darkness with same source id
         let oracleData = null;
-        oracleData = await window.callOverlayHandler({
+        oracleData = await callOverlayHandler({
           call: 'getCombatants',
           ids: [parseInt(matches.sourceId, 16)],
         });
@@ -1314,7 +1331,7 @@ export default {
             de: 'Bewegen!',
             fr: 'Bougez !',
             ja: '避けて！',
-            cn: '快躲开！',
+            cn: '快移动！',
             ko: '이동하기!',
           },
         }, intermediateRelativityOutputStrings);
@@ -1495,12 +1512,14 @@ export default {
           de: 'In Gruppen sammeln',
           fr: 'Packez-vous en groupe',
           cn: '集合',
+          ko: '쉐어',
         },
         knockbackIntoStackGroups: {
           en: 'Knockback Into Stack Groups',
           de: 'Rückstoß, dann in Gruppen sammeln',
           fr: 'Poussée puis packez-vous en groupe',
-          cn: '集合击退',
+          cn: '击退分摊',
+          ko: '넉백 후 쉐어',
         },
       },
     },
@@ -1527,6 +1546,7 @@ export default {
           de: 'Rückstoß dann verteilen',
           fr: 'Poussée puis dispersez-vous',
           cn: '分散击退',
+          ko: '넉백 후 산개',
         },
       },
     },
@@ -1550,6 +1570,7 @@ export default {
           de: 'In Gruppen sammeln',
           fr: 'Packez-vous en groupe',
           cn: '集合',
+          ko: '쉐어',
         },
       },
     },
@@ -1575,7 +1596,8 @@ export default {
           en: 'Double Aero: ${name1}, ${name2}',
           de: 'Doppel Windga: ${name1}, ${name2}',
           fr: 'Double Vent : ${name1}, ${name2}',
-          cn: '双重暴风: ${name1}, ${name2}',
+          cn: '双风: ${name1}, ${name2}',
+          ko: '더블 에어로가: ${name1}, ${name2}',
         },
       },
     },
@@ -1614,13 +1636,15 @@ export default {
           en: 'Double Aero on YOU',
           de: 'Doppel Windga auf DIR',
           fr: 'Double Vent sur VOUS',
-          cn: '双重暴风点名',
+          cn: '双风点名',
+          ko: '더블 에어로가 대상자',
         },
         spread: {
           en: 'Spread on YOU',
           de: 'Verteilen auf DIR',
           fr: 'Dispersion sur VOUS',
           cn: '分散点名',
+          ko: '산개징 대상자',
         },
       },
     },

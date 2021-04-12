@@ -143,11 +143,11 @@ export default {
       // This does not include the initial tether, unfortunately.
       // This is another case of "added combatant with initial tether".
       netRegex: NetRegexes.tether({ source: 'Boomtype Magitek Gobwalker G-VII', id: '0011' }),
-      netRegexDe: NetRegexes.tether({ source: 'Gobumm-Stampfer Vii', id: '0011' }),
-      netRegexFr: NetRegexes.tether({ source: 'Gobblindé Magitek G-Vii Boumbardier', id: '0011' }),
-      netRegexJa: NetRegexes.tether({ source: 'Vii号ゴブリウォーカーB型', id: '0011' }),
-      netRegexKo: NetRegexes.tether({ source: 'Vii호 고블린워커 B형', id: '0011' }),
-      netRegexCn: NetRegexes.tether({ source: '爆破型7号哥布林战车', id: '0011' }),
+      netRegexDe: NetRegexes.tether({ source: 'Gob-Stampfer VII-L', id: '0011' }),
+      netRegexFr: NetRegexes.tether({ source: 'gobblindé magitek G-VII Lamineur', id: '0011' }),
+      netRegexJa: NetRegexes.tether({ source: 'VII号ゴブリウォーカーL型', id: '0011' }),
+      netRegexKo: NetRegexes.tether({ source: 'VII호 고블린워커 L형', id: '0011' }),
+      netRegexCn: NetRegexes.tether({ source: '7号哥布林战车L型', id: '0011' }),
       condition: Conditions.targetIsYou(),
       suppressSeconds: 10,
       infoText: (data, _, output) => output.text(),
@@ -204,11 +204,11 @@ export default {
     {
       id: 'A7S Stickyloom',
       netRegex: NetRegexes.ability({ source: 'Boomtype Magitek Gobwalker G-VII', id: '16F2' }),
-      netRegexDe: NetRegexes.ability({ source: 'Gobumm-Stampfer Vii', id: '16F2' }),
-      netRegexFr: NetRegexes.ability({ source: 'Gobblindé Magitek G-Vii Boumbardier', id: '16F2' }),
-      netRegexJa: NetRegexes.ability({ source: 'Vii号ゴブリウォーカーB型', id: '16F2' }),
-      netRegexKo: NetRegexes.ability({ source: 'Vii호 고블린워커 B형', id: '16F2' }),
-      netRegexCn: NetRegexes.ability({ source: '爆破型7号哥布林战车', id: '16F2' }),
+      netRegexDe: NetRegexes.ability({ source: 'Gob-Stampfer VII-L', id: '16F2' }),
+      netRegexFr: NetRegexes.ability({ source: 'gobblindé magitek G-VII Lamineur', id: '16F2' }),
+      netRegexJa: NetRegexes.ability({ source: 'VII号ゴブリウォーカーL型', id: '16F2' }),
+      netRegexKo: NetRegexes.ability({ source: 'VII호 고블린워커 L형', id: '16F2' }),
+      netRegexCn: NetRegexes.ability({ source: '7号哥布林战车L型', id: '16F2' }),
       run: function(data, matches) {
         data.stickyloom = matches.target;
       },
@@ -282,7 +282,7 @@ export default {
       'missingTranslations': true,
       'replaceSync': {
         'Bomb': 'Bombe',
-        'Boomtype Magitek Gobwalker G-VII': 'Gobumm-Stampfer VII',
+        'Boomtype Magitek Gobwalker G-VII': 'Gob-Stampfer VII-L',
         'Padlock': 'Vorhängeschloss',
         'Quickthinx Allthoughts': 'Denkfix',
         'Shanoa': 'Schwarz(?:e|er|es|en) Katze',
@@ -314,7 +314,7 @@ export default {
       'missingTranslations': true,
       'replaceSync': {
         'Bomb': 'bombe',
-        'Boomtype Magitek Gobwalker G-VII': 'gobblindé magitek G-VII Boumbardier',
+        'Boomtype Magitek Gobwalker G-VII': 'gobblindé magitek G-VII Lamineur',
         'electrocution gallery': 'square d\'exécution publique',
         'Padlock': 'cadenas',
         'Quickthinx Allthoughts': 'Quickthinx le Cerveau',
@@ -335,7 +335,7 @@ export default {
       'missingTranslations': true,
       'replaceSync': {
         'Bomb': '爆弾',
-        'Boomtype Magitek Gobwalker G-VII': 'VII号ゴブリウォーカーB型',
+        'Boomtype Magitek Gobwalker G-VII': 'VII号ゴブリウォーカーL型',
         'Electrocution gallery': '公開処刑広場',
         'Frostbite': '凍傷',
         'Padlock': '錠前',
@@ -370,7 +370,7 @@ export default {
       'missingTranslations': true,
       'replaceSync': {
         'Bomb': '炸弹',
-        'Boomtype Magitek Gobwalker G-VII': '爆破型7号哥布林战车',
+        'Boomtype Magitek Gobwalker G-VII': 'VII호 고블린워커 L형',
         'Padlock': '牢门的锁',
         'Quickthinx Allthoughts': '万事通 奎克辛克斯',
         'Shanoa': '夏诺雅',
@@ -402,7 +402,7 @@ export default {
       'missingTranslations': true,
       'replaceSync': {
         'Bomb': '폭탄',
-        'Boomtype Magitek Gobwalker G-VII': 'VII호 고블린워커 B형',
+        'Boomtype Magitek Gobwalker G-VII': '7号哥布林战车L型',
         'Padlock': '자물쇠',
         'Quickthinx Allthoughts': '만능의 퀵싱크스',
         'Shanoa': '샤노아',
