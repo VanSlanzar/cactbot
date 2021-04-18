@@ -38,7 +38,7 @@ const processInputs = (inputPath) => {
         timelineFiles.push(filepath);
         return;
       }
-      if (/\/raidboss\/data\/.*\.[jt]s/.test(filepath)) {
+      if (/\/raidboss\/data\/.*\.js/.test(filepath)) {
         triggerFiles.push(filepath);
         return;
       }

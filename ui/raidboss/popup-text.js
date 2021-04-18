@@ -300,7 +300,7 @@ export class PopupText {
   ProcessDataFiles(files) {
     this.triggerSets = [];
     for (const filename in files) {
-      if (!filename.endsWith('.js') && !filename.endsWith('.ts'))
+      if (!filename.endsWith('.js'))
         continue;
 
       const json = files[filename];
