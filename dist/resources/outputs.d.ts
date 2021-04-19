@@ -403,7 +403,7 @@ declare const _default: {
     readonly stunTarget: {
         readonly en: "Stun ${name}";
         readonly de: "Betäubung auf ${name}";
-        readonly fr: "Étourdissez ${name}";
+        readonly fr: "Étourdissement sur ${name}";
         readonly ja: "${name} にスタン";
         readonly cn: "眩晕 ${name}";
         readonly ko: "${name}기절";
@@ -682,16 +682,6 @@ declare const _default: {
     readonly num7: TranslatableText;
     readonly num8: TranslatableText;
     readonly num9: TranslatableText;
-    readonly num0: Record<import("../types/global").Lang, string>;
-    readonly num1: Record<import("../types/global").Lang, string>;
-    readonly num2: Record<import("../types/global").Lang, string>;
-    readonly num3: Record<import("../types/global").Lang, string>;
-    readonly num4: Record<import("../types/global").Lang, string>;
-    readonly num5: Record<import("../types/global").Lang, string>;
-    readonly num6: Record<import("../types/global").Lang, string>;
-    readonly num7: Record<import("../types/global").Lang, string>;
-    readonly num8: Record<import("../types/global").Lang, string>;
-    readonly num9: Record<import("../types/global").Lang, string>;
 };
 export default _default;
 //# sourceMappingURL=outputs.d.ts.map
