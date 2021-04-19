@@ -21,6 +21,7 @@ declare const gameNameLogParams: readonly ["code", "name", "line"];
 declare const statChangeParams: readonly ["job", "strength", "dexterity", "vitality", "intelligence", "mind", "piety", "attackPower", "directHit", "criticalHit", "attackMagicPotency", "healMagicPotency", "determination", "skillSpeed", "spellSpeed", "tenacity"];
 declare const changeZoneParams: readonly ["id", "name"];
 declare const network6dParams: readonly ["instance", "command", "data0", "data1", "data2", "data3"];
+declare const nameToggleParams: readonly ["id", "name", "toggle"];
 export declare type StartsUsingParams = typeof startsUsingParams[number];
 export declare type AbilityParams = typeof abilityParams[number];
 export declare type AbilityFullParams = typeof abilityFullParams[number];
@@ -42,6 +43,11 @@ export declare type StatChangeParams = typeof statChangeParams[number];
 export declare type ChangeZoneParams = typeof changeZoneParams[number];
 export declare type Network6dParams = typeof network6dParams[number];
 export default class NetRegexes {
+export declare type NameToggleParams = typeof nameToggleParams[number];
+export default class NetRegexes {
+    static flagTranslationsNeeded: boolean;
+    static setFlagTranslationsNeeded(value: boolean): void;
+    static doesNetRegexNeedTranslation(regex: RegExp | string): boolean;
     /**
      * matches: https://github.com/quisquous/cactbot/blob/main/docs/LogGuide.md#14-networkstartscasting
      */
@@ -127,6 +133,10 @@ export default class NetRegexes {
      * matches: https://github.com/quisquous/cactbot/blob/main/docs/LogGuide.md#21-network6d-actor-control-lines
      */
     static network6d(params?: Params<Network6dParams>): NetRegex<Network6dParams>;
+    /**
+     * matches: https://github.com/quisquous/cactbot/blob/main/docs/LogGuide.md#22-networknametoggle
+     */
+    static nameToggle(params?: Params<NameToggleParams>): NetRegex<NameToggleParams>;
 }
 export {};
 //# sourceMappingURL=netregexes.d.ts.map
