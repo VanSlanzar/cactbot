@@ -94,7 +94,7 @@ export default {
         getOut: {
           en: 'Get out',
           de: 'Raus da',
-          fr: 'À l\'extérieur',
+          fr: 'À l\'extérieu',
           ja: '出て',
           cn: '出去',
           ko: '밖으로',
