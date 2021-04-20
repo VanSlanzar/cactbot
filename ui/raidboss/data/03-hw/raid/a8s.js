@@ -454,7 +454,7 @@ export default {
         preyGetOut: {
           en: 'Prey: Get Out',
           de: 'Makiert: Geh raus',
-          fr: 'Marquage : À l\'extérieur',
+          fr: 'Marquage : Sortez',
           ja: '赤いマーク: 外へ',
           cn: '红点名离开人群',
           ko: '빨간징: 밖으로',

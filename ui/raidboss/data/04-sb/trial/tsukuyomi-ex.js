@@ -59,7 +59,7 @@ export default {
         getOutOfFront: {
           en: 'Get out of front',
           de: 'Weg von vorn',
-          fr: 'Partez du devant',
+          fr: 'Sortez du devant',
           ja: '正面から離れる',
           cn: '远离正面',
           ko: '정면 피하기',
