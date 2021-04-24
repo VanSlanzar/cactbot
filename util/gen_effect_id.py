@@ -8,7 +8,10 @@ import os
 
 # Maybe this should be called Status like the table, but everything else
 # says gain/lose effects.
-_EFFECTS_OUTPUT_FILE = "effect_id.js"
+_EFFECTS_OUTPUT_FILE = "effect_id.ts"
+
+# TODO: add renaming?
+# Almagest: 563
 
 # There are a looooot of duplicate effect names in pvp, and it's impossible
 # to differentiate other than manually.  There's also older effects that
