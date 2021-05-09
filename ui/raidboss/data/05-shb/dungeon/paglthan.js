@@ -46,6 +46,8 @@ export default {
           en: 'Go to a lightning rod',
           de: 'Geh zu einem Blitzableiter',
           fr: 'Allez sur un paratonnerre',
+          ja: '避雷針に円範囲を転嫁',
+          cn: '蹭一下无AoE的塔',
         },
       },
     },
@@ -97,12 +99,18 @@ export default {
     {
       id: 'Paglthan Mega Flare Move',
       netRegex: NetRegexes.ability({ id: '5B4D', source: 'Lunar Bahamut' }),
+      netRegexDe: NetRegexes.ability({ id: '5B4D', source: 'Luna-Bahamut' }),
+      netRegexFr: NetRegexes.ability({ id: '5B4D', source: 'Luna-Bahamut' }),
+      netRegexJa: NetRegexes.ability({ id: '5B4D', source: 'ルナバハムート' }),
       condition: Conditions.targetIsYou(),
       alertText: (data, _, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Away from circles',
+          de: 'Weg von den Kreisen',
           fr: 'Éloignez-vous des cercles',
+          ja: '円を避ける',
+          cn: '远离圈圈',
         },
       },
     },
@@ -116,6 +124,8 @@ export default {
           en: 'Kan Rhai on YOU',
           de: 'Kan Rhai auf DIR',
           fr: 'Kan Rhai sur VOUS',
+          ja: '自分にカン・ラーイ',
+          cn: '十字AoE点名',
           ko: '십자 장판 대상자',
         },
       },
@@ -123,12 +133,67 @@ export default {
     {
       id: 'Paglthan Kan Rhai Move',
       netRegex: NetRegexes.ability({ id: '5B4F', source: 'Lunar Bahamut', capture: false }),
+      netRegexDe: NetRegexes.ability({ id: '5B4F', source: 'Luna-Bahamut', capture: false }),
+      netRegexFr: NetRegexes.ability({ id: '5B4F', source: 'Luna-Bahamut', capture: false }),
+      netRegexJa: NetRegexes.ability({ id: '5B4F', source: 'ルナバハムート', capture: false }),
       alertText: (data, _, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Away from crosses',
+          de: 'Weg von dem Kreuz',
           fr: 'Éloignez-vous des croix',
+          ja: '十字から離れる',
+          cn: '远离十字',
           ko: '십자 피하기',
+        },
+      },
+    },
+    {
+      id: 'Paglthan Lunar Flare Reset',
+      netRegex: NetRegexes.ability({ id: '5B49', source: 'Lunar Bahamut', capture: false }),
+      netRegexDe: NetRegexes.ability({ id: '5B49', source: 'Luna-Bahamut', capture: false }),
+      netRegexFr: NetRegexes.ability({ id: '5B49', source: 'Luna-Bahamut', capture: false }),
+      netRegexJa: NetRegexes.ability({ id: '5B49', source: 'ルナバハムート', capture: false }),
+      run: (data) => data.lunarFlares = 0,
+    },
+    {
+      id: 'Paglthan Lunar Flare Collect',
+      netRegex: NetRegexes.startsUsing({ id: '5B4[AB]', source: 'Lunar Bahamut', capture: false }),
+      netRegexDe: NetRegexes.startsUsing({ id: '5B4[AB]', source: 'Luna-Bahamut', capture: false }),
+      netRegexFr: NetRegexes.startsUsing({ id: '5B4[AB]', source: 'Luna-Bahamut', capture: false }),
+      netRegexJa: NetRegexes.startsUsing({ id: '5B4[AB]', source: 'ルナバハムート', capture: false }),
+      run: (data) => data.lunarFlares = (data.lunarFlares || 0) + 1,
+    },
+    {
+      // Get middle is 4x5B4A and 4x5B4B, get outside is 5x5B4A
+      id: 'Paglthan Lunar Flare',
+      netRegex: NetRegexes.startsUsing({ id: '5B4[AB]', source: 'Lunar Bahamut', capture: false }),
+      netRegexDe: NetRegexes.startsUsing({ id: '5B4[AB]', source: 'Luna-Bahamut', capture: false }),
+      netRegexFr: NetRegexes.startsUsing({ id: '5B4[AB]', source: 'Luna-Bahamut', capture: false }),
+      netRegexJa: NetRegexes.startsUsing({ id: '5B4[AB]', source: 'ルナバハムート', capture: false }),
+      delaySeconds: 0.5,
+      suppressSeconds: 1,
+      alertText: (data, _, output) => {
+        if (data.lunarFlares === 5)
+          return output.getOutsideBetweenCircles();
+        if (data.lunarFlares === 8)
+          return output.getMiddle();
+      },
+      outputStrings: {
+        getMiddle: {
+          en: 'Get Middle',
+          de: 'In die Mitte gehen',
+          fr: 'Allez au milieu',
+          ja: '中心へ',
+          cn: '中间',
+          ko: '중앙으로',
+        },
+        getOutsideBetweenCircles: {
+          en: 'Get Outside Between Circles',
+          de: 'Geh zum Rand zwichen den Kreisen',
+          fr: 'Allez à l\'extérieur entre les cercles',
+          ja: '外周の円の隙間へ',
+          cn: '去外圈交接处',
         },
       },
     },
