@@ -16,13 +16,13 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '1FA4', source: '神龍' }),
       netRegexCn: NetRegexes.startsUsing({ id: '1FA4', source: '神龙' }),
       netRegexKo: NetRegexes.startsUsing({ id: '1FA4', source: '신룡' }),
-      alertText: function(data, matches, output) {
+      alertText: (data, matches, output) => {
         if (matches.target === data.me)
           return output.akhMornOnYou();
         else if (data.role === 'tank')
           return output.akhMornOn({ player: data.ShortName(matches.target) });
       },
-      infoText: function(data, matches, output) {
+      infoText: (data, matches, output) => {
         // Nobody with Akh Morn is a direct target for Akh Rai,
         // and tanks should never be targeted for it.
         // Additionally, Akh Rai happens only after the intermission.
@@ -67,9 +67,7 @@ export default {
       netRegexKo: NetRegexes.startsUsing({ id: '1FAD', source: '신룡' }),
       // Here and elsewhere, timings aren't always completely usable. Instead we give the user
       // a quasi-standard amount of time when notifying.
-      delaySeconds: function(data, matches) {
-        return matches.castTime - 4;
-      },
+      delaySeconds: (_data, matches) => matches.castTime - 4,
       response: Responses.stopMoving(),
     },
     {
@@ -80,7 +78,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '24EF', source: '神龍', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '24EF', source: '神龙', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '24EF', source: '신룡', capture: false }),
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Out of middle',
@@ -101,7 +99,7 @@ export default {
       netRegexCn: NetRegexes.startsUsing({ id: '1FAB', source: '神龙', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '1FAB', source: '신룡', capture: false }),
       durationSeconds: 7,
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Get in water',
@@ -122,7 +120,7 @@ export default {
       netRegexCn: NetRegexes.startsUsing({ id: ['1F99', '1F9A'], source: '右翼', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: ['1F99', '1F9A'], source: '오른쪽 날개', capture: false }),
       durationSeconds: 7,
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Stack in water',
@@ -143,7 +141,7 @@ export default {
       netRegexCn: NetRegexes.startsUsing({ id: '1FAC', source: '神龙', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '1FAC', source: '신룡', capture: false }),
       durationSeconds: 7,
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'out of water',
@@ -164,7 +162,7 @@ export default {
       netRegexCn: NetRegexes.startsUsing({ id: '1F9B', source: '右翼', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '1F9B', source: '오른쪽 날개', capture: false }),
       durationSeconds: 7,
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Spread out, no water',
@@ -184,11 +182,9 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '1FAA', source: '神龍' }),
       netRegexCn: NetRegexes.startsUsing({ id: '1FAA', source: '神龙' }),
       netRegexKo: NetRegexes.startsUsing({ id: '1FAA', source: '신룡' }),
-      delaySeconds: function(data, matches) {
-        return matches.castTime - 6;
-      },
+      delaySeconds: (_data, matches) => matches.castTime - 6,
       durationSeconds: 5,
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Knockback, look for water',
@@ -208,12 +204,8 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '1FA2', source: 'レフトウィング' }),
       netRegexCn: NetRegexes.startsUsing({ id: '1FA2', source: '左翼' }),
       netRegexKo: NetRegexes.startsUsing({ id: '1FA2', source: '왼쪽 날개' }),
-      condition: function(data) {
-        return data.role === 'healer';
-      },
-      delaySeconds: function(data, matches) {
-        return matches.castTime - 4;
-      },
+      condition: (data) => data.role === 'healer',
+      delaySeconds: (_data, matches) => matches.castTime - 4,
       response: Responses.aoe(),
     },
     {
@@ -225,7 +217,7 @@ export default {
       netRegexCn: NetRegexes.startsUsing({ id: '1F93', source: '龙尾', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '1F93', source: '신룡의 꼬리', capture: false }),
       delaySeconds: 2,
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Tail: Switch targets',
@@ -246,10 +238,8 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '1FF4', source: '神龍', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '1FF4', source: '神龙', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '1FF4', source: '신룡', capture: false }),
-      condition: function(data) {
-        return !data.finalPhase;
-      },
-      run: function(data) {
+      condition: (data) => !data.finalPhase,
+      run: (data) => {
         data.finalPhase = true;
       },
     },
@@ -261,7 +251,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '1FF4', source: '神龍', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '1FF4', source: '神龙', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '1FF4', source: '신룡', capture: false }),
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'avoid divebomb',
@@ -287,7 +277,7 @@ export default {
       id: 'Shinryu Normal Slap Marker',
       netRegex: NetRegexes.headMarker({ id: '0062' }),
       condition: Conditions.targetIsYou(),
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Bait onto unbroken squares',

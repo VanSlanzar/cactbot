@@ -10,6 +10,7 @@ const sharedOutputStrings = {
     fr: 'Téléportez-vous vers la plateforme est',
     ja: '東の足場へテレポ',
     cn: '传送到右边(东边)平台',
+    ko: '동쪽으로 이동',
   },
   teleportWest: {
     en: 'Teleport to west platform',
@@ -17,6 +18,7 @@ const sharedOutputStrings = {
     fr: 'Téléportez-vous vers la plateforme ouest',
     ja: '西の足場へテレポ',
     cn: '传送到左边(西边)平台',
+    ko: '서쪽으로 이동',
   },
 };
 
@@ -40,7 +42,7 @@ export default {
       netRegexFr: NetRegexes.startsUsing({ source: 'Arme Diamant', id: '5F9A', capture: false }),
       netRegexJa: NetRegexes.startsUsing({ source: 'ダイヤウェポン', id: '5F9A', capture: false }),
       durationSeconds: 10,
-      alertText: (data, _, output) => output.teleportWest(),
+      alertText: (_data, _matches, output) => output.teleportWest(),
       outputStrings: sharedOutputStrings,
     },
     {
@@ -50,14 +52,14 @@ export default {
       netRegexFr: NetRegexes.startsUsing({ source: 'Arme Diamant', id: '5F9B', capture: false }),
       netRegexJa: NetRegexes.startsUsing({ source: 'ダイヤウェポン', id: '5F9B', capture: false }),
       durationSeconds: 10,
-      alertText: (data, _, output) => output.teleportEast(),
+      alertText: (_data, _matches, output) => output.teleportEast(),
       outputStrings: sharedOutputStrings,
     },
     {
       id: 'Diamond Photon Burst',
       netRegex: NetRegexes.headMarker({ id: '0057' }),
       condition: Conditions.targetIsYou(),
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Flare on YOU',
@@ -96,7 +98,7 @@ export default {
       netRegexFr: NetRegexes.startsUsing({ source: 'Arme Diamant', id: '5FE8', capture: false }),
       netRegexJa: NetRegexes.startsUsing({ source: 'ダイヤウェポン', id: '5FE8', capture: false }),
       durationSeconds: 5,
-      alertText: (data, _, output) => output.teleportEast(),
+      alertText: (_data, _matches, output) => output.teleportEast(),
       outputStrings: sharedOutputStrings,
     },
     {
@@ -130,7 +132,7 @@ export default {
       netRegex: NetRegexes.headMarker({ id: '00C5' }),
       condition: Conditions.targetIsYou(),
       durationSeconds: 7,
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Diamond Shrapnel on YOU',
@@ -148,7 +150,7 @@ export default {
       netRegexDe: NetRegexes.ability({ source: 'Diamant-Waffe', id: '5FA9', capture: false }),
       netRegexFr: NetRegexes.ability({ source: 'Arme Diamant', id: '5FA9', capture: false }),
       netRegexJa: NetRegexes.ability({ source: 'ダイヤウェポン', id: '5FA9', capture: false }),
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Avoid Bits',
@@ -167,7 +169,7 @@ export default {
       netRegexFr: NetRegexes.ability({ source: 'Arme Diamant', id: '6144', capture: false }),
       netRegexJa: NetRegexes.ability({ source: 'ダイヤウェポン', id: '6144', capture: false }),
       durationSeconds: 8,
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Get Towers',

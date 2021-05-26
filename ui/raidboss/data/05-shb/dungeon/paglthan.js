@@ -40,7 +40,7 @@ export default {
       id: 'Paglthan Lightning Rod Gain',
       netRegex: NetRegexes.gainsEffect({ effectId: 'A0E' }),
       condition: Conditions.targetIsYou(),
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Go to a lightning rod',
@@ -48,6 +48,7 @@ export default {
           fr: 'Allez sur un paratonnerre',
           ja: '避雷針に円範囲を転嫁',
           cn: '蹭一下无AoE的塔',
+          ko: '지팡이 AOE 넘기기',
         },
       },
     },
@@ -103,7 +104,7 @@ export default {
       netRegexFr: NetRegexes.ability({ id: '5B4D', source: 'Luna-Bahamut' }),
       netRegexJa: NetRegexes.ability({ id: '5B4D', source: 'ルナバハムート' }),
       condition: Conditions.targetIsYou(),
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Away from circles',
@@ -111,6 +112,7 @@ export default {
           fr: 'Éloignez-vous des cercles',
           ja: '円を避ける',
           cn: '远离圈圈',
+          ko: '장판 피하기',
         },
       },
     },
@@ -118,7 +120,7 @@ export default {
       id: 'Paglthan Kan Rhai Marker',
       netRegex: NetRegexes.headMarker({ id: '0104' }),
       condition: Conditions.targetIsYou(),
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Kan Rhai on YOU',
@@ -136,7 +138,7 @@ export default {
       netRegexDe: NetRegexes.ability({ id: '5B4F', source: 'Luna-Bahamut', capture: false }),
       netRegexFr: NetRegexes.ability({ id: '5B4F', source: 'Luna-Bahamut', capture: false }),
       netRegexJa: NetRegexes.ability({ id: '5B4F', source: 'ルナバハムート', capture: false }),
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Away from crosses',
@@ -173,7 +175,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '5B4[AB]', source: 'ルナバハムート', capture: false }),
       delaySeconds: 0.5,
       suppressSeconds: 1,
-      alertText: (data, _, output) => {
+      alertText: (data, _matches, output) => {
         if (data.lunarFlares === 5)
           return output.getOutsideBetweenCircles();
         if (data.lunarFlares === 8)
@@ -194,6 +196,7 @@ export default {
           fr: 'Allez à l\'extérieur entre les cercles',
           ja: '外周の円の隙間へ',
           cn: '去外圈交接处',
+          ko: '바깥 장판 사이로',
         },
       },
     },

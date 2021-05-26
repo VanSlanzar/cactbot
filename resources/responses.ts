@@ -19,7 +19,7 @@
 // anything with data or matches.  See `responses_test.js`.
 
 import { LocaleText, ResponseOutput, ResponseFunc, TriggerFunc, TargetedMatches, Output } from '../types/trigger';
-import { Data } from '../types/data';
+import { RaidbossData as Data } from '../types/data';
 import Outputs from './outputs';
 
 type TargetedResponseOutput = ResponseOutput<TargetedMatches>;
@@ -149,7 +149,7 @@ type ResponsesMap = {
   [response: string]: SingleSevToResponseFunc | DoubleSevToResponseFunc;
 };
 
-export const Responses: ResponsesMap = {
+export const Responses = {
   tankBuster: (targetSev?: Severity, otherSev?: Severity) => {
     const outputStrings = {
       noTarget: Outputs.tankBuster,
@@ -462,3 +462,10 @@ export const Responses: ResponsesMap = {
   },
   wakeUp: (sev?: Severity) => staticResponse(defaultAlarmText(sev), Outputs.wakeUp),
 } as const;
+
+// Don't give `Responses` a type in its declaration so that it can be treated as more strict
+// than `ResponsesMap`, but do assert that its type is correct.  This allows callers to know
+// which properties are defined in Responses without having to conditionally check for undefined.
+const responseMapTypeAssertion: ResponsesMap = Responses;
+// Suppress unused variable warning.
+console.assert(responseMapTypeAssertion);

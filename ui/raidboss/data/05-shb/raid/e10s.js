@@ -39,7 +39,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ source: '影の王', id: '56F0', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '56F0', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '56F0', capture: false }),
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Shadow Side',
@@ -59,7 +59,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ source: '影の王', id: '56F3', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '56F3', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '56F3', capture: false }),
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Opposite Shadow',
@@ -79,7 +79,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ source: '影の王', id: '5717', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '5717', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '5717', capture: false }),
-      response: Responses.getOut('alert'),
+      response: Responses.getOut(),
     },
     {
       id: 'E10S Giga Slash Shadow Single Left',
@@ -89,7 +89,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ source: '影の王', id: '56EA', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '56EA', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '56EA', capture: false }),
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Go Left of Shadow',
@@ -109,7 +109,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ source: '影の王', id: '56ED', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '56ED', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '56ED', capture: false }),
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Go Right of Shadow',
@@ -129,7 +129,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ source: '影の王', id: '56F4', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '56F4', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '56F4', capture: false }),
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Go Left of Shadows',
@@ -149,7 +149,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ source: '影の王', id: '56F8', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '56F8', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '56F8', capture: false }),
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Go Right of Shadows',
@@ -172,7 +172,7 @@ export default {
       condition: Conditions.caresAboutPhysical(),
       // Although this is a swap, use `tankBuster` here to give the off tank a warning and a chance
       // to shield the main tank.  The offtank swap is delayed into the swap trigger below.
-      response: Responses.tankBuster('alert', 'info'),
+      response: Responses.tankBuster(),
       run: (data, matches) => {
         data.umbraTarget = matches.target;
       },
@@ -209,7 +209,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ source: '影の王', id: '5B0E', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '5B0E', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '5B0E', capture: false }),
-      alertText: (data, _, output) => {
+      alertText: (data, _matches, output) => {
         if (data.me === data.umbraTarget)
           return output.avoidStack();
         return output.stack();
@@ -223,14 +223,7 @@ export default {
           cn: '不要重合!',
           ko: '공격 피하기',
         },
-        stack: {
-          en: 'Stack',
-          de: 'Sammeln',
-          fr: 'Packez-vous',
-          ja: '頭割り',
-          cn: '分摊',
-          ko: '쉐어뎀',
-        },
+        stack: Outputs.stackMarker,
       },
     },
     {
@@ -253,7 +246,7 @@ export default {
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '5B2D', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '5B2D', capture: false }),
       durationSeconds: (data) => data.gigaSlashCleaveDebuffDuration,
-      alertText: (data, _, output) => {
+      alertText: (data, _matches, output) => {
         let ret = '';
         switch (data.gigaSlashCleaveDebuffId) {
         case '973':
@@ -277,7 +270,7 @@ export default {
 
         return output.dropShadow({ dir: ret });
       },
-      infoText: (data, _, output) => output.leftCleave(),
+      infoText: (_data, _matches, output) => output.leftCleave(),
       outputStrings: {
         dropShadow: {
           en: 'Drop Shadow ${dir}',
@@ -307,7 +300,7 @@ export default {
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '5B2C', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '5B2C', capture: false }),
       durationSeconds: (data) => data.gigaSlashCleaveDebuffDuration,
-      alertText: (data, _, output) => {
+      alertText: (data, _matches, output) => {
         let ret = '';
         switch (data.gigaSlashCleaveDebuffId) {
         case '973':
@@ -331,7 +324,7 @@ export default {
 
         return output.dropShadow({ dir: ret });
       },
-      infoText: (data, _, output) => output.rightCleave(),
+      infoText: (_data, _matches, output) => output.rightCleave(),
       outputStrings: {
         dropShadow: {
           en: 'Drop Shadow ${dir}',
@@ -378,7 +371,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ source: '影の王', id: '5718', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '5718', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '5718', capture: false }),
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       run: (data) => data.clones = true,
       outputStrings: {
         text: {
@@ -464,7 +457,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ source: '影の王', id: '573A', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '573A', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '573A', capture: false }),
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: '1 out, 2+3 in',
@@ -484,7 +477,7 @@ export default {
       netRegexJa: NetRegexes.ability({ source: '影の王', id: '573A', capture: false }),
       netRegexCn: NetRegexes.ability({ source: '影之王', id: '573A', capture: false }),
       netRegexKo: NetRegexes.ability({ source: '그림자의 왕', id: '573A', capture: false }),
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: '2 out, 1+3 in',
@@ -505,7 +498,7 @@ export default {
       netRegexCn: NetRegexes.ability({ source: '影之王', id: '573A', capture: false }),
       netRegexKo: NetRegexes.ability({ source: '그림자의 왕', id: '573A', capture: false }),
       delaySeconds: 3,
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: '3 out, 1+2 in',
@@ -526,7 +519,7 @@ export default {
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '5720', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '5720', capture: false }),
       suppressSeconds: 99999,
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       run: (data) => delete data.clones,
       outputStrings: {
         text: {
@@ -558,7 +551,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ source: '影の王', id: '5716', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '5716', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '5716', capture: false }),
-      response: Responses.knockback('alert'),
+      response: Responses.knockback(),
     },
     {
       id: 'E10S Umbral Orbs',
@@ -570,7 +563,7 @@ export default {
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '5731', capture: false }),
       // TODO: maybe 4?
       delaySeconds: 3.5,
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Orbs',
@@ -590,7 +583,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ source: '影の王', id: '5739', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '5739', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '5739', capture: false }),
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Watch Tethered Dog',
@@ -612,7 +605,7 @@ export default {
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '572B', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '572B', capture: false }),
       delaySeconds: 4,
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           // TODO: this could be better if we knew where the shadow was
@@ -637,7 +630,7 @@ export default {
       netRegexCn: NetRegexes.ability({ source: '影之王', id: '5B13', capture: false }),
       netRegexKo: NetRegexes.ability({ source: '그림자의 왕', id: '5B13', capture: false }),
       suppressSeconds: 5,
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Away From Squiggles',
@@ -660,7 +653,7 @@ export default {
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '56FC', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '56FC', capture: false }),
       durationSeconds: 6,
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Shadow Side',
@@ -681,7 +674,7 @@ export default {
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '5700', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '5700', capture: false }),
       durationSeconds: 6,
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Opposite Shadow',
@@ -701,7 +694,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ source: '影の王', id: '5734', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '5734', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '5734', capture: false }),
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Cleaves with towers',
@@ -722,7 +715,7 @@ export default {
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '5734', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '5734', capture: false }),
       delaySeconds: 23.3,
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Towers first, then cleaves',
@@ -742,7 +735,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ source: '影の王', id: '5721', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '5721', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '5721', capture: false }),
-      infoText: (data, _, output) => {
+      infoText: (data, _matches, output) => {
         if (data.seenPitchBog)
           return output.secondPitchBog();
         return output.firstPitchBog();
@@ -770,10 +763,8 @@ export default {
     {
       id: 'E10S Shackled Apart',
       netRegex: NetRegexes.tether({ id: '0082' }),
-      condition: function(data, matches) {
-        return matches.source === data.me || matches.target === data.me;
-      },
-      alertText: function(data, matches, output) {
+      condition: (data, matches) => matches.source === data.me || matches.target === data.me,
+      alertText: (data, matches, output) => {
         const partner = matches.source === data.me ? matches.target : matches.source;
         return output.text({ player: data.ShortName(partner) });
       },
@@ -784,10 +775,8 @@ export default {
     {
       id: 'E10S Shackled Together',
       netRegex: NetRegexes.tether({ id: '0081' }),
-      condition: function(data, matches) {
-        return matches.source === data.me || matches.target === data.me;
-      },
-      alertText: function(data, matches, output) {
+      condition: (data, matches) => matches.source === data.me || matches.target === data.me,
+      alertText: (data, matches, output) => {
         const partner = matches.source === data.me ? matches.target : matches.source;
         return output.text({ player: data.ShortName(partner) });
       },
@@ -804,7 +793,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ source: '影の王', id: '5BCF', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ source: '影之王', id: '5BCF', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '그림자의 왕', id: '5BCF', capture: false }),
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Pick up Puddles',

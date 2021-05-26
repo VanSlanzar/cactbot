@@ -23,7 +23,7 @@ export default {
       id: 'ShivaUn Icebrand',
       regex: /Icebrand/,
       beforeSeconds: 5,
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Party Share Tankbuster',
@@ -52,7 +52,7 @@ export default {
       netRegexJa: NetRegexes.ability({ source: 'シヴァ', id: '5367', capture: false }),
       netRegexKo: NetRegexes.ability({ source: '시바', id: '5367', capture: false }),
       netRegexCn: NetRegexes.ability({ source: '希瓦', id: '5367', capture: false }),
-      response: (data, _, output) => {
+      response: (data, _matches, output) => {
         // cactbot-builtin-response
         output.responseOutputStrings = {
           staffTankSwap: {
@@ -80,7 +80,7 @@ export default {
 
         return { infoText: output.staff() };
       },
-      run: function(data) {
+      run: (data) => {
         data.soonAfterWeaponChange = true;
       },
     },
@@ -92,7 +92,7 @@ export default {
       netRegexJa: NetRegexes.ability({ source: 'シヴァ', id: '5366', capture: false }),
       netRegexKo: NetRegexes.ability({ source: '시바', id: '5366', capture: false }),
       netRegexCn: NetRegexes.ability({ source: '希瓦', id: '5366', capture: false }),
-      response: (data, _, output) => {
+      response: (data, _matches, output) => {
         // cactbot-builtin-response
         output.responseOutputStrings = {
           swordTankSwap: {
@@ -119,7 +119,7 @@ export default {
 
         return { infoText: output.sword() };
       },
-      run: function(data) {
+      run: (data) => {
         data.soonAfterWeaponChange = true;
       },
     },
@@ -132,14 +132,14 @@ export default {
       netRegexKo: NetRegexes.ability({ source: '시바', id: ['5366', '5367'], capture: false }),
       netRegexCn: NetRegexes.ability({ source: '希瓦', id: ['5366', '5367'], capture: false }),
       delaySeconds: 30,
-      run: function(data) {
+      run: (data) => {
         data.soonAfterWeaponChange = false;
       },
     },
     {
       id: 'ShivaUn Slashing Resistance Down Gain',
       netRegex: NetRegexes.gainsEffect({ effectId: '23C' }),
-      run: function(data, matches) {
+      run: (data, matches) => {
         data.slashing = data.slashing || {};
         data.slashing[matches.target] = true;
       },
@@ -147,7 +147,7 @@ export default {
     {
       id: 'ShivaUn Slashing Resistance Down Lose',
       netRegex: NetRegexes.losesEffect({ effectId: '23C' }),
-      run: function(data, matches) {
+      run: (data, matches) => {
         data.slashing = data.slashing || {};
         data.slashing[matches.target] = false;
       },
@@ -155,7 +155,7 @@ export default {
     {
       id: 'ShivaUn Blunt Resistance Down Gain',
       netRegex: NetRegexes.gainsEffect({ effectId: '23D' }),
-      run: function(data, matches) {
+      run: (data, matches) => {
         data.blunt = data.blunt || {};
         data.blunt[matches.target] = true;
       },
@@ -163,7 +163,7 @@ export default {
     {
       id: 'ShivaUn Blunt Resistance Down Lose',
       netRegex: NetRegexes.losesEffect({ effectId: '23D' }),
-      run: function(data, matches) {
+      run: (data, matches) => {
         data.blunt = data.blunt || {};
         data.blunt[matches.target] = false;
       },
@@ -176,7 +176,7 @@ export default {
       netRegexJa: NetRegexes.ability({ source: 'シヴァ', id: '5365' }),
       netRegexKo: NetRegexes.ability({ source: '시바', id: '5365' }),
       netRegexCn: NetRegexes.ability({ source: '希瓦', id: '5365' }),
-      run: function(data, matches) {
+      run: (data, matches) => {
         data.currentTank = matches.target;
       },
     },
@@ -194,7 +194,7 @@ export default {
     {
       id: 'ShivaUn Whiteout',
       netRegex: NetRegexes.startsUsing({ id: '5376', capture: false }),
-      response: Responses.getIn('alert'),
+      response: Responses.getIn(),
     },
     {
       id: 'ShivaUn Diamond Dust',
@@ -204,7 +204,7 @@ export default {
       netRegexJa: NetRegexes.ability({ source: 'シヴァ', id: '536C', capture: false }),
       netRegexKo: NetRegexes.ability({ source: '시바', id: '536C', capture: false }),
       netRegexCn: NetRegexes.ability({ source: '希瓦', id: '536C', capture: false }),
-      run: function(data) {
+      run: (data) => {
         data.seenDiamondDust = true;
       },
     },
@@ -217,7 +217,7 @@ export default {
       netRegexKo: NetRegexes.ability({ source: '시바', id: '5368', capture: false }),
       netRegexCn: NetRegexes.ability({ source: '希瓦', id: '5368', capture: false }),
       response: Responses.getBehind('alarm'),
-      run: function(data) {
+      run: (data) => {
         // Just in case ACT has crashed or something, make sure this state is correct.
         data.seenDiamondDust = true;
       },
@@ -227,7 +227,7 @@ export default {
       netRegex: NetRegexes.headMarker({ id: '001A' }),
       condition: Conditions.targetIsYou(),
       // Responses.knockback does not quite give the 'laser cleave' aspect here.
-      alarmText: (data, _, output) => output.text(),
+      alarmText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Knockback Laser on YOU',
@@ -243,7 +243,7 @@ export default {
       id: 'ShivaUn Avalanche Marker Other',
       netRegex: NetRegexes.headMarker({ id: '001A' }),
       condition: Conditions.targetIsNotYou(),
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Avoid Laser',
@@ -263,7 +263,7 @@ export default {
       netRegexJa: NetRegexes.abilityFull({ source: 'シヴァ', id: '537B' }),
       netRegexKo: NetRegexes.abilityFull({ source: '시바', id: '537B' }),
       netRegexCn: NetRegexes.abilityFull({ source: '希瓦', id: '537B' }),
-      condition: function(data, matches) {
+      condition: (data, matches) => {
         // Ignore other middle circles and try to only target the Icicle Impact x9.
         if (!data.seenDiamondDust || data.soonAfterWeaponChange)
           return false;
@@ -285,9 +285,7 @@ export default {
       id: 'ShivaUn Ice Boulder',
       netRegex: NetRegexes.ability({ id: '537A' }),
       condition: Conditions.targetIsNotYou(),
-      infoText: function(data, matches, output) {
-        return output.text({ player: data.ShortName(matches.target) });
-      },
+      infoText: (data, matches, output) => output.text({ player: data.ShortName(matches.target) }),
       outputStrings: {
         text: {
           en: 'Free ${player}',

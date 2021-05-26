@@ -40,7 +40,7 @@ export default {
       condition: (data) => data.seenMines || data.role !== 'tank',
       delaySeconds: 9,
       durationSeconds: 6,
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       run: (data) => data.seenMines = true,
       outputStrings: {
         text: {
@@ -94,10 +94,12 @@ export default {
       id: 'Emerald Primus Terminus Est',
       netRegex: NetRegexes.headMarker({ id: '00F5' }),
       condition: Conditions.targetIsYou(),
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Knockback Arrow on YOU',
+          ja: '自分に吹き飛ばし矢印',
+          cn: '击退箭头点名',
           ko: '넉백 화살표 대상자',
         },
       },
@@ -106,10 +108,12 @@ export default {
       id: 'Emerald Secundus Terminus Est X',
       netRegex: NetRegexes.headMarker({ id: '00FE' }),
       condition: Conditions.targetIsYou(),
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Go Cardinal With Sword',
+          ja: '辺の中心に捨てる',
+          cn: '四边放刀',
           ko: '동서남북으로 이동',
         },
       },
@@ -118,10 +122,12 @@ export default {
       id: 'Emerald Secundus Terminus Est Plus',
       netRegex: NetRegexes.headMarker({ id: '00FD' }),
       condition: Conditions.targetIsYou(),
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Go Intercardinal With Sword',
+          ja: '四隅に捨てる',
+          cn: '四角放刀',
           ko: '대각위치로 이동',
         },
       },

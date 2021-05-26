@@ -25,10 +25,8 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '315C', source: 'カオス', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '315C', source: '卡奥斯', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '315C', source: '카오스', capture: false }),
-      condition: function(data) {
-        return data.role === 'tank';
-      },
-      alarmText: (data, _, output) => output.text(),
+      condition: (data) => data.role === 'tank',
+      alarmText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Orb Tethers',

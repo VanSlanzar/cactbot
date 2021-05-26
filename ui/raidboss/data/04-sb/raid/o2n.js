@@ -1,5 +1,6 @@
 import Conditions from '../../../../../resources/conditions';
 import NetRegexes from '../../../../../resources/netregexes';
+import Outputs from '../../../../../resources/outputs';
 import { Responses } from '../../../../../resources/responses';
 import ZoneId from '../../../../../resources/zone_id';
 
@@ -20,7 +21,7 @@ export default {
       id: 'O2N Levitation Gain',
       netRegex: NetRegexes.gainsEffect({ effectId: '556' }),
       condition: Conditions.targetIsYou(),
-      run: function(data) {
+      run: (data) => {
         data.levitating = true;
       },
     },
@@ -28,14 +29,14 @@ export default {
       id: 'O2N Levitation Lose',
       netRegex: NetRegexes.losesEffect({ effectId: '556' }),
       condition: Conditions.targetIsYou(),
-      run: function(data) {
+      run: (data) => {
         data.levitating = false;
       },
     },
     {
       id: 'O2N Gravitational Manipulation Stack',
       netRegex: NetRegexes.headMarker({ id: '0071' }),
-      alertText: function(data, matches, output) {
+      alertText: (data, matches, output) => {
         if (data.me === matches.target)
           return output.stackMarkerOnYou();
 
@@ -50,23 +51,14 @@ export default {
           cn: '集合点名',
           ko: '쉐어징 대상자',
         },
-        stackOn: {
-          en: 'Stack on ${player}',
-          de: 'Sammeln auf ${player}',
-          fr: 'Packez-vous sur ${player}',
-          ja: '${player}に集合',
-          cn: '靠近${player}集合',
-          ko: '${player} 쉐어징',
-        },
+        stackOn: Outputs.stackOnPlayer,
       },
     },
     {
       id: 'O2N Gravitational Manipulation Float',
       netRegex: NetRegexes.headMarker({ id: '0071' }),
-      condition: function(data, matches) {
-        return !data.levitating && Conditions.targetIsNotYou()(data, matches);
-      },
-      infoText: (data, _, output) => output.text(),
+      condition: (data, matches) => !data.levitating && Conditions.targetIsNotYou()(data, matches),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Levitate',
@@ -86,9 +78,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '250F', source: 'カタストロフィー' }),
       netRegexCn: NetRegexes.startsUsing({ id: '250F', source: '灾变者' }),
       netRegexKo: NetRegexes.startsUsing({ id: '250F', source: '카타스트로피' }),
-      condition: function(data) {
-        return data.role === 'tank' || data.role === 'healer';
-      },
+      condition: (data) => data.role === 'tank' || data.role === 'healer',
       response: Responses.tankBuster(),
     },
     {
@@ -99,7 +89,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '24FF', source: 'カタストロフィー', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '24FF', source: '灾变者', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '24FF', source: '카타스트로피', capture: false }),
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: '-100 Gs: Go north/south',
@@ -129,11 +119,11 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '2512', source: 'カタストロフィー', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '2512', source: '灾变者', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '2512', source: '카타스트로피', capture: false }),
-      alertText: function(data, _, output) {
+      alertText: (data, _matches, output) => {
         if (!data.levitating)
           return output.levitate();
       },
-      infoText: function(data, _, output) {
+      infoText: (data, _matches, output) => {
         if (data.levitating)
           return output.earthquake();
       },
@@ -173,15 +163,15 @@ export default {
       condition: Conditions.targetIsYou(),
       delaySeconds: 5,
       suppressSeconds: 10,
-      alertText: function(data, _, output) {
+      alertText: (data, _matches, output) => {
         if (!data.levitating)
           return output.levitate();
       },
-      infoText: function(data, _, output) {
+      infoText: (data, _matches, output) => {
         if (data.levitating)
           return output.sixFulmsUnder();
       },
-      tts: (data, _, output) => output.float(),
+      tts: (_data, _matches, output) => output.float(),
       outputStrings: {
         sixFulmsUnder: {
           en: '6 Fulms Under',
@@ -217,15 +207,15 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '2502', source: 'カタストロフィー', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '2502', source: '灾变者', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '2502', source: '카타스트로피', capture: false }),
-      preRun: function(data) {
+      preRun: (data) => {
         data.antiCounter = data.antiCounter || 0;
       },
-      durationSeconds: function(data) {
+      durationSeconds: (data) => {
         if (data.antiCounter === 0 && data.levitating)
           return 3;
         return 8;
       },
-      alertText: function(data, _, output) {
+      alertText: (data, _matches, output) => {
         // The first Antilight is always blue.
         if (data.antiCounter === 0) {
           // Players who are already floating should just get an info about Petrospheres.
@@ -240,11 +230,11 @@ export default {
 
         return output.dontLevitate();
       },
-      infoText: function(data, _, output) {
+      infoText: (data, _matches, output) => {
         if (data.antiCounter === 0 && data.levitating)
           return output.antilight();
       },
-      run: function(data) {
+      run: (data) => {
         data.antiCounter += 1;
       },
       outputStrings: {

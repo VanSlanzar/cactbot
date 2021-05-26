@@ -1,4 +1,5 @@
 import NetRegexes from '../../../../../resources/netregexes';
+import Outputs from '../../../../../resources/outputs';
 import { Responses } from '../../../../../resources/responses';
 import ZoneId from '../../../../../resources/zone_id';
 
@@ -11,7 +12,7 @@ export default {
       id: 'SeiryuEx Split Group',
       regex: /Forbidden Arts 1/,
       beforeSeconds: 4,
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'stack with your group',
@@ -28,7 +29,7 @@ export default {
       regex: /Forbidden Arts$/,
       beforeSeconds: 1,
       suppressSeconds: 10,
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'line stack',
@@ -44,10 +45,8 @@ export default {
       id: 'SeiryuEx Tether',
       regex: /Kanabo/,
       beforeSeconds: 7,
-      condition: function(data) {
-        return data.role === 'tank';
-      },
-      alertText: (data, _, output) => output.text(),
+      condition: (data) => data.role === 'tank',
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Grab Tether, Point Away',
@@ -69,7 +68,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '37E4', source: '青龍', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '37E4', source: '青龙', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '37E4', source: '청룡', capture: false }),
-      run: function(data) {
+      run: (data) => {
         data.blazing = true;
       },
     },
@@ -81,7 +80,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '37D2', source: '青龍' }),
       netRegexCn: NetRegexes.startsUsing({ id: '37D2', source: '青龙' }),
       netRegexKo: NetRegexes.startsUsing({ id: '37D2', source: '청룡' }),
-      alertText: function(data, matches, output) {
+      alertText: (data, matches, output) => {
         if (matches.target === data.me)
           return output.tankSwap();
 
@@ -89,14 +88,7 @@ export default {
           return output.swapThenBuster();
       },
       outputStrings: {
-        tankSwap: {
-          en: 'Tank Swap',
-          de: 'Tankwechsel',
-          fr: 'Tank Swap',
-          ja: 'スイッチ',
-          cn: '换T',
-          ko: '탱 교대',
-        },
+        tankSwap: Outputs.tankSwap,
         swapThenBuster: {
           en: 'Swap, then Buster',
           de: 'Tankwechsel, danach Tankbuster',
@@ -115,13 +107,13 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '37D2', source: '青龍', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '37D2', source: '青龙', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '37D2', source: '청룡', capture: false }),
-      condition: function(data) {
+      condition: (data) => {
         // TODO: it'd be nice to figure out who the tanks are so this
         // could also apply to the person Cursekeeper was on.
         return data.role !== 'tank';
       },
       delaySeconds: 3,
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Away From Tanks',
@@ -141,7 +133,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '3C25', source: '青龍', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '3C25', source: '青龙', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '3C25', source: '청룡', capture: false }),
-      run: function(data) {
+      run: (data) => {
         data.markers = [];
       },
     },
@@ -154,7 +146,7 @@ export default {
       netRegexCn: NetRegexes.startsUsing({ id: '3C25', source: '青龙', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '3C25', source: '청룡', capture: false }),
       delaySeconds: 1,
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Stack for Puddle AOEs',
@@ -169,20 +161,16 @@ export default {
     {
       id: 'SeiryuEx Ascending Marker Tracking',
       netRegex: NetRegexes.headMarker({ id: '00A9' }),
-      condition: function(data) {
-        return data.blazing;
-      },
-      run: function(data, matches) {
+      condition: (data) => data.blazing,
+      run: (data, matches) => {
         data.markers.push(matches.target);
       },
     },
     {
       id: 'SeiryuEx Ascending Marker You',
       netRegex: NetRegexes.headMarker({ id: '00A9' }),
-      condition: function(data, matches) {
-        return data.blazing && matches.target === data.me;
-      },
-      infoText: function(data, _, output) {
+      condition: (data, matches) => data.blazing && matches.target === data.me,
+      infoText: (data, _matches, output) => {
         if (data.role === 'tank' || data.role === 'healer')
           return output.spreadDpsGetTowers();
 
@@ -210,12 +198,12 @@ export default {
     {
       id: 'SeiryuEx Ascending Tower You',
       netRegex: NetRegexes.headMarker({ id: '00A9', capture: false }),
-      condition: function(data) {
+      condition: (data) => {
         if (!data.blazing || data.markers.length !== 4)
           return false;
         return !data.markers.includes(data.me);
       },
-      alarmText: function(data, _, output) {
+      alarmText: (data, _matches, output) => {
         if (data.role === 'tank' || data.role === 'healer')
           return output.getTowerTankHealerTowers();
 
@@ -268,13 +256,13 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '37F7', source: '青龍', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '37F7', source: '青龙', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '37F7', source: '청룡', capture: false }),
-      alarmText: function(data, _, output) {
+      alarmText: (data, _matches, output) => {
         if (data.withForce === undefined)
           return output.goToSnakes();
 
         return output.outOfMiddleTowardSnakes();
       },
-      run: function(data) {
+      run: (data) => {
         data.withForce = true;
       },
       outputStrings: {
@@ -304,9 +292,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '37F4', source: '沼の式鬼' }),
       netRegexCn: NetRegexes.startsUsing({ id: '37F4', source: '沼之式鬼' }),
       netRegexKo: NetRegexes.startsUsing({ id: '37F4', source: '늪 사역귀' }),
-      condition: function(data) {
-        return data.CanSilence();
-      },
+      condition: (data) => data.CanSilence(),
       response: Responses.interrupt(),
     },
     {
@@ -317,7 +303,7 @@ export default {
       netRegexJa: NetRegexes.addedCombatant({ name: '蒼の式鬼', capture: false }),
       netRegexCn: NetRegexes.addedCombatant({ name: '苍之式鬼', capture: false }),
       netRegexKo: NetRegexes.addedCombatant({ name: '푸른 사역귀', capture: false }),
-      infoText: function(data, _, output) {
+      infoText: (data, _matches, output) => {
         if (data.role === 'tank' || data.role === 'healer')
           return output.stackSouth();
 
@@ -362,7 +348,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '3A05', source: '青龍', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '3A05', source: '青龙', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '3A05', source: '청룡', capture: false }),
-      response: Responses.getInThenOut('info'),
+      response: Responses.getInThenOut(),
     },
     {
       id: 'SeiryuEx Sigil In Out 2',
@@ -383,7 +369,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '3A03', source: '青龍', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '3A03', source: '青龙', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '3A03', source: '청룡', capture: false }),
-      response: Responses.getOutThenIn('info'),
+      response: Responses.getOutThenIn(),
     },
     {
       id: 'SeiryuEx Sigil Out In 2',
@@ -405,7 +391,7 @@ export default {
       netRegexCn: NetRegexes.startsUsing({ id: '37CB', source: '青龙', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '37CB', source: '청룡', capture: false }),
       delaySeconds: 28,
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Pop Sprint',

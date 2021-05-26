@@ -1,4 +1,5 @@
 import NetRegexes from '../../../../../resources/netregexes';
+import Outputs from '../../../../../resources/outputs';
 import { Responses } from '../../../../../resources/responses';
 import ZoneId from '../../../../../resources/zone_id';
 
@@ -23,10 +24,8 @@ export default {
       netRegexJa: NetRegexes.ability({ id: '367', source: 'ハリカルナッソス', capture: false }),
       netRegexCn: NetRegexes.ability({ id: '367', source: '哈利卡纳苏斯', capture: false }),
       netRegexKo: NetRegexes.ability({ id: '367', source: '할리카르나소스', capture: false }),
-      condition: function(data) {
-        return !data.phaseNumber;
-      },
-      run: function(data) {
+      condition: (data) => !data.phaseNumber,
+      run: (data) => {
         // Indexing phases at 1 so as to make phases match what humans expect.
         // 1: We start here.
         // 2: Cave phase with Uplifts.
@@ -42,7 +41,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '2304', source: 'ハリカルナッソス', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '2304', source: '哈利卡纳苏斯', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '2304', source: '할리카르나소스', capture: false }),
-      run: function(data) {
+      run: (data) => {
         data.phaseNumber += 1;
       },
     },
@@ -55,7 +54,7 @@ export default {
       //   (3) prey marker
       id: 'O3N Spellblade Holy Standard',
       netRegex: NetRegexes.headMarker({ id: ['0064', '0065'] }),
-      condition: function(data, matches) {
+      condition: (data, matches) => {
         // Cave phase has no stack markers.
         if (data.phaseNumber === 2)
           return false;
@@ -64,7 +63,7 @@ export default {
         data.holyTargets.push(matches.target);
         return data.holyTargets.length === 3;
       },
-      alertText: function(data, _, output) {
+      alertText: (data, _matches, output) => {
         if (data.holyTargets[0] === data.me)
           return output.stackOnYou();
 
@@ -72,20 +71,13 @@ export default {
           if (data.holyTargets[i] === data.me)
             return output.out();
         }
-        return output.stackOnHolytargets({ holyTargets: data.holyTargets[0] });
+        return output.stackOnHolytargets({ player: data.holyTargets[0] });
       },
-      run: function(data) {
+      run: (data) => {
         delete data.holyTargets;
       },
       outputStrings: {
-        stackOnYou: {
-          en: 'Stack on YOU',
-          de: 'Auf DIR sammeln',
-          fr: 'Package sur VOUS',
-          ja: '自分にスタック',
-          cn: '集合点名',
-          ko: '쉐어징 대상자',
-        },
+        stackOnYou: Outputs.stackOnYou,
         out: {
           en: 'Out',
           de: 'Raus',
@@ -94,35 +86,26 @@ export default {
           cn: '远离',
           ko: '밖으로',
         },
-        stackOnHolytargets: {
-          en: 'Stack on ${holyTargets}',
-          de: 'Stack auf ${holyTargets}',
-          fr: 'Packez-vous sur ${holyTargets}',
-          ja: '${holyTargets}にスタック',
-          cn: '靠近 ${holyTargets}集合',
-          ko: '"${holyTargets}" 쉐어징',
-        },
+        stackOnHolytargets: Outputs.stackOnPlayer,
       },
     },
     {
       id: 'O3N Spellblade Holy Cave',
       netRegex: NetRegexes.headMarker({ id: '0065' }),
-      condition: function(data, matches) {
-        return data.phaseNumber === 2 && data.me === matches.target;
-      },
+      condition: (data, matches) => data.phaseNumber === 2 && data.me === matches.target,
       response: Responses.spread(),
     },
     {
       id: 'O3N Spellblade Holy Mindjack',
       netRegex: NetRegexes.headMarker({ id: '0064' }),
-      condition: function(data) {
+      condition: (data) => {
         if (data.phaseNumber < 3)
           return false;
         data.holyCounter = data.holyCounter || 0;
         return (data.holyCounter % 2 === 0);
       },
       response: Responses.stackMarkerOn(),
-      run: function(data) {
+      run: (data) => {
         data.holyCounter += 1;
         delete data.holyTargets;
       },
@@ -135,8 +118,8 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '2471', source: 'ハリカルナッソス', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '2471', source: '哈利卡纳苏斯', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '2471', source: '할리카르나소스', capture: false }),
-      infoText: (data, _, output) => output.getOnCrystalSquare(),
-      tts: (data, _, output) => output.blueSquare(),
+      infoText: (_data, _matches, output) => output.getOnCrystalSquare(),
+      tts: (_data, _matches, output) => output.blueSquare(),
       outputStrings: {
         getOnCrystalSquare: {
           en: 'Get on crystal square',
@@ -164,10 +147,8 @@ export default {
       netRegexJa: NetRegexes.addedCombatant({ name: 'ドラゴングレイト', capture: false }),
       netRegexCn: NetRegexes.addedCombatant({ name: '巨龙', capture: false }),
       netRegexKo: NetRegexes.addedCombatant({ name: '거대 드래곤', capture: false }),
-      condition: function(data) {
-        return data.role === 'tank';
-      },
-      infoText: (data, _, output) => output.text(),
+      condition: (data) => data.role === 'tank',
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Grab dragon',
@@ -187,7 +168,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '2304', source: 'ハリカルナッソス', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '2304', source: '哈利卡纳苏斯', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '2304', source: '할리카르나소스', capture: false }),
-      run: function(data) {
+      run: (data) => {
         data.gameCount = data.gameCount || 1;
       },
     },
@@ -199,10 +180,8 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '2466', source: 'ハリカルナッソス', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '2466', source: '哈利卡纳苏斯', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '2466', source: '할리카르나소스', capture: false }),
-      condition: function(data) {
-        return data.phaseNumber === 3 && data.gameCount % 2 === 0;
-      },
-      alertText: (data, _, output) => output.text(),
+      condition: (data) => data.phaseNumber === 3 && data.gameCount % 2 === 0,
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Get hit by Ribbit',
@@ -222,9 +201,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '2466', source: 'ハリカルナッソス', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '2466', source: '哈利卡纳苏斯', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '2466', source: '할리카르나소스', capture: false }),
-      condition: function(data) {
-        return !(data.phaseNumber === 3 && data.gameCount % 2 === 0);
-      },
+      condition: (data) => !(data.phaseNumber === 3 && data.gameCount % 2 === 0),
       response: Responses.awayFromFront(),
     },
     {
@@ -237,7 +214,7 @@ export default {
       netRegexKo: NetRegexes.startsUsing({ id: '246D', source: '할리카르나소스', capture: false }),
       // No point in checking whether the user has the frog debuff,
       // if they didn't get it, or got it when they shouldn't have, there's no fixing things.
-      infoText: function(data, _, output) {
+      infoText: (data, _matches, output) => {
         if (data.phaseNumber === 3 && data.gameCount % 2 === 0)
           return output.standOnFrogTile();
 
@@ -251,7 +228,7 @@ export default {
         if (data.role === 'dps')
           return output.standOnSword();
       },
-      run: function(data) {
+      run: (data) => {
         data.gameCount += 1;
       },
       outputStrings: {
@@ -297,7 +274,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '2467', source: 'ハリカルナッソス', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '2467', source: '哈利卡纳苏斯', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '2467', source: '할리카르나소스', capture: false }),
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Mindjack: Forward',
@@ -317,7 +294,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '2468', source: 'ハリカルナッソス', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '2468', source: '哈利卡纳苏斯', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '2468', source: '할리카르나소스', capture: false }),
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Mindjack: Back',
@@ -337,7 +314,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '2469', source: 'ハリカルナッソス', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '2469', source: '哈利卡纳苏斯', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '2469', source: '할리카르나소스', capture: false }),
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Mindjack: Left',
@@ -357,7 +334,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '246A', source: 'ハリカルナッソス', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '246A', source: '哈利卡纳苏斯', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '246A', source: '할리카르나소스', capture: false }),
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Mindjack: Right',

@@ -18,7 +18,7 @@ export default {
       regex: /(?:Brainhurt|Bodyhurt) Breakblock/,
       beforeSeconds: 10,
       suppressSeconds: 1,
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Stun Soon',
@@ -40,7 +40,7 @@ export default {
       netRegexJa: NetRegexes.addedCombatant({ name: '爆弾', capture: false }),
       netRegexCn: NetRegexes.addedCombatant({ name: '炸弹', capture: false }),
       netRegexKo: NetRegexes.addedCombatant({ name: '폭탄', capture: false }),
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Bomb',
@@ -60,13 +60,9 @@ export default {
       netRegexJa: NetRegexes.ability({ source: 'Ix号ゴブリウィドー', id: '1413' }),
       netRegexCn: NetRegexes.ability({ source: '9号哥布林黑寡妇', id: '1413' }),
       netRegexKo: NetRegexes.ability({ source: 'Ix호 고블린거미', id: '1413' }),
-      condition: function(data) {
-        return data.role === 'healer' || data.job === 'BLU';
-      },
+      condition: (data) => data.role === 'healer' || data.job === 'BLU',
       suppressSeconds: 10,
-      infoText: function(data, matches, output) {
-        return output.text({ player: data.ShortName(matches.target) });
-      },
+      infoText: (data, matches, output) => output.text({ player: data.ShortName(matches.target) }),
       outputStrings: {
         text: {
           en: 'Keep ${player} topped',
@@ -88,7 +84,7 @@ export default {
       netRegexKo: NetRegexes.ability({ source: 'Ix호 고블린거미', id: '1413' }),
       condition: Conditions.targetIsYou(),
       suppressSeconds: 10,
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Boomcannon on YOU',
@@ -108,7 +104,7 @@ export default {
       netRegexJa: NetRegexes.addedCombatant({ name: 'ゴルディオス・ソルジャー', capture: false }),
       netRegexCn: NetRegexes.addedCombatant({ name: '戈耳狄士兵', capture: false }),
       netRegexKo: NetRegexes.addedCombatant({ name: '고르디우스 병사', capture: false }),
-      run: function(data) {
+      run: (data) => {
         delete data.bangyzoom;
       },
     },
@@ -120,12 +116,10 @@ export default {
       netRegexJa: NetRegexes.ability({ id: 'FD9', target: 'ゴルディオス・ソルジャー', capture: false }),
       netRegexCn: NetRegexes.ability({ id: 'FD9', target: '戈耳狄士兵', capture: false }),
       netRegexKo: NetRegexes.ability({ id: 'FD9', target: '고르디우스 병사', capture: false }),
-      condition: function(data) {
-        return !data.bangyzoom;
-      },
+      condition: (data) => !data.bangyzoom,
       suppressSeconds: 1,
-      infoText: (data, _, output) => output.text(),
-      run: function(data) {
+      infoText: (_data, _matches, output) => output.text(),
+      run: (data) => {
         data.bangyzoom = true;
       },
       outputStrings: {

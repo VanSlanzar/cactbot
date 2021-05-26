@@ -1,5 +1,6 @@
 import Conditions from '../../../../../resources/conditions';
 import NetRegexes from '../../../../../resources/netregexes';
+import Outputs from '../../../../../resources/outputs';
 import { Responses } from '../../../../../resources/responses';
 import ZoneId from '../../../../../resources/zone_id';
 
@@ -36,7 +37,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ source: ['ガルーダ', 'ラクタパクシャ'], id: ['4BD[DEF]', '4BE[345]'], capture: false }),
       netRegexCn: NetRegexes.startsUsing({ source: ['迦楼罗', '赤翼罗羯坨博叉'], id: ['4BD[DEF]', '4BE[345]'], capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: ['가루다', '락타팍샤'], id: ['4BD[DEF]', '4BE[345]'], capture: false }),
-      infoText: (data, _, output) => output.text(),
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Avoid green nails',
@@ -52,7 +53,7 @@ export default {
       id: 'E6N Air Bump',
       netRegex: NetRegexes.headMarker({ id: '00D3' }),
       suppressSeconds: 1,
-      infoText: function(data, matches, output) {
+      infoText: (data, matches, output) => {
         if (data.me === matches.target)
           return output.enumerationOnYou();
 
@@ -97,7 +98,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ source: ['イフリート', 'ラクタパクシャ'], id: '4CFE', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ source: ['伊弗利特', '赤翼罗羯坨博叉'], id: '4CFE', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: ['이프리트', '락타팍샤'], id: '4CFE', capture: false }),
-      preRun: function(data) {
+      preRun: (data) => {
         data.handsOfFlame = true;
       },
     },
@@ -106,10 +107,8 @@ export default {
       // Break tether if you're the target during Ifrit+Garuda phase
       id: 'E6N Hands of Flame Tether',
       netRegex: NetRegexes.tether({ id: '0068' }),
-      condition: function(data) {
-        return data.handsOfFlame;
-      },
-      infoText: function(data, matches, output) {
+      condition: (data) => data.handsOfFlame,
+      infoText: (data, matches, output) => {
         if (data.me === matches.target)
           return output.chargeOnYou();
 
@@ -126,14 +125,7 @@ export default {
           cn: '冲锋点名',
           ko: '돌진 대상자',
         },
-        tankSwap: {
-          en: 'Tank Swap',
-          de: 'Tank Swap',
-          fr: 'Tank Swap',
-          ja: 'タンクスイッチ',
-          cn: '换坦克',
-          ko: '탱 교대',
-        },
+        tankSwap: Outputs.tankSwap,
       },
     },
     {
@@ -144,7 +136,7 @@ export default {
       netRegexJa: NetRegexes.ability({ source: ['イフリート', 'ラクタパクシャ'], id: '4BE9', capture: false }),
       netRegexCn: NetRegexes.ability({ source: ['伊弗利特', '赤翼罗羯坨博叉'], id: '4BE9', capture: false }),
       netRegexKo: NetRegexes.ability({ source: ['이프리트', '락타팍샤'], id: '4BE9', capture: false }),
-      preRun: function(data) {
+      preRun: (data) => {
         data.handsOfFlame = false;
       },
       suppressSeconds: 1,
@@ -164,7 +156,7 @@ export default {
       id: 'E6N Hands of Hell',
       netRegex: NetRegexes.headMarker({ id: '0016' }),
       condition: Conditions.targetIsYou(),
-      alertText: (data, _, output) => output.text(),
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Tether Marker on YOU',
@@ -185,11 +177,9 @@ export default {
       netRegexCn: NetRegexes.ability({ source: '伊弗利特', id: '4F98', capture: false }),
       netRegexKo: NetRegexes.ability({ source: '이프리트', id: '4F98', capture: false }),
       // Run only once, because Ifrit's other jumps are not important.
-      condition: function(data) {
-        return !data.seenSpark;
-      },
-      alertText: (data, _, output) => output.text(),
-      run: function(data) {
+      condition: (data) => !data.seenSpark,
+      alertText: (_data, _matches, output) => output.text(),
+      run: (data) => {
         data.seenSpark = true;
       },
       outputStrings: {

@@ -21,16 +21,9 @@ module.exports = {
       },
     },
     {
-      'files': ['**/raidboss/data/**/*'],
-      'rules': {
-        'rulesdir/cactbot-output-strings': 'error',
-        'rulesdir/cactbot-timeline-triggers': 'error',
-      },
-    },
-    {
       'files': ['**/*.ts'],
       'parser': '@typescript-eslint/parser',
-      'plugins': ['@typescript-eslint'],
+      'plugins': ['@typescript-eslint', 'prefer-arrow'],
       'parserOptions': {
         'tsconfigRootDir': __dirname,
         'project': ['./tsconfig.json'],
@@ -63,6 +56,16 @@ module.exports = {
             objectLiteralTypeAssertions: 'never',
           },
         ],
+      },
+    },
+    {
+      'files': ['**/raidboss/data/**/*'],
+      'rules': {
+        'no-unused-vars': ['error', { 'args': 'all', 'argsIgnorePattern': '^_' }],
+        'prefer-arrow/prefer-arrow-functions': 'warn',
+        'rulesdir/cactbot-output-strings': 'error',
+        'rulesdir/cactbot-timeline-triggers': 'error',
+        'rulesdir/cactbot-response-default-severities': 'error',
       },
     },
   ],
@@ -155,7 +158,7 @@ module.exports = {
       'windows',
     ],
     'max-len': [
-      'error',
+      'warn',
       {
         'code': 100,
         'ignoreRegExpLiterals': true,

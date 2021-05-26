@@ -19,7 +19,7 @@ export default {
       netRegexCn: NetRegexes.ability({ id: '31C[78]', source: '尘世幻龙', capture: false }),
       netRegexKo: NetRegexes.ability({ id: '31C[78]', source: '미드가르드오름', capture: false }),
       delaySeconds: 10,
-      run: function(data) {
+      run: (data) => {
         delete data.lastSpinWasHorizontal;
       },
     },
@@ -31,8 +31,8 @@ export default {
       netRegexJa: NetRegexes.ability({ id: '31C7', source: 'ミドガルズオルム', capture: false }),
       netRegexCn: NetRegexes.ability({ id: '31C7', source: '尘世幻龙', capture: false }),
       netRegexKo: NetRegexes.ability({ id: '31C7', source: '미드가르드오름', capture: false }),
-      infoText: (data, _, output) => output.text(),
-      run: function(data) {
+      infoText: (_data, _matches, output) => output.text(),
+      run: (data) => {
         data.lastSpinWasHorizontal = true;
       },
       outputStrings: {
@@ -54,8 +54,8 @@ export default {
       netRegexJa: NetRegexes.ability({ id: '31C8', source: 'ミドガルズオルム', capture: false }),
       netRegexCn: NetRegexes.ability({ id: '31C8', source: '尘世幻龙', capture: false }),
       netRegexKo: NetRegexes.ability({ id: '31C8', source: '미드가르드오름', capture: false }),
-      infoText: (data, _, output) => output.text(),
-      run: function(data) {
+      infoText: (_data, _matches, output) => output.text(),
+      run: (data) => {
         data.lastSpinWasHorizontal = false;
       },
       outputStrings: {
@@ -77,10 +77,8 @@ export default {
       netRegexJa: NetRegexes.ability({ id: '31C9', source: 'ミドガルズオルム', capture: false }),
       netRegexCn: NetRegexes.ability({ id: '31C9', source: '尘世幻龙', capture: false }),
       netRegexKo: NetRegexes.ability({ id: '31C9', source: '미드가르드오름', capture: false }),
-      condition: function(data) {
-        return data.lastSpinWasHorizontal !== undefined;
-      },
-      alertText: function(data, _, output) {
+      condition: (data) => data.lastSpinWasHorizontal !== undefined,
+      alertText: (data, _matches, output) => {
         if (data.lastSpinWasHorizontal)
           return output.getOut();
 
@@ -113,10 +111,8 @@ export default {
       netRegexJa: NetRegexes.ability({ id: '31CB', source: 'ミドガルズオルム', capture: false }),
       netRegexCn: NetRegexes.ability({ id: '31CB', source: '尘世幻龙', capture: false }),
       netRegexKo: NetRegexes.ability({ id: '31CB', source: '미드가르드오름', capture: false }),
-      condition: function(data) {
-        return data.lastSpinWasHorizontal !== undefined;
-      },
-      alertText: function(data, _, output) {
+      condition: (data) => data.lastSpinWasHorizontal !== undefined,
+      alertText: (data, _matches, output) => {
         if (data.lastSpinWasHorizontal)
           return output.getIn();
 

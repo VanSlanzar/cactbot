@@ -1,5 +1,6 @@
 import Conditions from '../../../../../resources/conditions';
 import NetRegexes from '../../../../../resources/netregexes';
+import Outputs from '../../../../../resources/outputs';
 import { Responses } from '../../../../../resources/responses';
 import ZoneId from '../../../../../resources/zone_id';
 
@@ -36,20 +37,20 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: ['2BBB', '2EB2'], source: 'ツクヨミ' }),
       netRegexCn: NetRegexes.startsUsing({ id: ['2BBB', '2EB2'], source: '月读' }),
       netRegexKo: NetRegexes.startsUsing({ id: ['2BBB', '2EB2'], source: '츠쿠요미' }),
-      alarmText: function(data, matches, output) {
+      alarmText: (data, matches, output) => {
         if (matches.target === data.me || data.role !== 'tank')
           return;
 
         return output.tankSwap();
       },
-      alertText: function(data, matches, output) {
+      alertText: (data, matches, output) => {
         if (matches.target === data.me)
           return output.tankBusterOnYou();
 
         if (data.role === 'healer')
           return output.busterOn({ player: data.ShortName(matches.target) });
       },
-      infoText: function(data, matches, output) {
+      infoText: (data, matches, output) => {
         if (matches.target === data.me || data.role === 'tank' || data.role === 'healer')
           return;
 
@@ -64,30 +65,9 @@ export default {
           cn: '远离正面',
           ko: '정면 피하기',
         },
-        tankBusterOnYou: {
-          en: 'Tank Buster on YOU',
-          de: 'Tankbuster auf DIR',
-          fr: 'Tank buster sur VOUS',
-          ja: '自分にタンクバスター',
-          cn: '死刑减伤',
-          ko: '탱버 대상자',
-        },
-        busterOn: {
-          en: 'Buster on ${player}',
-          de: 'Tankbuster auf ${player}',
-          fr: 'Tank buster sur ${player}',
-          ja: '${player}にタンクバスター',
-          cn: '死刑 点${player}',
-          ko: '"${player}" 탱버',
-        },
-        tankSwap: {
-          en: 'Tank Swap!',
-          de: 'Tankwechsel!',
-          fr: 'Tank swap !',
-          ja: 'スイッチ',
-          cn: '换T！',
-          ko: '탱 교대',
-        },
+        tankBusterOnYou: Outputs.tankBusterOnYou,
+        busterOn: Outputs.tankBusterOnPlayer,
+        tankSwap: Outputs.tankSwap,
       },
     },
     {
@@ -98,7 +78,7 @@ export default {
       netRegexJa: NetRegexes.gainsEffect({ target: 'ツクヨミ', effectId: '5FF', capture: false }),
       netRegexCn: NetRegexes.gainsEffect({ target: '月读', effectId: '5FF', capture: false }),
       netRegexKo: NetRegexes.gainsEffect({ target: '츠쿠요미', effectId: '5FF', capture: false }),
-      run: function(data) {
+      run: (data) => {
         data.moonIsOut = true;
       },
     },
@@ -110,7 +90,7 @@ export default {
       netRegexJa: NetRegexes.gainsEffect({ target: 'ツクヨミ', effectId: '600', capture: false }),
       netRegexCn: NetRegexes.gainsEffect({ target: '月读', effectId: '600', capture: false }),
       netRegexKo: NetRegexes.gainsEffect({ target: '츠쿠요미', effectId: '600', capture: false }),
-      run: function(data) {
+      run: (data) => {
         data.moonIsOut = false;
       },
     },
@@ -122,7 +102,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '2BDA', source: 'ツクヨミ', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '2BDA', source: '月读', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '2BDA', source: '츠쿠요미', capture: false }),
-      infoText: function(data, _, output) {
+      infoText: (data, _matches, output) => {
         if (data.moonIsOut)
           return output.leftAndOut();
         return output.leftAndIn();
@@ -154,7 +134,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '2BDB', source: 'ツクヨミ', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '2BDB', source: '月读', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '2BDB', source: '츠쿠요미', capture: false }),
-      infoText: function(data, _, output) {
+      infoText: (data, _matches, output) => {
         if (data.moonIsOut)
           return output.rightAndOut();
         return output.rightAndIn();
@@ -217,7 +197,7 @@ export default {
       netRegexCn: NetRegexes.ability({ source: '月读', id: '2EB0', capture: false }),
       netRegexKo: NetRegexes.ability({ source: '츠쿠요미', id: '2EB0', capture: false }),
       suppressSeconds: 5,
-      run: function(data) {
+      run: (data) => {
         delete data.moonlitCount;
         delete data.moonshadowedCount;
       },
@@ -226,7 +206,7 @@ export default {
       id: 'Tsukuyomi Moonlit Debuff Logic',
       netRegex: NetRegexes.gainsEffect({ effectId: '602' }),
       condition: Conditions.targetIsYou(),
-      preRun: function(data) {
+      preRun: (data) => {
         // init at 3 so we can start at 4 stacks to give the initial instruction to move
         if (typeof data.moonlitCount === 'undefined')
           data.moonlitCount = 3;
@@ -241,10 +221,8 @@ export default {
     {
       id: 'Tsukuyomi Moonlit Debuff',
       netRegex: NetRegexes.gainsEffect({ effectId: '602' }),
-      condition: function(data, matches) {
-        return matches.target === data.me && data.moonlitCount >= 4;
-      },
-      infoText: (data, _, output) => output.text(),
+      condition: (data, matches) => matches.target === data.me && data.moonlitCount >= 4,
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Move to Black!',
@@ -260,7 +238,7 @@ export default {
       id: 'Tsukuyomi Moonshadowed Debuff Logic',
       netRegex: NetRegexes.gainsEffect({ effectId: '603' }),
       condition: Conditions.targetIsYou(),
-      preRun: function(data) {
+      preRun: (data) => {
         // init at 3 so we can start at 4 stacks to give the initial instruction to move
         if (typeof data.moonshadowedCount === 'undefined')
           data.moonshadowedCount = 3;
@@ -275,10 +253,8 @@ export default {
     {
       id: 'Tsukuyomi Moonshadowed Debuff',
       netRegex: NetRegexes.gainsEffect({ effectId: '603' }),
-      condition: function(data, matches) {
-        return matches.target === data.me && data.moonshadowedCount >= 4;
-      },
-      infoText: (data, _, output) => output.text(),
+      condition: (data, matches) => matches.target === data.me && data.moonshadowedCount >= 4,
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Move to White!',
