@@ -44,17 +44,13 @@ export default {
       id: 'O2S Levitation Gain',
       netRegex: NetRegexes.gainsEffect({ effectId: '556' }),
       condition: Conditions.targetIsYou(),
-      run: (data) => {
-        data.levitating = true;
-      },
+      run: (data) => data.levitating = true,
     },
     {
       id: 'O2S Levitation Lose',
       netRegex: NetRegexes.losesEffect({ effectId: '556' }),
       condition: Conditions.targetIsYou(),
-      run: (data) => {
-        data.levitating = false;
-      },
+      run: (data) => data.levitating = false,
     },
     {
       id: 'O2S -100Gs',
@@ -288,9 +284,7 @@ export default {
           return output.sixFulmsUnder();
       },
       tts: (_data, _matches, output) => output.float(),
-      run: (data) => {
-        data.under = true;
-      },
+      run: (data) => data.under = true,
       outputStrings: {
         sixFulmsUnder: {
           en: '6 Fulms Under',
@@ -322,9 +316,7 @@ export default {
       id: 'O2S 6 Fulms Under Lose',
       netRegex: NetRegexes.losesEffect({ effectId: '237' }),
       condition: Conditions.targetIsYou(),
-      run: (data) => {
-        data.under = false;
-      },
+      run: (data) => data.under = false,
     },
   ],
   timelineReplace: [
@@ -335,6 +327,7 @@ export default {
         'Fleshy Member': 'Tentakel',
       },
       'replaceText': {
+        '\\(ground\\)': '(Boden)',
         '-100 Gs': 'Minus 100 G',
         '(?<!-)100 Gs': '100 G',
         'Antilight': 'Dunkellicht',
@@ -365,7 +358,6 @@ export default {
         'Fleshy Member': 'tentacule',
       },
       'replaceText': {
-        '\\(center\\)': '(centre)',
         '\\(ground\\)': 'sol',
         '-100 Gs': 'Gravité -100',
         '(?<!-)100 Gs': 'Gravité 100',
@@ -396,7 +388,6 @@ export default {
         'Fleshy Member': '触手',
       },
       'replaceText': {
-        '\\(center\\)': '(中央)',
         '\\(T/H\\)': '(タンク/ヒラ)',
         '-100 Gs': '重力マイナス100',
         '(?<!-)100 Gs': '重力100',
@@ -428,7 +419,6 @@ export default {
         'Fleshy Member': '触手',
       },
       'replaceText': {
-        '\\(center\\)': '(中央)',
         '\\(T/H\\)': '(T/奶)',
         '-100 Gs': '重力-100',
         '(?<!-)100 Gs': '重力100',

@@ -228,12 +228,11 @@ export default {
     {
       id: 'E2N Countdown Marker Shadoweye You',
       netRegex: NetRegexes.headMarker({ id: '00B8' }),
-      condition: (data, matches) => data.spell[matches.target] === 'eye',
-      delaySeconds: 2,
-      infoText: (data, matches, output) => {
-        if (data.me === matches.target)
-          return output.text();
+      condition: (data, matches) => {
+        return data.me === matches.target && data.spell[matches.target] === 'eye';
       },
+      delaySeconds: 2,
+      infoText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Eye on YOU',
@@ -249,9 +248,7 @@ export default {
       id: 'E2N Countdown Marker Cleanup',
       netRegex: NetRegexes.headMarker({ id: '00B8' }),
       delaySeconds: 10,
-      run: (data, matches) => {
-        delete data.spell[matches.target];
-      },
+      run: (data, matches) => delete data.spell[matches.target],
     },
   ],
   timelineReplace: [

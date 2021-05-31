@@ -279,9 +279,7 @@ export default {
       // This is probably a problem for all timeline triggers (whoops)
       // and needs to be fixed more generally rather than adding a
       // suppression.
-      preRun: (data) => {
-        data.swingCount = (data.swingCount || 0) + 1;
-      },
+      preRun: (data) => data.swingCount = (data.swingCount || 0) + 1,
       suppressSeconds: 1,
       alertText: (data, _matches, output) => {
         const multipleSwings = data.swingCount === 2 || data.swingCount === 3;
@@ -552,9 +550,7 @@ export default {
       netRegexFr: NetRegexes.abilityFull({ source: 'liquide vivant', id: '4978' }),
       netRegexJa: NetRegexes.abilityFull({ source: 'リビングリキッド', id: '4978' }),
       netRegexKo: NetRegexes.abilityFull({ source: '살아있는 액체', id: '4978' }),
-      run: (data, matches) => {
-        data.liquidTank = matches.target;
-      },
+      run: (data, matches) => data.liquidTank = matches.target,
     },
     {
       id: 'TEA Hand Tank',
@@ -564,9 +560,7 @@ export default {
       netRegexFr: NetRegexes.abilityFull({ source: 'membre liquide', id: '4979' }),
       netRegexJa: NetRegexes.abilityFull({ source: 'リキッドハンド', id: '4979' }),
       netRegexKo: NetRegexes.abilityFull({ source: '액체 손', id: '4979' }),
-      run: (data, matches) => {
-        data.handTank = matches.target;
-      },
+      run: (data, matches) => data.handTank = matches.target,
     },
     {
       id: 'TEA Cruise Chaser Tank',
@@ -576,9 +570,7 @@ export default {
       netRegexFr: NetRegexes.abilityFull({ source: 'Croiseur-chasseur', id: '497A' }),
       netRegexJa: NetRegexes.abilityFull({ source: 'クルーズチェイサー', id: '497A' }),
       netRegexKo: NetRegexes.abilityFull({ source: '순항추격기', id: '497A' }),
-      run: (data, matches) => {
-        data.cruiseTank = matches.target;
-      },
+      run: (data, matches) => data.cruiseTank = matches.target,
     },
     {
       id: 'TEA Brute Tank',
@@ -588,9 +580,7 @@ export default {
       netRegexFr: NetRegexes.abilityFull({ source: 'Justicier', id: '497B' }),
       netRegexJa: NetRegexes.abilityFull({ source: 'ブルートジャスティス', id: '497B' }),
       netRegexKo: NetRegexes.abilityFull({ source: '포악한 심판자', id: '497B' }),
-      run: (data, matches) => {
-        data.bruteTank = matches.target;
-      },
+      run: (data, matches) => data.bruteTank = matches.target,
     },
     {
       id: 'TEA Cascade',
@@ -997,10 +987,7 @@ export default {
       id: 'TEA Compressed Water Explode',
       netRegex: NetRegexes.gainsEffect({ effectId: '85E' }),
       condition: Conditions.targetIsYou(),
-      delaySeconds: (_data, matches) => {
-        // 5 second warning.
-        return parseFloat(matches.duration) - 5;
-      },
+      delaySeconds: (_data, matches) => parseFloat(matches.duration) - 5,
       alertText: (data, _matches, output) => {
         if (data.seenGavel)
           return;
@@ -1037,10 +1024,7 @@ export default {
       id: 'TEA Compressed Lightning Explode',
       netRegex: NetRegexes.gainsEffect({ effectId: '85F' }),
       condition: Conditions.targetIsYou(),
-      delaySeconds: (_data, matches) => {
-        // 5 second warning.
-        return parseFloat(matches.duration) - 5;
-      },
+      delaySeconds: (_data, matches) => parseFloat(matches.duration) - 5,
       alertText: (data, _matches, output) => {
         if (data.seenGavel)
           return;
@@ -1176,9 +1160,7 @@ export default {
       netRegexFr: NetRegexes.startsUsing({ source: 'Justicier', id: '483C', capture: false }),
       netRegexJa: NetRegexes.startsUsing({ source: 'ブルートジャスティス', id: '483C', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ source: '포악한 심판자', id: '483C', capture: false }),
-      run: (data) => {
-        data.seenGavel = true;
-      },
+      run: (data) => data.seenGavel = true,
     },
     {
       id: 'TEA Double Rocket Punch',
@@ -1464,9 +1446,7 @@ export default {
       id: 'TEA Inception Vuln Collection',
       netRegex: NetRegexes.gainsEffect({ effectId: '2B7' }),
       condition: (data) => data.phase === 'inception',
-      run: (data, matches) => {
-        data.vuln[matches.target] = true;
-      },
+      run: (data, matches) => data.vuln[matches.target] = true,
     },
     {
       id: 'TEA Inception Alpha Sword',
@@ -2080,9 +2060,7 @@ export default {
       durationSeconds: 8,
       suppressSeconds: 20,
       infoText: (_data, _matches, output) => output.motionFirst(),
-      run: (data) => {
-        data.firstAlphaOrdainedText = 'motionFirst';
-      },
+      run: (data) => data.firstAlphaOrdainedText = 'motionFirst',
       outputStrings: {
         motionFirst: ordainedOutputStrings.motionFirst,
       },
@@ -2496,9 +2474,7 @@ export default {
       netRegexJa: NetRegexes.abilityFull({ source: 'パーフェクト・アレキサンダー', id: '48A0', capture: false }),
       netRegexKo: NetRegexes.abilityFull({ source: '완전체 알렉산더', id: '48A0', capture: false }),
       infoText: (_data, _matches, output) => output.text(),
-      run: (data) => {
-        data.betaIsOpticalStack = false;
-      },
+      run: (data) => data.betaIsOpticalStack = false,
       outputStrings: {
         text: {
           en: 'Optical Spread',
@@ -2519,9 +2495,7 @@ export default {
       netRegexJa: NetRegexes.abilityFull({ source: 'パーフェクト・アレキサンダー', id: '48A1', capture: false }),
       netRegexKo: NetRegexes.abilityFull({ source: '완전체 알렉산더', id: '48A1', capture: false }),
       infoText: (_data, _matches, output) => output.text(),
-      run: (data) => {
-        data.betaIsOpticalStack = true;
-      },
+      run: (data) => data.betaIsOpticalStack = true,
       outputStrings: {
         text: {
           en: 'Optical Stack',
@@ -2561,14 +2535,7 @@ export default {
         return output.opticalStackPlayers({ players: names.join(', ') });
       },
       outputStrings: {
-        unknown: {
-          en: '???',
-          de: '???',
-          fr: '???',
-          ja: '???',
-          cn: '???',
-          ko: '???',
-        },
+        unknown: Outputs.unknown,
         opticalStack: {
           en: 'Optical Stack',
           de: 'Visier sammeln',
@@ -2611,11 +2578,9 @@ export default {
       netRegexFr: NetRegexes.ability({ source: 'Alexander parfait', id: '4B14', capture: false }),
       netRegexJa: NetRegexes.ability({ source: 'パーフェクト・アレキサンダー', id: '4B14', capture: false }),
       netRegexKo: NetRegexes.ability({ source: '완전체 알렉산더', id: '4B14', capture: false }),
+      condition: (data) => data.radiantOutputStringKey,
       delaySeconds: 16,
-      alertText: (data, _matches, output) => {
-        if (data.radiantOutputStringKey)
-          return output[data.radiantOutputStringKey]();
-      },
+      alertText: (data, _matches, output) => output[data.radiantOutputStringKey](),
       outputStrings: radiantOutputStrings,
     },
     {
@@ -2930,8 +2895,10 @@ export default {
         'Temporal Stasis': 'Zeitstillstand',
         'The Final Word': 'Strafzumessung',
         'Throttles': 'Erstickungen',
+        'True Heart': 'Reines Herz',
         'Void Of Repentance': 'Kammer der Buße',
         'Water and Thunder': 'Wasser und Blitz',
+        'Waves': 'Wellen',
         'Whirlwind': 'Wirbelwind',
         'Wormhole Formation': 'Dimensionsspaltungsformation',
       },

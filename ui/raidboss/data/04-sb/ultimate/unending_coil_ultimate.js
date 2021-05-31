@@ -1,6 +1,7 @@
 import Conditions from '../../../../../resources/conditions';
 import NetRegexes from '../../../../../resources/netregexes';
 import Regexes from '../../../../../resources/regexes';
+import Outputs from '../../../../../resources/outputs';
 import { Responses } from '../../../../../resources/responses';
 import ZoneId from '../../../../../resources/zone_id';
 
@@ -27,33 +28,25 @@ export default {
       id: 'UCU Firescorched Gain',
       netRegex: NetRegexes.gainsEffect({ effectId: '1D0' }),
       condition: Conditions.targetIsYou(),
-      run: (data) => {
-        data.fireDebuff = true;
-      },
+      run: (data) => data.fireDebuff = true,
     },
     {
       id: 'UCU Firescorched Lose',
       netRegex: NetRegexes.losesEffect({ effectId: '1D0' }),
       condition: Conditions.targetIsYou(),
-      run: (data) => {
-        data.fireDebuff = false;
-      },
+      run: (data) => data.fireDebuff = false,
     },
     {
       id: 'UCU Icebitten Gain',
       netRegex: NetRegexes.gainsEffect({ effectId: '1D1' }),
       condition: Conditions.targetIsYou(),
-      run: (data) => {
-        data.iceDebuff = true;
-      },
+      run: (data) => data.iceDebuff = true,
     },
     {
       id: 'UCU Icebitten Lose',
       netRegex: NetRegexes.losesEffect({ effectId: '1D1' }),
       condition: Conditions.targetIsYou(),
-      run: (data) => {
-        data.iceDebuff = false;
-      },
+      run: (data) => data.iceDebuff = false,
     },
     {
       id: 'UCU Fireball Counter',
@@ -191,10 +184,8 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '26A9', source: 'ツインタニア', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '26A9', source: '双塔尼亚', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '26A9', source: '트윈타니아', capture: false }),
-      alertText: (data, _matches, output) => {
-        if (data.role === 'tank' || data.role === 'healer')
-          return output.text();
-      },
+      condition: (data) => data.role === 'tank' || data.role === 'healer',
+      alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {
           en: 'Death Sentence',
@@ -256,9 +247,7 @@ export default {
       id: 'UCU Hatch Cleanup',
       netRegex: NetRegexes.headMarker({ id: '0076', capture: false }),
       delaySeconds: 5,
-      run: (data) => {
-        delete data.hatch;
-      },
+      run: (data) => delete data.hatch,
     },
     {
       id: 'UCU Twintania P2',
@@ -779,9 +768,7 @@ export default {
       delaySeconds: 35,
       suppressSeconds: 99999,
       infoText: (_data, _matches, output) => output.text(),
-      run: (data) => {
-        data.naelFireballCount = 1;
-      },
+      run: (data) => data.naelFireballCount = 1,
       outputStrings: {
         text: {
           en: 'Fire IN',
@@ -816,9 +803,7 @@ export default {
         if (data.fireballs[1].includes(data.me))
           return output.fireOut();
       },
-      run: (data) => {
-        data.naelFireballCount = 2;
-      },
+      run: (data) => data.naelFireballCount = 2,
       outputStrings: {
         fireOut: {
           en: 'Fire OUT',
@@ -867,9 +852,7 @@ export default {
         }
         return output.fireIn();
       },
-      run: (data) => {
-        data.naelFireballCount = 3;
-      },
+      run: (data) => data.naelFireballCount = 3,
       outputStrings: {
         fireIn: {
           en: 'Fire IN',
@@ -927,9 +910,7 @@ export default {
         if (!data.tookThreeFireballs)
           return output.fireIn();
       },
-      run: (data) => {
-        data.naelFireballCount = 4;
-      },
+      run: (data) => data.naelFireballCount = 4,
       outputStrings: {
         fireIn: {
           en: 'Fire IN',
@@ -1072,14 +1053,7 @@ export default {
           cn: '带着点名去${dir}',
           ko: '${dir}으로 이동',
         },
-        unknownDir: {
-          en: '???',
-          de: '???',
-          fr: '???',
-          ja: '???',
-          cn: '???',
-          ko: '???',
-        },
+        unknownDir: Outputs.unknown,
       },
     },
     {
@@ -1108,9 +1082,7 @@ export default {
       id: 'UCU Nael Dragon Dive Marker Counter',
       netRegex: NetRegexes.headMarker({ id: '0014', capture: false }),
       condition: (data) => !data.trio,
-      run: (data) => {
-        data.naelDiveMarkerCount++;
-      },
+      run: (data) => data.naelDiveMarkerCount++,
     },
     {
       // Octet marker tracking (77=nael, 14=dragon, 29=baha, 2A=twin)
@@ -1330,9 +1302,7 @@ export default {
     {
       id: 'UCU Megaflare Stack Tracking',
       netRegex: NetRegexes.headMarker({ id: '0027' }),
-      run: (data, matches) => {
-        data.megaStack.push(matches.target);
-      },
+      run: (data, matches) => data.megaStack.push(matches.target),
     },
     {
       id: 'UCU Megaflare Tower',
@@ -1437,9 +1407,7 @@ export default {
     {
       id: 'UCU Earthshaker Tracking',
       netRegex: NetRegexes.headMarker({ id: '0028' }),
-      run: (data, matches) => {
-        data.shakers.push(matches.target);
-      },
+      run: (data, matches) => data.shakers.push(matches.target),
     },
     {
       id: 'UCU Earthshaker Not Me',

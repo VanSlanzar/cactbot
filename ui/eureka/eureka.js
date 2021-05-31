@@ -1723,7 +1723,7 @@ const Options = {
       mapHeight: 1400,
       shortName: 'bozjasouthern',
       hasTracker: false,
-      dontShowInactive: true,
+      onlyShowInactiveWithExplicitRespawns: true,
       treatNMsAsSkirmishes: true,
       mapToPixelXScalar: 47.911,
       mapToPixelXConstant: -292.56,
@@ -2159,7 +2159,8 @@ const Options = {
           y: 12.6,
           isCritical: true,
           ceKey: 0,
-          respawnMinutes: 60,
+          // TODO: this needs a 60 minute respawn *after* it finishes.
+          // respawnMinutes: 60,
         },
         killitwithfire: {
           label: {
@@ -2201,6 +2202,7 @@ const Options = {
           x: 28.4,
           y: 29.5,
           isCritical: true,
+          isDuelPrecursor: true,
           ceKey: 3,
         },
         aceshigh: {
@@ -2216,6 +2218,7 @@ const Options = {
           y: 26.8,
           isCritical: true,
           isDuel: true,
+          respawnMinutes: 60,
           ceKey: 4,
         },
         shadowdeathshand: {
@@ -2258,6 +2261,7 @@ const Options = {
           x: 27.3,
           y: 17.7,
           isCritical: true,
+          isDuelPrecursor: true,
           ceKey: 7,
         },
         beastofman: {
@@ -2273,6 +2277,7 @@ const Options = {
           y: 20.4,
           isCritical: true,
           isDuel: true,
+          respawnMinutes: 60,
           ceKey: 8,
         },
         firesofwar: {
@@ -2330,6 +2335,7 @@ const Options = {
           y: 15.9,
           isCritical: true,
           isDuel: true,
+          respawnMinutes: 60,
           ceKey: 12,
         },
         metalfoxchaos: {
@@ -2344,6 +2350,7 @@ const Options = {
           x: 13.8,
           y: 18.3,
           isCritical: true,
+          isDuelPrecursor: true,
           ceKey: 13,
         },
         riseoftherobots: {
@@ -2380,9 +2387,9 @@ const Options = {
       mapImage: 'zadnor.png',
       mapWidth: 1600,
       mapHeight: 1400,
-      shortName: 'Zadnor',
+      shortName: 'zadnor',
       hasTracker: false,
-      dontShowInactive: true,
+      onlyShowInactiveWithExplicitRespawns: true,
       treatNMsAsSkirmishes: true,
       mapToPixelXScalar: 39.067,
       mapToPixelXConstant: 10.03,
@@ -2407,9 +2414,9 @@ const Options = {
           y: 34.2,
           fateID: 1718,
         },
-        animmoraldilemna: {
+        animmoraldilemma: {
           label: {
-            en: 'Dilemna',
+            en: 'Dilemma',
             de: 'Ketzer Fabineau',
           },
           x: 22.7,
@@ -2499,7 +2506,7 @@ const Options = {
         },
         tankingup: {
           label: {
-            en: 'Tanking Up',
+            en: 'Tanking',
             de: 'Seiryu Zwo',
           },
           x: 8.1,
@@ -2580,7 +2587,7 @@ const Options = {
         },
         whenmagesrage: {
           label: {
-            en: 'Mages Rage',
+            en: 'Mages',
             de: 'Was du heute kannst besorgen',
           },
           x: 20.3,
@@ -2589,7 +2596,7 @@ const Options = {
         },
         hypertunedhavoc: {
           label: {
-            en: 'Hypertuned',
+            en: 'Hyper',
             de: 'goldene Gelegenheit',
           },
           x: 16.6,
@@ -2598,7 +2605,7 @@ const Options = {
         },
         attackofthesupersoldiers: {
           label: {
-            en: 'Super Soldiers',
+            en: 'Soldiers',
             de: 'Verstärkung .. Mech-Einheit',
           },
           x: 16.6,
@@ -2632,11 +2639,12 @@ const Options = {
           y: 8.2,
           isCritical: true,
           ceKey: 0,
-          respawnMinutes: 60,
+          // TODO: this needs a 60 minute respawn *after* it finishes.
+          // respawnMinutes: 60,
         },
         onserpentswings: {
           label: {
-            en: 'Serpents Wings',
+            en: 'Serpents',
             de: 'Geistertrupp',
           },
           x: 31.4,
@@ -2646,27 +2654,30 @@ const Options = {
         },
         feelingtheburn: {
           label: {
-            en: 'Feeling the Burn',
+            en: 'Feeling',
             de: 'Schwarzbrands',
           },
           x: 16.6,
           y: 16.8,
           isCritical: true,
+          isDuelPrecursor: true,
           ceKey: 2,
         },
         thebrokenblade: {
           label: {
-            en: 'Broken Blade',
+            en: 'Blade',
             de: 'Hyper-Dabog',
           },
           x: 26.5,
           y: 35.6,
           isCritical: true,
+          isDuel: true,
+          respawnMinutes: 60,
           ceKey: 3,
         },
         frombeyondthegrave: {
           label: {
-            en: 'Beyond',
+            en: 'Grave',
             de: 'Shemhazai ',
           },
           x: 20.2,
@@ -2702,6 +2713,8 @@ const Options = {
           x: 5.3,
           y: 31.9,
           isCritical: true,
+          isDuel: true,
+          respawnMinutes: 60,
           ceKey: 7,
         },
         therewouldbeblood: {
@@ -2716,17 +2729,18 @@ const Options = {
         },
         nevercrywolf: {
           label: {
-            en: 'Cry Wolf',
+            en: 'Wolf',
             de: 'Hrodvitnir',
           },
           x: 4.9,
           y: 25.3,
           isCritical: true,
+          isDuelPrecursor: true,
           ceKey: 9,
         },
         timetoburn: {
           label: {
-            en: 'Time to Burn',
+            en: 'Time',
             de: 'Belias',
           },
           x: 10.5,
@@ -2736,7 +2750,7 @@ const Options = {
         },
         leanmeanmagitekmachines: {
           label: {
-            en: 'Lean, Mean',
+            en: 'Magitek',
             de: 'Gepanzerte Zenturie',
           },
           x: 15.2,
@@ -2756,12 +2770,13 @@ const Options = {
         },
         afamiliarface: {
           label: {
-            en: 'Familiar Face',
+            en: 'Familiar',
             de: 'Hashmallim',
           },
           x: 28.0,
           y: 29.2,
           isCritical: true,
+          isDuelPrecursor: true,
           ceKey: 13,
         },
         lookstodiefor: {
@@ -2776,12 +2791,14 @@ const Options = {
         },
         takingthelyonsshare: {
           label: {
-            en: 'Lyon\'s Share',
+            en: 'Lyon\'s',
             de: 'Revanche: Lyon',
           },
           x: 22.5,
           y: 13.2,
           isCritical: true,
+          isDuel: true,
+          respawnMinutes: 60,
           ceKey: 15,
         },
       },
@@ -2878,7 +2895,10 @@ class EurekaTracker {
 
     if (nm.isCritical)
       label.classList.add('critical');
-    if (this.zoneInfo.dontShowInactive)
+    if (nm.isDuel)
+      label.classList.add('duel');
+    // Start these off hidden.
+    if (this.zoneInfo.onlyShowInactiveWithExplicitRespawns)
       label.classList.add('nm-hidden');
 
     label.id = nmKey;
@@ -3000,16 +3020,15 @@ class EurekaTracker {
 
   OnFatePop(fate) {
     this.DebugPrint(`OnFatePop: ${this.TransByDispLang(fate.label)}`);
-    if (fate.element.classList.contains('nm-hidden'))
-      fate.element.classList.remove('nm-hidden');
-
+    const classList = fate.element.classList;
     if (fate.isCritical)
-      fate.element.classList.add('critical-pop');
+      classList.add('critical-pop');
     else
-      fate.element.classList.add('nm-pop');
+      classList.add('nm-pop');
 
-    fate.element.classList.remove('nm-down');
-    fate.lastPopTimeMsLocal = +new Date();
+    classList.remove('nm-hidden');
+    classList.remove('nm-down');
+    classList.remove('critical-down');
     fate.respawnTimeMsLocal = this.RespawnTime(fate);
 
     if (fate.bunny) {
@@ -3017,8 +3036,8 @@ class EurekaTracker {
       if (shouldPlay && this.options.BunnyPopSound && this.options.BunnyPopVolume)
         this.PlaySound(this.options.BunnyPopSound, this.options.BunnyPopVolume);
     } else if (fate.isCritical) {
-      const shouldPlay = fate.isDuel && this.options.PopNoiseForDuel ||
-          !fate.isDuel && this.options.PopNoiseForCriticalEngagement;
+      const shouldPlay = fate.isDuelPrecursor && this.options.PopNoiseForDuel ||
+          this.options.PopNoiseForCriticalEngagement;
       if (shouldPlay && this.options.CriticalPopSound && this.options.CriticalPopVolume)
         this.PlaySound(this.options.CriticalPopSound, this.options.CriticalPopVolume);
     } else {
@@ -3045,14 +3064,14 @@ class EurekaTracker {
     this.DebugPrint(`OnFateKill: ${this.TransByDispLang(fate.label)}`);
     this.UpdateTimes();
     if (fate.element.classList.contains('nm-pop')) {
-      if (this.zoneInfo.dontShowInactive)
+      if (this.zoneInfo.onlyShowInactiveWithExplicitRespawns && !fate.respawnMinutes)
         fate.element.classList.add('nm-hidden');
       fate.element.classList.add('nm-down');
       fate.element.classList.remove('nm-pop');
       fate.progressElement.innerText = null;
       return;
     } else if (fate.element.classList.contains('critical-pop')) {
-      if (this.zoneInfo.dontShowInactive)
+      if (this.zoneInfo.onlyShowInactiveWithExplicitRespawns && !fate.respawnMinutes)
         fate.element.classList.add('nm-hidden');
       fate.element.classList.add('critical-down');
       fate.element.classList.remove('critical-pop');
@@ -3136,12 +3155,6 @@ class EurekaTracker {
 
     document.getElementById('label-tracker').innerHTML = this.currentTracker;
 
-    // TODO: don't early out here, because it means bozja can't show a timer.
-    // Instead, maybe add a per-zone default respawn time which, if null/zero,
-    // means don't show respawn times unless specified.
-    if (this.zoneInfo.shortName === 'bozjasouthern')
-      return;
-
     for (let i = 0; i < this.nmKeys.length; ++i) {
       const nm = this.nms[this.nmKeys[i]];
 
@@ -3211,8 +3224,8 @@ class EurekaTracker {
         const remainingMinutes = Math.ceil(remainingMs / 1000 / 60);
         const nmString = respawnIcon + remainingMinutes +
           this.TransByDispLang(this.options.timeStrings.minute);
-        nm.timeElement.innerHTML = nmString;
-        nm.element.classList.add('nm-down');
+        if (nm.timeElement.innerHTML !== nmString)
+          nm.timeElement.innerHTML = nmString;
       }
     }
   }

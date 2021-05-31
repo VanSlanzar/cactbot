@@ -123,14 +123,7 @@ const summonDirectionOutputStrings = {
     cn: '上偏左(北偏西)',
     ko: '11시',
   },
-  unknown: {
-    en: '???',
-    de: '???',
-    fr: '???',
-    ja: '???',
-    cn: '???',
-    ko: '???',
-  },
+  unknown: Outputs.unknown,
 };
 
 const convertBossHeadingToClonePosition = (boss) => {
@@ -362,7 +355,7 @@ export default {
       netRegexCn: NetRegexes.startsUsing({ id: '561[23]', source: '暗黑之云', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '561[23]', source: '어둠의 구름', capture: false }),
       delaySeconds: 7,
-      alertText: (data, _, output) => output[data.phaserOutputs[0]](),
+      alertText: (data, _matches, output) => output[data.phaserOutputs[0]](),
       run: (data) => data.phaserOutputs.shift(),
       outputStrings: phaserOutputStrings,
     },
@@ -375,7 +368,7 @@ export default {
       netRegexCn: NetRegexes.startsUsing({ id: '561[23]', source: '暗黑之云', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '561[23]', source: '어둠의 구름', capture: false }),
       delaySeconds: 12,
-      alertText: (data, _, output) => output[data.phaserOutputs[0]](),
+      alertText: (data, _matches, output) => output[data.phaserOutputs[0]](),
       run: (data) => data.phaserOutputs.shift(),
       outputStrings: phaserOutputStrings,
     },
@@ -407,7 +400,7 @@ export default {
       netRegexCn: NetRegexes.startsUsing({ id: '560[DE]', source: '暗黑之云', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '560[DE]', source: '어둠의 구름', capture: false }),
       delaySeconds: 8,
-      alertText: (data, _, output) => output[data.phaserOutputs[0]](),
+      alertText: (data, _matches, output) => output[data.phaserOutputs[0]](),
       run: (data) => data.phaserOutputs.shift(),
       outputStrings: phaserOutputStrings,
     },
@@ -420,7 +413,7 @@ export default {
       netRegexCn: NetRegexes.startsUsing({ id: '560[DE]', source: '暗黑之云', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '560[DE]', source: '어둠의 구름', capture: false }),
       delaySeconds: 12,
-      alertText: (data, _, output) => output[data.phaserOutputs[0]](),
+      alertText: (data, _matches, output) => output[data.phaserOutputs[0]](),
       run: (data) => data.phaserOutputs.shift(),
       outputStrings: phaserOutputStrings,
     },
@@ -590,7 +583,7 @@ export default {
       id: 'E9S Curse Of Darkness',
       netRegex: NetRegexes.gainsEffect({ effectId: '953' }),
       condition: Conditions.targetIsYou(),
-      delaySeconds: (_, matches) => matches.duration - 3,
+      delaySeconds: (_data, matches) => matches.duration - 3,
       alertText: (_data, _matches, output) => output.text(),
       outputStrings: {
         text: {

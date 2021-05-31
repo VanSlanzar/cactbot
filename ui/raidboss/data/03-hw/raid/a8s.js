@@ -271,9 +271,7 @@ export default {
         if (data.me !== matches.target)
           return output.thunderOn({ player: data.ShortName(matches.target) });
       },
-      run: (data, matches) => {
-        data.lightning = matches.target;
-      },
+      run: (data, matches) => data.lightning = matches.target,
       outputStrings: {
         thunderOn: {
           en: 'Thunder on ${player}',
@@ -296,17 +294,14 @@ export default {
     {
       id: 'A8S Compressed Lightning Lose',
       netRegex: NetRegexes.losesEffect({ effectId: '400', capture: false }),
-      run: (data) => {
-        delete data.lightning;
-      },
+      run: (data) => delete data.lightning,
     },
     {
       id: 'A8S Compressed Lightning Soon',
       netRegex: NetRegexes.gainsEffect({ effectId: '400' }),
+      condition: (data) => data.lightning,
       delaySeconds: (_data, matches) => parseFloat(matches.duration) - 5,
       infoText: (data, _matches, output) => {
-        if (!data.lightning)
-          return;
         return output.text({ player: data.ShortName(data.lightning) });
       },
       outputStrings: {
@@ -377,9 +372,7 @@ export default {
     {
       id: 'A8S Long Needle Stack Collect',
       netRegex: NetRegexes.headMarker({ id: '003E' }),
-      run: (data, matches) => {
-        data.longNeedleStack = matches.target;
-      },
+      run: (data, matches) => data.longNeedleStack = matches.target,
     },
     {
       id: 'A8S Long Needle Prey Collect',
@@ -583,9 +576,7 @@ export default {
       netRegexJa: NetRegexes.ability({ source: 'ブルートジャスティス', id: '1673', capture: false }),
       netRegexCn: NetRegexes.ability({ source: '残暴正义号', id: '1673', capture: false }),
       netRegexKo: NetRegexes.ability({ source: '포악한 심판자', id: '1673', capture: false }),
-      run: (data) => {
-        data.seenLinkUp = true;
-      },
+      run: (data) => data.seenLinkUp = true,
     },
     {
       id: 'A8S Verdict Min HP',
@@ -607,9 +598,7 @@ export default {
     {
       id: 'A8S Verdict Min HP Collect',
       netRegex: NetRegexes.gainsEffect({ effectId: '408' }),
-      run: (data, matches) => {
-        data.verdictMin = matches.target;
-      },
+      run: (data, matches) => data.verdictMin = matches.target,
     },
     {
       id: 'A8S Verdict Min HP Tornado',
@@ -631,9 +620,7 @@ export default {
     {
       id: 'A8S Verdict Max HP Collect',
       netRegex: NetRegexes.gainsEffect({ effectId: '407' }),
-      run: (data, matches) => {
-        data.verdictMax = matches.target;
-      },
+      run: (data, matches) => data.verdictMax = matches.target,
     },
     {
       id: 'A8S Verdict Max HP',
@@ -803,9 +790,7 @@ export default {
         if (data.me !== matches.target)
           return output.waterOn({ player: data.ShortName(matches.target) });
       },
-      run: (data, matches) => {
-        data.water = matches.target;
-      },
+      run: (data, matches) => data.water = matches.target,
       outputStrings: {
         waterOn: {
           en: 'Water on ${player}',
@@ -836,10 +821,9 @@ export default {
     {
       id: 'A8S Compressed Water Soon',
       netRegex: NetRegexes.gainsEffect({ effectId: '3FF' }),
+      condition: (data) => data.water,
       delaySeconds: (_data, matches) => parseFloat(matches.duration) - 5,
       infoText: (data, _matches, output) => {
-        if (!data.water)
-          return;
         return output.text({ player: data.ShortName(data.water) });
       },
       outputStrings: {
@@ -984,9 +968,9 @@ export default {
         'Attachment': 'Extension',
         'Auxiliary Power': 'Soutien énergétique',
         'Ballistic Missile': 'Missiles balistiques',
-        'Blaster \\(north\\)': 'Fracasseur (nord)',
+        'Blaster': 'Fracasseur',
         'Blinder': 'Missile aveuglant',
-        'Brawler \\(middle\\)': 'Bagarreur (milieu)',
+        'Brawler(?! Mechanic)': 'Bagarreur',
         'Brawler Mechanic': 'Mécanique du Bagarreur',
         'Brute Force': 'Force brute',
         'Crashing Thunder': 'Éclair percutant',
@@ -1030,11 +1014,11 @@ export default {
         'Super Cyclone': 'Super cyclone',
         'Super Jump': 'Super saut',
         'Supercharge': 'Super charge',
-        'Swindler \\(east\\)': 'Arnaqueur (est)',
+        'Swindler': 'Arnaqueur',
         'Transform': 'Assemblage Justicier',
         'Ultra Flash': 'Ultraflash',
         'Verdict': 'Ouverture de procès',
-        'Vortexer \\(south\\)': 'Tourbillonneur (sud)',
+        'Vortexer': 'Tourbillonneur',
       },
     },
     {
@@ -1054,9 +1038,6 @@ export default {
       'replaceText': {
         '--orbs--': '--オーブ--',
         '--regulator check--': '--レギュレーターチェック--',
-        '\\(east\\)': '(東)',
-        '\\(middle\\)': '(中)',
-        '\\(north\\)': '(北)',
         '100-Megatonze Shock': '100メガトンズショック',
         'Apocalyptic Ray': 'アポカリプティクレイ',
         'Attachment': 'アタッチメント',
@@ -1212,9 +1193,9 @@ export default {
         'Attachment': '무기 장착',
         'Auxiliary Power': '에너지 지원',
         'Ballistic Missile': '미사일 발사',
-        'Blaster \\(north\\)': '폭파자 (북쪽)',
+        'Blaster': '폭파자',
         'Blinder': '섬광 미사일',
-        'Brawler \\(middle\\)': '폭격자 (중앙)',
+        'Brawler(?! Mechanic)': '폭격자',
         'Brawler Mechanic': '한손/양손 버스터/드릴',
         'Brute Force': '폭력적인 주먹',
         'Crashing Thunder': '충격의 번개',

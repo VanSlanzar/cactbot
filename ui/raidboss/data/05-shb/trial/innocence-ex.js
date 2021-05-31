@@ -382,9 +382,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '3EEA', source: 'イノセンス', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '3EEA', source: '无瑕灵君', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '3EEA', source: '이노센스', capture: false }),
-      run: (data) => {
-        delete data.starbirthActive;
-      },
+      run: (data) => delete data.starbirthActive,
     },
     {
       id: 'InnoEx Starbirth End 2',
@@ -394,9 +392,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '3EEE', source: 'イノセンス', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '3EEE', source: '无瑕灵君', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '3EEE', source: '이노센스', capture: false }),
-      run: (data) => {
-        delete data.starbirthActive;
-      },
+      run: (data) => delete data.starbirthActive,
     },
     {
       id: 'InnoEx Soul And Body Left',
@@ -494,6 +490,14 @@ export default {
         'Forgiven Shame': 'Geläuterte Schande',
       },
       'replaceText': {
+        'Tethers': 'Verbindungen',
+        'Rotate': 'Rotieren',
+        'Trident': 'Dreizack',
+        'Charge': 'Ansturm',
+        'Corner': 'Ecke',
+        'Explode': 'Explosion',
+        'Avoid': 'ausweichen',
+        'Final(?!angriff)': ' Finale',
         'Soul And Body': 'Seele und Körper',
         'Shadowreaver': 'Schattenplünderer',
         'Scold\'s Bridle': 'Schandmal',
@@ -511,11 +515,7 @@ export default {
         'Forgiven venery': 'Geläuterte Wollust',
         'Drop Of Light': 'Lichtabfall',
         'Winged Rep': 'Schwinge des Urteils',
-        'Starbirth Corner': 'Sternengeburt Ecke',
-        'Starbirth Explode': 'Sternengeburt Explosion',
-        'Starbirth Charge': 'Sternengeburt Charge',
-        'Starbirth Avoid': 'vermeide Sternengeburt',
-        'Starbirth Final': 'Finale Sternengeburt',
+        'Starbirth': 'Sternengeburt',
       },
     },
     {

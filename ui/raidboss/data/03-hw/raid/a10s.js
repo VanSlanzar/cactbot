@@ -8,14 +8,7 @@ import ZoneId from '../../../../../resources/zone_id';
 // Ignoring Gobsway Rumblerocks (1AA0) aoe trigger, as it is small and frequent.
 
 const chargeOutputStrings = {
-  getIn: {
-    en: 'In',
-    de: 'Rein',
-    fr: 'Intérieur',
-    ja: '中へ',
-    cn: '靠近',
-    ko: '안으로',
-  },
+  getIn: Outputs.in,
   getOut: {
     en: 'Out',
     de: 'Raus',
@@ -279,9 +272,7 @@ export default {
       netRegexKo: NetRegexes.ability({ source: '용병 레임브릭스', id: '1AA9', capture: false }),
       delaySeconds: 20,
       suppressSeconds: 20,
-      run: (data) => {
-        delete data.seenBrighteyes;
-      },
+      run: (data) => delete data.seenBrighteyes,
     },
     {
       id: 'A10S Brighteyes Prey Marker',
@@ -383,13 +374,13 @@ export default {
       },
       'replaceText': {
         '(?!--)mechanic': 'Mechanik',
-        '--in--': '--Rein--',
-        '--out--': '--Raus--',
         '--in/out--': '--Rein/Raus--',
         '--out/in--': '--Raus/Rein--',
         '--spread/stack--': '--Verteilen/Sammeln--',
         '--stack/spread--': '--Sammeln/Verteilen--',
-        'Brighteyes': 'Zielheften Auge',
+        '\\(Stack/Spread\\)': '(Sammeln/Verteilen)',
+        'Brighteyes(?! Markers)': 'Zielheften Auge',
+        'Brighteyes Markers': 'Zielheften Auge Markierungen',
         'Clone Add': 'Klon Add',
         'Discharge': 'Abfeuern',
         'Double Charge': 'Doppelaufladung',
@@ -413,7 +404,7 @@ export default {
         'Stoneskin': 'Steinhaut',
         'Triple Charge': 'Dreifachaufladung',
         'Weight Trap': 'Gewichts-Falle',
-        'Leghops\\?/Charge \\(In\\)\\?': 'Gob am Berg?/Aufladung (Rein)?',
+        'Leghops\\?/Charge': 'Gob am Berg?/Aufladung',
       },
     },
     {
@@ -428,9 +419,7 @@ export default {
       },
       'replaceText': {
         '(?!--)mechanic': 'Mécanique',
-        '--in--': '--intérieur--',
         '--in/out--': '--intérieur/extérieur--',
-        '--out--': '--extérieur--',
         '--out/in--': '--extérieur/intérieur--',
         '--spread/stack--': '--dispersion/package--',
         '--stack/spread--': '--package/dispersion--',
@@ -455,7 +444,7 @@ export default {
         'Illuminati Hand Cannon': 'Main-canon indigo',
         'Impact': 'Impact',
         'Laceration': 'Lacération',
-        'Leghops\\?/Charge \\(In\\)\\?': 'Mortelle ?/Charge (intérieur) ?',
+        'Leghops\\?/Charge': 'Mortelle ?/Charge',
         'Single Charge': 'Rechargement simple',
         'Steam Roller': 'Compression',
         'Stoneskin': 'Cuirasse',
@@ -475,13 +464,12 @@ export default {
       },
       'replaceText': {
         '(?!--)mechanic': 'ギミック',
-        '--in--': '--中--',
         '--in/out--': '--中/外--',
-        '--out--': '--外--',
         '--out/in--': '--外/中--',
         '--spread/stack--': '--散開/集合--',
         '--stack/spread--': '--集合/散開--',
         '\\(Stack/Spread\\)': '(集合/散開)',
+        '\\)\\?': ') ?',
         'Brighteyes Markers': '狙い目マーキング',
         'Brighteyes(?! Markers)': '狙い目',
         'Clone Add': '雑魚: ミラージュ',
@@ -502,7 +490,7 @@ export default {
         'Illuminati Hand Cannon': 'イルミナティ・ハンドカノン',
         'Impact': '衝撃',
         'Laceration': '斬撃',
-        'Leghops\\?/Charge \\(In\\)\\?': 'ゴブ流後の先?/充填 (中) ?',
+        'Leghops\\?/Charge': 'ゴブ流後の先?/充填',
         'Single Charge': '単発充填',
         'Steam Roller': 'ローラープレス',
         'Stoneskin': 'ストンスキン',
@@ -522,12 +510,11 @@ export default {
       },
       'replaceText': {
         '(?!--)mechanic': '机制',
-        '--in--': '--内--',
-        '--out--': '--外--',
         '--in/out--': '--内/外--',
         '--out/in--': '--外/内--',
         '--spread/stack--': '--分散/集合--',
         '--stack/spread--': '--集合/分散--',
+        '\\)\\?': ') ?',
         'Brighteyes': '目标',
         'Clone Add': '分身出现',
         'Discharge': '枪击',
@@ -552,7 +539,7 @@ export default {
         'Stoneskin': '石肤',
         'Triple Charge': '三连填充',
         'Weight Trap': '铁球陷阱',
-        'Leghops\\?/Charge \\(In\\)\\?': '哥布流后之先?/冲锋（内）?',
+        'Leghops\\?/Charge': '哥布流后之先?/冲锋',
       },
     },
     {
@@ -567,8 +554,6 @@ export default {
       },
       'replaceText': {
         '(?!--)mechanic': '기믹',
-        '--in--': '--안--',
-        '--out--': '--밖--',
         '--in/out--': '--안/밖--',
         '--out/in--': '--밖/안--',
         '--spread/stack--': '--산개/쉐어--',
@@ -598,7 +583,7 @@ export default {
         'Stoneskin': '스톤스킨',
         'Triple Charge': '3연속 충전',
         'Weight Trap': '철퇴 함정',
-        'Leghops\\?/Charge \\(In\\)\\?': '되받아치기?/충전 (안)?',
+        'Leghops\\?/Charge': '되받아치기?/충전',
       },
     },
   ],

@@ -262,9 +262,7 @@ export default {
       id: 'Ridorana Construct Accelerate Spread',
       netRegex: NetRegexes.headMarker({ id: '008A' }),
       condition: Conditions.targetIsYou(),
-      preRun: (data) => {
-        data.accelerateSpreadOnMe = true;
-      },
+      preRun: (data) => data.accelerateSpreadOnMe = true,
       response: Responses.spread(),
     },
     {
@@ -281,9 +279,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '2C65', source: '労働七号', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '2C65', source: '劳动七号', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '2C65', source: '노동 7호', capture: false }),
-      run: (data) => {
-        delete data.accelerateSpreadOnMe;
-      },
+      run: (data) => delete data.accelerateSpreadOnMe,
     },
     {
       id: 'Ridorana Construct Math Setup',
@@ -293,9 +289,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '2C6C', source: '労働七号', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '2C6C', source: '劳动七号', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '2C6C', source: '노동 7호', capture: false }),
-      run: (data) => {
-        data.mathBaseValue = 0;
-      },
+      run: (data) => data.mathBaseValue = 0,
     },
     {
       // Hp Penalty effect.
@@ -519,6 +513,12 @@ export default {
         'Yiazmat': 'Yiasmat',
       },
       'replaceText': {
+        '\\(close\\)': '(Nahe)',
+        '\\(cross\\)': '(Kreuz)',
+        '\\(combo\\)': '(Kombo)',
+        '\\(orbit\\)': '(Orbit)',
+        '\\(far\\)': '(Entfernt)',
+        '\\(single\\)': '(Einzeln)',
         'Accelerate': 'Beschleunigen',
         'Annihilation Mode': 'Auslöschungsmodul',
         'Archaeodemon spawn': 'Archaeodämon erscheint',
@@ -661,7 +661,6 @@ export default {
       'replaceText': {
         '\\(close\\)': '(近い)',
         '\\(combo\\)': '(コンボ)',
-        '\\(cross\\)': '(十字)',
         '\\(orbit\\)': '(曲線)',
         '\\(far\\)': '(遠い)',
         '\\(single\\)': '(一撃)',
@@ -857,7 +856,6 @@ export default {
         'Ventilate': '냉각',
         'Water IV': '워터쟈',
         'White Breath': '하얀 숨결',
-        'cross': '지나감',
         'orbit': '떠있음',
         'close': '가까이',
         'far': '멀리',

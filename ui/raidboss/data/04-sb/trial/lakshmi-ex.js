@@ -26,9 +26,7 @@ export default {
       netRegexJa: NetRegexes.startsUsing({ id: '2148', source: 'ラクシュミ', capture: false }),
       netRegexCn: NetRegexes.startsUsing({ id: '2148', source: '吉祥天女', capture: false }),
       netRegexKo: NetRegexes.startsUsing({ id: '2148', source: '락슈미', capture: false }),
-      run: (data) => {
-        data.chanchala = true;
-      },
+      run: (data) => data.chanchala = true,
     },
     {
       id: 'LakshmiEx Chanchala Lose',
@@ -38,9 +36,7 @@ export default {
       netRegexJa: NetRegexes.losesEffect({ target: 'ラクシュミ', effectId: '582', capture: false }),
       netRegexCn: NetRegexes.losesEffect({ target: '吉祥天女', effectId: '582', capture: false }),
       netRegexKo: NetRegexes.losesEffect({ target: '락슈미', effectId: '582', capture: false }),
-      run: (data) => {
-        data.chanchala = false;
-      },
+      run: (data) => data.chanchala = false,
     },
     {
       id: 'LakshmiEx Pull of Light Tank',
@@ -310,6 +306,8 @@ export default {
         'Lakshmi': 'Lakshmi',
       },
       'replaceText': {
+        '--chanchala end--': '--Chanchala endet--',
+        '\\(mid\\)': '(Mitte)',
         '/dance': '/tanz',
         'Adds Appear': 'Adds erscheinen',
         'Alluring Arm': 'Anziehender Arm',
@@ -338,7 +336,6 @@ export default {
         '--chanchala end--': '--fin de chanchala--',
         '/dance': '/danse',
         '\\(mid\\)': '(milieu)',
-        '\\(out\\)': '(extérieur)',
         'Adds Appear': 'Apparition d\'adds',
         'Alluring Arm': 'Bras séduisants',
         'Blissful Spear': 'Épieu béatifiant',
@@ -365,7 +362,6 @@ export default {
       'replaceText': {
         '/dance': '/dance',
         '\\(mid\\)': '(中央)',
-        '\\(out\\)': '(外)',
         'Adds Appear': '雑魚',
         'Alluring Arm': '魅惑の腕',
         'Blissful Spear': '聖なる槍',

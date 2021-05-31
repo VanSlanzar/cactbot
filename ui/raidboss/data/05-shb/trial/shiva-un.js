@@ -80,9 +80,7 @@ export default {
 
         return { infoText: output.staff() };
       },
-      run: (data) => {
-        data.soonAfterWeaponChange = true;
-      },
+      run: (data) => data.soonAfterWeaponChange = true,
     },
     {
       id: 'ShivaUn Sword Phase',
@@ -119,9 +117,7 @@ export default {
 
         return { infoText: output.sword() };
       },
-      run: (data) => {
-        data.soonAfterWeaponChange = true;
-      },
+      run: (data) => data.soonAfterWeaponChange = true,
     },
     {
       id: 'ShivaUn Weapon Change Delayed',
@@ -132,9 +128,7 @@ export default {
       netRegexKo: NetRegexes.ability({ source: '시바', id: ['5366', '5367'], capture: false }),
       netRegexCn: NetRegexes.ability({ source: '希瓦', id: ['5366', '5367'], capture: false }),
       delaySeconds: 30,
-      run: (data) => {
-        data.soonAfterWeaponChange = false;
-      },
+      run: (data) => data.soonAfterWeaponChange = false,
     },
     {
       id: 'ShivaUn Slashing Resistance Down Gain',
@@ -176,9 +170,7 @@ export default {
       netRegexJa: NetRegexes.ability({ source: 'シヴァ', id: '5365' }),
       netRegexKo: NetRegexes.ability({ source: '시바', id: '5365' }),
       netRegexCn: NetRegexes.ability({ source: '希瓦', id: '5365' }),
-      run: (data, matches) => {
-        data.currentTank = matches.target;
-      },
+      run: (data, matches) => data.currentTank = matches.target,
     },
     {
       id: 'ShivaUn Hailstorm Marker',
@@ -204,9 +196,7 @@ export default {
       netRegexJa: NetRegexes.ability({ source: 'シヴァ', id: '536C', capture: false }),
       netRegexKo: NetRegexes.ability({ source: '시바', id: '536C', capture: false }),
       netRegexCn: NetRegexes.ability({ source: '希瓦', id: '536C', capture: false }),
-      run: (data) => {
-        data.seenDiamondDust = true;
-      },
+      run: (data) => data.seenDiamondDust = true,
     },
     {
       id: 'ShivaUn Frost Bow',
@@ -308,7 +298,6 @@ export default {
       'replaceText': {
         '\\(circle\\)': '(Kreis)',
         '\\(cross\\)': '(Kreuz)',
-        '--frozen--': '--eingefroren--',
         'Absolute Zero': 'Absoluter Nullpunkt',
         'Avalanche': 'Lawine',
         'Diamond Dust': 'Diamantenstaub',
@@ -337,7 +326,6 @@ export default {
         '\\?': ' ?',
         '\\(circle\\)': '(cercle)',
         '\\(cross\\)': '(croix)',
-        '--frozen--': '--gelé--',
         'Absolute Zero': 'Zéro absolu',
         'Avalanche': 'Avalanche',
         'Diamond Dust': 'Poussière de diamant',
@@ -366,7 +354,6 @@ export default {
         '\\?': ' ?',
         '\\(circle\\)': '(輪)',
         '\\(cross\\)': '(十字)',
-        '--frozen--': '--凍結--',
         'Absolute Zero': '絶対零度',
         'Avalanche': 'アバランチ',
         'Diamond Dust': 'ダイアモンドダスト',
@@ -395,7 +382,6 @@ export default {
         '\\?': ' ?',
         '\\(circle\\)': '(圆)',
         '\\(cross\\)': '(十字)',
-        '--frozen--': '--冻结--',
         'Absolute Zero': '绝对零度',
         'Avalanche': '雪崩',
         'Diamond Dust': '钻石星尘',
@@ -423,7 +409,6 @@ export default {
       'replaceText': {
         '\\(circle\\)': '(원형)',
         '\\(cross\\)': '(십자)',
-        '--frozen--': '--동결--',
         'Absolute Zero': '절대영도',
         'Avalanche': '눈사태',
         'Diamond Dust': '다이아몬드 더스트',
