@@ -218,6 +218,9 @@ module.exports = function(env, argv) {
         {
           test: /\.ts$/,
           loader: 'ts-loader',
+          options: {
+            compilerOptions: dev ? { declaration: true, declarationMap: true } : {},
+          },
         },
         {
           test: /\.css$/,
@@ -286,6 +289,7 @@ module.exports = function(env, argv) {
     ],
     stats: {
       children: true,
+      errorDetails: true,
     },
   };
 };

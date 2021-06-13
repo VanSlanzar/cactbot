@@ -290,7 +290,7 @@ ThirdParty
 | <img src="../../resources/ffxiv/jobs/whm-large.png" width="30px" /><br> 白魔法师 |                 显示治疗&血百合数量，距离获得下一朵治疗百合的时间，DoT剩余时间，以及法令&醒梦的冷却时间。                 |
 |  <img src="../../resources/ffxiv/jobs/sch-large.png" width="30px" /><br> 学者  |                 显示以太超流的层数、异想以太量/炽天使剩余时间、DoT剩余时间，并显示以太超流&醒梦的冷却。                  |
 | <img src="../../resources/ffxiv/jobs/ast-large.png" width="30px" /><br> 占星术士 |                 显示已有的印记数量，标注是否应该发当前卡/应该发给谁，DoT剩余时间和抽卡&醒梦的冷却时间。                  |
-|  <img src="../../resources/ffxiv/jobs/mnk-large.png" width="30px" /><br> 武僧  | 显示斗气档数，<del>剩余的疾风迅雷Buff时间</del>(5.4疾风迅雷将被删除)，身形持续时间，并监控连击效果提高、双掌打buff和破碎拳DoT时间。 |
+|  <img src="../../resources/ffxiv/jobs/mnk-large.png" width="30px" /><br> 武僧  | 显示斗气档数，身形持续时间，并监控连击效果提高、双掌打buff和破碎拳DoT时间。 |
 | <img src="../../resources/ffxiv/jobs/drg-large.png" width="30px" /><br> 龙骑士  |               显示龙血时间&龙眼数，开膛枪buff剩余时间，跳跃的冷却时间，以及猛枪&巨龙视线的持续时间和冷却时间。               |
 |  <img src="../../resources/ffxiv/jobs/nin-large.png" width="30px" /><br> 忍者  |                显示忍气量，风遁剩余时间，攻其不备持续时间&冷却时间，分身之术&结印的冷却，并显示连击剩余时间。                 |
 |  <img src="../../resources/ffxiv/jobs/sam-large.png" width="30px" /><br> 武士  |                  显示剑气量，剑压档数，士风、阵风和彼岸花的剩余时间，回返的冷却时间，以及显示连击剩余时间。                  |
@@ -314,7 +314,7 @@ ThirdParty
 
 该模块会自动追踪NM的出现和死亡。  还会显示特殊天气/夜晚计时器以及粘贴到聊天中的优雷卡追踪器链接。  聊天中的所有坐标信息也都会临时显示在地图上。
 
-当前，该模块不会直接读取优雷卡追踪器的信息。  但如果您点击优雷卡追踪器左侧红色的“复制已杀死的NM”按钮来复制当前已死NM的列表，则可以将其粘贴到游戏中，例如`/echo ? 冷却中的NM: 蝎子 (7m) > 魔界花 (24m) > 独眼 (54m)`，以便该模块从此列表自动同步数据。
+当前，该模块不会直接读取优雷卡追踪器的信息。  但如果您点击优雷卡追踪器左侧红色的“复制已杀死的NM”按钮来复制当前已死NM的列表，则可以将其粘贴到游戏中，例如`/echo 冷却中的NM: 蝎子 (7m) → 魔界花 (24m) → 独眼 (54m)`，以便该模块从此列表自动同步数据。
 
 如果您看不到表情符号，请确保已安装[此Windows更新](https://support.microsoft.com/en-us/help/2729094/an-update-for-the-segoe-ui-symbol-font-in-windows-7-and-in-windows-ser)。
 

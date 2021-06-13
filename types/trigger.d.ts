@@ -1,4 +1,5 @@
 import { Lang, NonEnLang } from '../resources/languages';
+import { TimelineReplacement, TimelineStyle } from '../ui/raidboss/timeline';
 import { RaidbossData } from './data';
 
 export interface BaseRegExp<T> extends RegExp {
@@ -7,7 +8,7 @@ export interface BaseRegExp<T> extends RegExp {
   };
 }
 
-export type Matches<Params> = { [s in Params]?: string };
+export type Matches<Params> = { [s in Params]: string } | MatchesAny;
 
 // TargetedMatches can be used for generic functions in responses or conditions
 // that use matches from any number of Regex or NetRegex functions.
@@ -26,19 +27,20 @@ export type LocaleText = LocaleObject<string>;
 
 export type ZoneId = number | null;
 
+export type OutputStrings = { [outputKey: string]: LocaleText };
+
 // TODO: is it awkward to have Outputs the static class and Output the unrelated type?
 // This type corresponds to TriggerOutputProxy.
 export type Output = {
-  responseOutputStrings: {
-    [outputKey: string]: LocaleText;
-  };
+  responseOutputStrings: OutputStrings;
 } & {
   [key: string]: (params?: { [param: string]: string | undefined }) => string;
 };
 
 // The output of any non-response raidboss trigger function.
-export type TriggerOutput =
-    undefined | null | LocaleText | string | number | boolean | (() => TriggerOutput);
+export type TriggerOutput<Data, Matches> =
+    undefined | null | LocaleText | string | number | boolean |
+    ((d: Data, m: Matches, o: Output) => TriggerOutput<Data, Matches>);
 
 // The type of a non-response trigger field.
 export type TriggerFunc<Data, Matches, Return> =
@@ -49,7 +51,7 @@ type ResponseFields = 'infoText' | 'alertText' | 'alarmText' | 'tts';
 
 // The output from a response function (different from other TriggerOutput functions).
 export type ResponseOutput<Data, Matches> = {
-  [text in ResponseFields]?: TriggerFunc<Data, Matches, TriggerOutput>;
+  [text in ResponseFields]?: TriggerFunc<Data, Matches, TriggerOutput<Data, Matches>>;
 };
 // The type of a response trigger field.
 export type ResponseFunc<Data, Matches> =
@@ -61,16 +63,19 @@ export type TriggerAutoConfig = {
   Output?: Output;
   Duration?: number;
   BeforeSeconds?: number;
-  OutputStrings?: { [outputKey: string]: Lang };
+  OutputStrings?: OutputStrings;
+  TextAlertsEnabled?: boolean;
+  SoundAlertsEnabled?: boolean;
+  SpokenAlertsEnabled?: boolean;
 }
 
 export type MatchesAny = { [s in T]?: string };
 
 // Note: functions like run or preRun need to be defined as void-only as (confusingly)
 // it is not possible to assign `(d: Data) => boolean` to a void | undefined, only to void.
-type OptionalUnlessVoid<T> = T extends void ? void : T | undefined;
 export type TriggerField<Data, Return> =
-    TriggerFunc<Data, MatchesAny, OptionalUnlessVoid<Return>> | OptionalUnlessVoid<Return>;
+  [Return] extends [void] ? TriggerFunc<Data, MatchesAny, void> :
+  TriggerFunc<Data, MatchesAny, Return | undefined> | Return | undefined;
 
 // This trigger type is what we expect cactbot triggers to be written as,
 // in other words `id` is not technically required for triggers but for
@@ -83,18 +88,16 @@ export type BaseTrigger<Data> = {
   delaySeconds?: TriggerField<Data, number>;
   durationSeconds?: TriggerField<Data, number>;
   suppressSeconds?: TriggerField<Data, number>;
-  promise?: TriggerField<Promise<Data, void>>;
+  promise?: TriggerField<Data, Promise<void>>;
   sound?: TriggerField<Data, string>;
   soundVolume?: TriggerField<Data, number>;
   response?: ResponseField<Data>;
-  alarmText?: TriggerField<Data, TriggerOutput>;
-  alertText?: TriggerField<Data, TriggerOutput>;
-  infoText?: TriggerField<Data, TriggerOutput>;
-  tts?: TriggerField<Data, TriggerOutput>;
+  alarmText?: TriggerField<Data, TriggerOutput<Data, MatchesAny>>;
+  alertText?: TriggerField<Data, TriggerOutput<Data, MatchesAny>>;
+  infoText?: TriggerField<Data, TriggerOutput<Data, MatchesAny>>;
+  tts?: TriggerField<Data, TriggerOutput<Data, MatchesAny>>;
   run?: TriggerField<Data, void>;
-  outputStrings?: {
-    [key: string]: LocaleText;
-  };
+  outputStrings?: OutputStrings;
 }
 
 export type NetRegexTrigger<Data> = BaseTrigger<Data> & {
@@ -132,12 +135,8 @@ export type TriggerSet<Data> = {
   timeline?: TimelineFunc;
   triggers?: NetRegexTrigger<Data>[];
   timelineTriggers?: TimelineTrigger<Data>[];
-  timelineReplace?: {
-    locale: Lang;
-    missingTranslations?: boolean;
-    replaceText?: { [regex: string]: string };
-    replaceSync?: { [regex: string]: string };
-  }[];
+  timelineReplace?: TimelineReplacement[];
+  timelineStyles?: TimelineStyle[];
 }
 
 // Less strict type for user triggers + built-in triggers, including deprecated fields.
