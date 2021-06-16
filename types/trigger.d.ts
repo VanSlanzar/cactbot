@@ -27,14 +27,14 @@ export type LocaleText = LocaleObject<string>;
 
 export type ZoneId = number | null;
 
-export type OutputStrings = { [outputKey: string]: LocaleText };
+export type OutputStrings = { [outputKey: string]: LocaleText | string };
 
 // TODO: is it awkward to have Outputs the static class and Output the unrelated type?
 // This type corresponds to TriggerOutputProxy.
 export type Output = {
   responseOutputStrings: OutputStrings;
 } & {
-  [key: string]: (params?: { [param: string]: string | undefined }) => string;
+  [key: string]: (params?: { [param: string]: string | number | undefined }) => string;
 };
 
 // The output of any non-response raidboss trigger function.
