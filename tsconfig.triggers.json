@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.base.json",
+  "ts-node": {
+    "compiler": "ttypescript"
+  },
+  "compilerOptions": {
+    "outDir": "./dist/triggers"
+  },
+  "include": [
+    "./ui/raidboss/data/",
+    "./types/manifest.d.ts"
+  ]
+}
