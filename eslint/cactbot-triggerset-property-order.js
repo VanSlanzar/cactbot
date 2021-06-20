@@ -4,7 +4,7 @@ module.exports = {
   meta: {
     type: 'suggestion',
     docs: {
-      description: 'suggest the trigger property order',
+      description: 'suggest the triggerSet property order',
       category: 'Stylistic Issues',
       recommended: true,
       url: 'https://github.com/quisquous/cactbot/blob/main/docs/RaidbossGuide.md#trigger-elements',
@@ -22,66 +22,38 @@ module.exports = {
       },
     ],
     messages: {
-      sortKeys: 'Expected trigger properties ordered like {{expectedOrder}} (\'{{beforeKey}}\' should be before \'{{nextKey}}\')',
+      sortKeys: 'Expected triggerSet properties ordered like {{expectedOrder}} (\'{{beforeKey}}\' should be before \'{{nextKey}}\')',
     },
   },
   create: (context) => {
     const raidbossOrderList = [
-      'id',
-      'type',
-      'disabled',
-      'netRegex',
-      'netRegexDe',
-      'netRegexFr',
-      'netRegexJa',
-      'netRegexCn',
-      'netRegexKo',
-      'regex',
-      'beforeSeconds',
-      'condition',
-      'preRun',
-      'delaySeconds',
-      'durationSeconds',
-      'suppressSeconds',
-      'promise',
-      'sound',
-      'soundVolume',
-      'response',
-      'alarmText',
-      'alertText',
-      'infoText',
-      'tts',
-      'run',
-      'outputStrings',
+      'zoneId',
+      'overrideTimelineFile',
+      'timelineFile',
+      'timeline',
+      'resetWhenOutOfCombat',
+      'initData',
+      'timelineStyles',
+      'timelineTriggers',
+      'triggers',
+      'timelineReplace',
     ];
     const oopsyraidsyOrderList = [
-      'id',
-      'netRegex',
-      'netRegexDe',
-      'netRegexFr',
-      'netRegexJa',
-      'netRegexCn',
-      'netRegexKo',
-      'regex',
-      'damageRegex',
-      'healRegex',
-      'gainsEffectRegex',
-      'losesEffectRegex',
-      'abilityRegex',
-      'condition',
-      'collectSeconds',
-      'delaySeconds',
-      'suppressSeconds',
-      'deathReason',
-      'mistake',
-      'run',
+      'zoneId',
+      'damageWarn',
+      'damageFail',
+      'gainsEffectWarn',
+      'gainsEffectFail',
+      'shareWarn',
+      'shareFail',
+      'triggers',
     ];
     const optionModule = context.options[0] ? context.options[0].module : undefined;
     if (!optionModule || (optionModule !== 'oopsyraidsy' && optionModule !== 'raidboss'))
       return;
     const orderList = optionModule === 'oopsyraidsy' ? oopsyraidsyOrderList : raidbossOrderList;
     return {
-      'Property[key.name=/(timelineTriggers|triggers)/] > ArrayExpression > ObjectExpression': (node) => {
+      'VariableDeclarator[id.name=\'triggerSet\'] > ObjectExpression': (node) => {
         const properties = node.properties;
 
         const validList = generateValidList(orderList, properties);
