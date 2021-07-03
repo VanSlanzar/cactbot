@@ -2,6 +2,7 @@ import { UnreachableCode } from '../../../../resources/not_reached';
 import { RaidbossOptions } from '../../../../ui/raidboss/raidboss_options';
 import { TimelineUI, Event } from '../../timeline';
 import RaidEmulator from '../data/RaidEmulator';
+
 import RaidEmulatorTimeline from './RaidEmulatorTimeline';
 
 export interface EmulatorTimerBar {
@@ -65,7 +66,7 @@ export default class RaidEmulatorTimelineUI extends TimelineUI {
 
       this.emulatedTimerBars = [];
     });
-    emulator.on('postSeek', (currentLogTime) => {
+    emulator.on('postSeek', (currentLogTime: number) => {
       if (this.timeline instanceof RaidEmulatorTimeline)
         this.timeline.emulatedSync(currentLogTime);
 
@@ -107,7 +108,7 @@ export default class RaidEmulatorTimelineUI extends TimelineUI {
   }
 
   // Override
-  protected OnAddTimer(fightNow: number, e: Event, channeling: boolean): void {
+  OnAddTimer(fightNow: number, e: Event, channeling: boolean): void {
     if (!this.timeline)
       throw new UnreachableCode();
 

@@ -1,22 +1,23 @@
+import { UnreachableCode } from '../../../../resources/not_reached';
+import Util from '../../../../resources/util';
+import { LooseTrigger } from '../../../../types/trigger';
+import raidbossFileData from '../../data/raidboss_manifest.txt';
+import { PopupTextGenerator, TriggerHelper } from '../../popup-text';
+import { RaidbossOptions } from '../../raidboss_options';
+import { TimelineLoader } from '../../timeline';
 import EmulatorCommon, { DataType } from '../EmulatorCommon';
 import EventBus from '../EventBus';
-import { PopupTextGenerator, TriggerHelper } from '../../popup-text';
-import RaidEmulatorTimelineController from '../overrides/RaidEmulatorTimelineController';
-import PopupTextAnalysis, { ResolverStatus, Resolver } from './PopupTextAnalysis';
-import Util from '../../../../resources/util';
-import raidbossFileData from '../../data/raidboss_manifest.txt';
 import RaidEmulatorAnalysisTimelineUI from '../overrides/RaidEmulatorAnalysisTimelineUI';
-import { RaidbossOptions } from '../../raidboss_options';
-import Encounter from './Encounter';
-import RaidEmulator from './RaidEmulator';
-import LineEvent from './network_log_converter/LineEvent';
-import { UnreachableCode } from '../../../../resources/not_reached';
-import { LooseTrigger } from '../../../../types/trigger';
-import Combatant from './Combatant';
-import { TimelineLoader } from '../../timeline';
 import RaidEmulatorPopupText from '../overrides/RaidEmulatorPopupText';
+import RaidEmulatorTimelineController from '../overrides/RaidEmulatorTimelineController';
 
-type PerspectiveTrigger = {
+import Combatant from './Combatant';
+import Encounter from './Encounter';
+import LineEvent from './network_log_converter/LineEvent';
+import PopupTextAnalysis, { ResolverStatus, Resolver } from './PopupTextAnalysis';
+import RaidEmulator from './RaidEmulator';
+
+export type PerspectiveTrigger = {
   triggerHelper: TriggerHelper;
   status: ResolverStatus;
   logLine: LineEvent;
@@ -32,9 +33,9 @@ type Perspectives = { [id: string]: Perspective };
 export default class AnalyzedEncounter extends EventBus {
   perspectives: Perspectives = {};
   constructor(
-    public options: RaidbossOptions,
-    public encounter: Encounter,
-    public emulator: RaidEmulator) {
+      public options: RaidbossOptions,
+      public encounter: Encounter,
+      public emulator: RaidEmulator) {
     super();
   }
 
@@ -144,14 +145,22 @@ export default class AnalyzedEncounter extends EventBus {
 
     this.selectPerspective(id, popupText);
 
-    if (timelineController.activeTimeline) {
-      timelineController.activeTimeline.SetTrigger((trigger: LooseTrigger, matches) => {
+    if (timelineController.activeTimeline?.ui) {
+      timelineController.activeTimeline.ui.OnTrigger = (trigger: LooseTrigger, matches) => {
         const currentLine = this.encounter.logLines[currentLogIndex];
+        if (!currentLine)
+          throw new UnreachableCode();
+
         const resolver = popupText.currentResolver = new Resolver({
           initialData: EmulatorCommon.cloneData(popupText.getData()),
           suppressed: false,
           executed: false,
         });
+        resolver.triggerHelper =
+          popupText._onTriggerInternalGetHelper(
+              trigger,
+              matches?.groups ?? {},
+              currentLine?.timestamp);
         popupText.triggerResolvers.push(resolver);
 
         if (!currentLine)
@@ -167,7 +176,7 @@ export default class AnalyzedEncounter extends EventBus {
                 resolver.status, popupText.getData());
           }
         });
-      });
+      };
     }
 
     popupText.callback = (log, triggerHelper, currentTriggerStatus) => {

@@ -1,8 +1,9 @@
 import { Lang, NonEnLang } from '../resources/languages';
+import { NetMatches, NetAnyMatches } from '../types/net_matches';
 import { TimelineReplacement, TimelineStyle } from '../ui/raidboss/timeline';
+
 import { RaidbossData } from './data';
 import { CactbotBaseRegExp, TriggerTypes } from './net_trigger';
-import { NetMatches, Matches } from '../types/net_matches';
 
 // TargetedMatches can be used for generic functions in responses or conditions
 // that use matches from any number of Regex or NetRegex functions.
@@ -34,31 +35,31 @@ export type Output = {
 };
 
 // The output of any non-response raidboss trigger function.
-export type TriggerOutput<Data extends RaidbossData, MatchType extends Matches> =
+export type TriggerOutput<Data extends RaidbossData, MatchType extends NetAnyMatches> =
     undefined | null | LocaleText | string | number | boolean |
     ((d: Data, m: MatchType, o: Output) => TriggerOutput<Data, MatchType>);
 
 // Used if the function doesn't need to return an en key
-export type PartialTriggerOutput<Data extends RaidbossData, MatchType extends Matches> =
+export type PartialTriggerOutput<Data extends RaidbossData, MatchType extends NetAnyMatches> =
     undefined | null | Partial<LocaleText> | string | number | boolean |
     ((d: Data, m: MatchType, o: Output) => PartialTriggerOutput<Data, MatchType>);
 
 // The type of a non-response trigger field.
-export type TriggerFunc<Data extends RaidbossData, MatchType extends Matches, Return> =
+export type TriggerFunc<Data extends RaidbossData, MatchType extends NetAnyMatches, Return> =
     (data: Data, matches: MatchType, output: Output) => Return;
 
 // The output from a response function (different from other TriggerOutput functions).
-export type ResponseOutput<Data extends RaidbossData, MatchType extends Matches> = {
-  infoText?: TriggerFunc<Data, MatchType, TriggerOutput<Data, MatchType>>;
-  alertText?: TriggerFunc<Data, MatchType, TriggerOutput<Data, MatchType>>;
-  alarmText?: TriggerFunc<Data, MatchType, TriggerOutput<Data, MatchType>>;
-  tts?: TriggerFunc<Data, MatchType, PartialTriggerOutput<Data, MatchType>>;
-};
+export type ResponseOutput<Data extends RaidbossData, MatchType extends NetAnyMatches> = {
+  infoText?: TriggerField<Data, MatchType, TriggerOutput<Data, MatchType>>;
+  alertText?: TriggerField<Data, MatchType, TriggerOutput<Data, MatchType>>;
+  alarmText?: TriggerField<Data, MatchType, TriggerOutput<Data, MatchType>>;
+  tts?: TriggerField<Data, MatchType, PartialTriggerOutput<Data, MatchType>>;
+} | undefined;
 // The type of a response trigger field.
-export type ResponseFunc<Data extends RaidbossData, MatchType extends Matches> =
+export type ResponseFunc<Data extends RaidbossData, MatchType extends NetAnyMatches> =
     (data: Data, matches: MatchType, output: Output) => ResponseOutput<Data, MatchType>;
 
-export type ResponseField<Data extends RaidbossData, MatchType extends Matches> =
+export type ResponseField<Data extends RaidbossData, MatchType extends NetAnyMatches> =
     ResponseFunc<Data, MatchType> | ResponseOutput<Data, MatchType>;
 
 export type TriggerAutoConfig = {
@@ -73,7 +74,7 @@ export type TriggerAutoConfig = {
 
 // Note: functions like run or preRun need to be defined as void-only as (confusingly)
 // it is not possible to assign `(d: Data) => boolean` to a void | undefined, only to void.
-export type TriggerField<Data extends RaidbossData, MatchType extends Matches, Return> =
+export type TriggerField<Data extends RaidbossData, MatchType extends NetAnyMatches, Return> =
   [Return] extends [void] ? TriggerFunc<Data, MatchType, void> :
   TriggerFunc<Data, MatchType, Return | undefined> | Return | undefined;
 
@@ -131,27 +132,47 @@ export type RegexTrigger<Data extends RaidbossData> =
 
 export type TimelineTrigger<Data extends RaidbossData> = BaseTrigger<Data, 'None'> & {
   regex: RegExp;
-  beforeSeconds: number;
+  beforeSeconds?: number;
 };
 
 // Because timeline functions run during loading, they only support the base RaidbossData.
-export type TimelineFunc = string | string[] | ((data: RaidbossData) => TimelineFunc);
+export type TimelineFunc = (data: RaidbossData) => TimelineField;
+export type TimelineField = string | (string | TimelineFunc)[] | TimelineFunc | undefined;
 
 export type DataInitializeFunc<Data extends RaidbossData> = () => Omit<Data, keyof RaidbossData>;
 
-export type TriggerSet<Data extends RaidbossData> = {
+export type DisabledTrigger = { id: string; disabled: true };
+
+// This helper takes all of the properties in Type and checks to see if they can be assigned to a
+// blank object, and if so excludes them from the returned union. The `-?` syntax removes the
+// optional modifier from the attribute which prevents `undefined` from being included in the union
+// See also: https://www.typescriptlang.org/docs/handbook/2/mapped-types.html#mapping-modifiers
+type RequiredFieldsAsUnion<Type> =
+  {
+    [key in keyof Type]-?: Record<string, never> extends Pick<Type, key> ? never : key
+  }[keyof Type];
+
+export type BaseTriggerSet<Data extends RaidbossData> = {
   // ZoneId.MatchAll (aka null) is not supported in array form.
   zoneId: ZoneId | number[];
   resetWhenOutOfCombat?: boolean;
   overrideTimelineFile?: boolean;
   timelineFile?: string;
-  timeline?: TimelineFunc;
-  triggers?: NetRegexTrigger<Data>[];
-  timelineTriggers?: TimelineTrigger<Data>[];
+  timeline?: TimelineField;
+  triggers?: (NetRegexTrigger<Data> | DisabledTrigger)[];
+  timelineTriggers?: (TimelineTrigger<Data> | DisabledTrigger)[];
   timelineReplace?: TimelineReplacement[];
   timelineStyles?: TimelineStyle[];
-  initData?: DataInitializeFunc<Data>;
 }
+
+// If Data contains required properties that are not on RaidbossData, require initData
+export type TriggerSet<Data extends RaidbossData> = BaseTriggerSet<Data> &
+  (RequiredFieldsAsUnion<Data> extends RequiredFieldsAsUnion<RaidbossData> ?
+  {
+    initData?: DataInitializeFunc<Data>;
+  } : {
+    initData: DataInitializeFunc<Data>;
+  });
 
 // Less strict type for user triggers + built-in triggers, including deprecated fields.
 export type LooseTimelineTrigger = Partial<TimelineTrigger<RaidbossData>>;
