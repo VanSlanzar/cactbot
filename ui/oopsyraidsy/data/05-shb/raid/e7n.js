@@ -1,6 +1,8 @@
 import NetRegexes from '../../../../../resources/netregexes';
 import ZoneId from '../../../../../resources/zone_id';
 
+import { playerDamageFields } from '../../../oopsy_common';
+
 const wrongBuff = (str) => {
   return {
     en: str + ' (wrong buff)',
@@ -30,25 +32,11 @@ export default {
     'E7N Strength In Numbers Donut': '4C4C', // Large donut ground AoEs, intermission
     'E7N Strength In Numbers 2': '4C4D', // Large circle ground AoEs, intermission
   },
-  damageFail: {
+  shareWarn: {
+    'E7N Stygian Stake': '4C33', // Laser tank buster, outside intermission phase
+    'E5N Silver Shot': '4E7D', // Spread markers, intermission
   },
   triggers: [
-    {
-      id: 'E7N Stygian Stake', // Laser tank buster, outside intermission phase
-      damageRegex: '4C33',
-      condition: (e) => e.type !== '15',
-      mistake: (e) => {
-        return { type: 'warn', blame: e.targetName, text: e.abilityName };
-      },
-    },
-    {
-      id: 'E5N Silver Shot', // Spread markers, intermission
-      damageRegex: '4E7D',
-      condition: (e) => e.type !== '15',
-      mistake: (e) => {
-        return { type: 'warn', blame: e.targetName, text: e.abilityName };
-      },
-    },
     {
       id: 'E7N Astral Effect Gain',
       netRegex: NetRegexes.gainsEffect({ effectId: '8BE' }),
@@ -83,29 +71,29 @@ export default {
     },
     {
       id: 'E7N Light\'s Course',
-      damageRegex: ['4C3E', '4C40', '4C22', '4C3C', '4E63'],
-      condition: (e, data) => {
-        return !data.hasUmbral || !data.hasUmbral[e.targetName];
+      netRegex: NetRegexes.abilityFull({ id: ['4C3E', '4C40', '4C22', '4C3C', '4E63'], ...playerDamageFields }),
+      condition: (_e, data, matches) => {
+        return !data.hasUmbral || !data.hasUmbral[matches.target];
       },
-      mistake: (e, data) => {
-        if (data.hasAstral && data.hasAstral[e.targetName])
-          return { type: 'fail', blame: e.targetName, text: wrongBuff(e.abilityName) };
-        return { type: 'warn', blame: e.targetName, text: noBuff(e.abilityName) };
+      mistake: (_e, data, matches) => {
+        if (data.hasAstral && data.hasAstral[matches.target])
+          return { type: 'fail', blame: matches.target, text: wrongBuff(matches.ability) };
+        return { type: 'warn', blame: matches.target, text: noBuff(matches.ability) };
       },
     },
     {
       id: 'E7N Darks\'s Course',
-      damageRegex: ['4C3D', '4C23', '4C41', '4C43'],
-      condition: (e, data) => {
-        return !data.hasAstral || !data.hasAstral[e.targetName];
+      netRegex: NetRegexes.abilityFull({ id: ['4C3D', '4C23', '4C41', '4C43'], ...playerDamageFields }),
+      condition: (_e, data, matches) => {
+        return !data.hasAstral || !data.hasAstral[matches.target];
       },
-      mistake: (e, data) => {
-        if (data.hasUmbral && data.hasUmbral[e.targetName])
-          return { type: 'fail', blame: e.targetName, text: wrongBuff(e.abilityName) };
+      mistake: (_e, data, matches) => {
+        if (data.hasUmbral && data.hasUmbral[matches.target])
+          return { type: 'fail', blame: matches.target, text: wrongBuff(matches.ability) };
         // This case is probably impossible, as the debuff ticks after death,
         // but leaving it here in case there's some rez or disconnect timing
         // that could lead to this.
-        return { type: 'warn', blame: e.targetName, text: noBuff(e.abilityName) };
+        return { type: 'warn', blame: matches.target, text: noBuff(matches.ability) };
       },
     },
   ],

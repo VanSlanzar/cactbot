@@ -55,14 +55,14 @@ export default {
     },
     {
       id: 'O3N Ribbit',
-      abilityRegex: '2466',
-      condition: (e, data) => {
+      netRegex: NetRegexes.ability({ id: '2466' }),
+      condition: (_e, data, matches) => {
         // We DO want to be hit by Toad/Ribbit if the next cast of The Game
         // is 4x toad panels.
-        return !(data.phaseNumber === 3 && data.gameCount % 2 === 0) && e.targetId !== 'E0000000';
+        return !(data.phaseNumber === 3 && data.gameCount % 2 === 0) && matches.targetId !== 'E0000000';
       },
-      mistake: (e) => {
-        return { type: 'warn', blame: e.targetName, text: e.abilityName };
+      mistake: (_e, _data, matches) => {
+        return { type: 'warn', blame: matches.target, text: matches.ability };
       },
     },
     {
@@ -70,13 +70,11 @@ export default {
       // Why overthink Normal mode, however?
       id: 'O3N The Game',
       // Guess what you just lost?
-      abilityRegex: '246D',
-      condition: (e) => {
-        // If the player takes no damage, they did the mechanic correctly.
-        return e.damage > 0;
-      },
-      mistake: (e) => {
-        return { type: 'warn', blame: e.targetName, text: e.abilityName };
+      netRegex: NetRegexes.ability({ id: '246D' }),
+      // If the player takes no damage, they did the mechanic correctly.
+      condition: (_e, data, matches) => data.DamageFromMatches(matches) > 0,
+      mistake: (_e, _data, matches) => {
+        return { type: 'warn', blame: matches.target, text: matches.ability };
       },
       run: (_e, data) => {
         data.gameCount += 1;

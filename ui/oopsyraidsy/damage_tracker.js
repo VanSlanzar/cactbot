@@ -57,6 +57,7 @@ export class DamageTracker {
       inCombat: this.inCombat,
       ShortName: (name) => ShortNamify(name, this.options.PlayerNicks),
       IsPlayerId: IsPlayerId,
+      DamageFromMatches: (matches) => UnscrambleDamage(matches.damage),
 
       // Deprecated.
       ParseLocaleFloat: parseFloat,
@@ -440,6 +441,37 @@ export class DamageTracker {
     }
   }
 
+  AddSoloTriggers(type, dict) {
+    if (!dict)
+      return;
+    const keys = Object.keys(dict);
+    const condFunc = (e) => e.type !== '16';
+    for (const key of keys) {
+      const id = dict[key];
+      const trigger = {
+        id: key,
+        damageRegex: id,
+        condition: condFunc,
+        idRegex: Regexes.parse('^' + id + '$'),
+        mistake: function(e, data) {
+          return {
+            type: type,
+            blame: e.targetName,
+            text: {
+              en: `${e.abilityName} (alone)`,
+              de: `${e.abilityName} (allein)`,
+              fr: `${e.abilityName} (seul(e))`,
+              ja: `${e.abilityName} (一人)`,
+              cn: `${e.abilityName} (单吃)`,
+              ko: `${e.abilityName} (혼자 맞음)`,
+            },
+          };
+        },
+      };
+      this.damageTriggers.push(trigger);
+    }
+  }
+
   ReloadTriggers() {
     this.ProcessDataFiles();
 
@@ -510,6 +542,8 @@ export class DamageTracker {
       this.AddGainsEffectTriggers('fail', set.gainsEffectFail);
       this.AddShareTriggers('warn', set.shareWarn);
       this.AddShareTriggers('fail', set.shareFail);
+      this.AddSoloTriggers('warn', set.soloWarn);
+      this.AddSoloTriggers('fail', set.soloFail);
 
       if (!set.triggers)
         set.triggers = [];

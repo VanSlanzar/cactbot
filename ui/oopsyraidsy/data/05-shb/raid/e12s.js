@@ -2,6 +2,8 @@ import NetRegexes from '../../../../../resources/netregexes';
 import Outputs from '../../../../../resources/outputs';
 import ZoneId from '../../../../../resources/zone_id';
 
+import { playerDamageFields } from '../../../oopsy_common';
+
 // TODO: add separate damageWarn-esque icon for damage downs?
 // TODO: 58A6 Under The Weight / 58B2 Classical Sculpture missing somebody in party warning?
 // TODO: 58CA Dark Water III / 58C5 Shell Crusher should hit everyone in party
@@ -59,13 +61,16 @@ export default {
   gainsEffectFail: {
     'E12S Oracle Doom': '9D4', // Relativity punishment for multiple mistakes
   },
+  soloWarn: {
+    'E12S Promise Force Of The Land': '58A4',
+  },
   triggers: [
     {
       // Big circle ground aoes during Shiva junction.
       // This can be shielded through as long as that person doesn't stack.
       id: 'E12S Icicle Impact',
-      damageRegex: '4E5A',
-      condition: (e) => e.damage > 0,
+      netRegex: NetRegexes.abilityFull({ id: '4E5A', ...playerDamageFields }),
+      condition: (_e, data, matches) => data.DamageFromMatches(matches) > 0,
       mistake: (_e, _data, matches) => {
         return { type: 'warn', blame: matches.target, text: matches.ability };
       },
@@ -121,13 +126,9 @@ export default {
     {
       // This is the Chiseled Sculpture laser with the limit cut dots.
       id: 'E12S Promise Blade Of Flame',
-      netRegex: NetRegexes.ability({ source: 'Chiseled Sculpture', id: '58B3' }),
-      mistake: (e, data, matches) => {
+      netRegex: NetRegexes.ability({ type: '22', source: 'Chiseled Sculpture', id: '58B3' }),
+      mistake: (_e, data, matches) => {
         if (!data.laserNameToNum || !data.sculptureTetherNameToId || !data.sculptureYPositions)
-          return;
-
-        // Hitting only one person is just fine.
-        if (e.type === '15')
           return;
 
         // Find the person who has this laser number and is tethered to this statue.
@@ -228,26 +229,6 @@ export default {
             ja: `${matches.ability} (${pillarOwner}から)`,
             cn: `${matches.ability} (来自${pillarOwner})`,
             ko: `${matches.ability} (대상자 "${pillarOwner}")`,
-          },
-        };
-      },
-    },
-    {
-      // Titan phase orange marker
-      id: 'E12S Promise Force Of The Land',
-      damageRegex: '58A4',
-      condition: (e) => e.type === '15',
-      mistake: (_e, _data, matches) => {
-        return {
-          type: 'warn',
-          blame: matches.target,
-          text: {
-            en: `${matches.ability} (alone)`,
-            de: `${matches.ability} (allein)`,
-            fr: `${matches.ability} (seul(e))`,
-            ja: `${matches.ability} (一人)`,
-            cn: `${matches.ability} (单吃)`,
-            ko: `${matches.ability} (혼자 맞음)`,
           },
         };
       },
@@ -437,8 +418,8 @@ export default {
     },
     {
       id: 'E12S Oracle Shadoweye',
-      damageRegex: '58D2',
-      condition: (e) => e.damage > 0,
+      netRegex: NetRegexes.abilityFull({ id: '58D2', ...playerDamageFields }),
+      condition: (_e, data, matches) => data.DamageFromMatches(matches) > 0,
       mistake: (_e, _data, matches) => {
         return { type: 'fail', blame: matches.target, text: matches.ability };
       },

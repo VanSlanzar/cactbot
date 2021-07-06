@@ -1,4 +1,7 @@
+import NetRegexes from '../../../../../resources/netregexes';
 import ZoneId from '../../../../../resources/zone_id';
+
+import { playerDamageFields } from '../../../oopsy_common';
 
 // TODO: 561D Evil Seed hits everyone, hard to know if there's a double tap
 // TODO: falling through panel just does damage with no ability name, like a death wall
@@ -36,35 +39,18 @@ export default {
   gainsEffectWarn: {
     'E9S Stygian Tendrils': '952', // standing in the brambles
   },
+  soloWarn: {
+    'E9S Multi-Pronged Particle Beam': '5600', // Art Of Darkness Partner Stack
+  },
   triggers: [
-    {
-      // Art Of Darkness Partner Stack
-      id: 'E9S Multi-Pronged Particle Beam',
-      damageRegex: '5600',
-      condition: (e) => e.type === '15',
-      mistake: (_e, _data, matches) => {
-        return {
-          type: 'warn',
-          blame: matches.target,
-          text: {
-            en: `${matches.ability} (alone)`,
-            de: `${matches.ability} (allein)`,
-            fr: `${matches.ability} (seul(e))`,
-            ja: `${matches.ability} (一人)`,
-            cn: `${matches.ability} (单吃)`,
-            ko: `${matches.ability} (혼자 맞음)`,
-          },
-        };
-      },
-    },
     {
       // Anti-air "tank spread".  This can be stacked by two tanks invulning.
       // Note: this will still show something for holmgang/living, but
       // arguably a healer might need to do something about that, so maybe
       // it's ok to still show as a warning??
       id: 'E9S Condensed Anti-Air Particle Beam',
-      damageRegex: '5615',
-      condition: (e) => e.type !== '15' && e.damage > 0,
+      netRegex: NetRegexes.abilityFull({ type: '22', id: '5615', ...playerDamageFields }),
+      condition: (_e, data, matches) => data.DamageFromMatches(matches) > 0,
       mistake: (_e, _data, matches) => {
         return { type: 'fail', blame: matches.target, text: matches.ability };
       },
@@ -72,8 +58,8 @@ export default {
     {
       // Anti-air "out".  This can be invulned by a tank along with the spread above.
       id: 'E9S Anti-Air Phaser Unlimited',
-      damageRegex: '5612',
-      condition: (e) => e.damage > 0,
+      netRegex: NetRegexes.abilityFull({ id: '5612', ...playerDamageFields }),
+      condition: (_e, data, matches) => data.DamageFromMatches(matches) > 0,
       mistake: (_e, _data, matches) => {
         return { type: 'warn', blame: matches.target, text: matches.ability };
       },

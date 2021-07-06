@@ -1,4 +1,7 @@
+import NetRegexes from '../../../../../resources/netregexes';
 import ZoneId from '../../../../../resources/zone_id';
+
+import { playerDamageFields } from '../../../oopsy_common';
 
 // TODO: Dahu 5776 Spit Flame should always hit a Marchosias
 // TODO: hitting phantom with ice spikes with anything but dispel?
@@ -131,22 +134,22 @@ export default {
     {
       // These ability ids can be ordered differently and "hit" people when levitating.
       id: 'DelubrumSav Guard Lots Cast',
-      damageRegex: ['5827', '5828', '5B6C', '5B6D', '5BB6', '5BB7', '5B88', '5B89'],
-      condition: (e) => e.flags.slice(-2) === '03',
+      netRegex: NetRegexes.abilityFull({ id: ['5827', '5828', '5B6C', '5B6D', '5BB6', '5BB7', '5B88', '5B89'], ...playerDamageFields }),
+      condition: (_e, _data, matches) => matches.flags.slice(-2) === '03',
       mistake: (_e, _data, matches) => {
         return { type: 'warn', blame: matches.target, text: matches.ability };
       },
     },
     {
       id: 'DelubrumSav Golem Compaction',
-      abilityRegex: '5746',
+      netRegex: NetRegexes.ability({ id: '5746' }),
       mistake: (_e, _data, matches) => {
         return { type: 'fail', fullText: `${matches.source}: ${matches.ability}` };
       },
     },
     {
       id: 'DelubrumSav Slime Sanguine Fusion',
-      abilityRegex: '554D',
+      netRegex: NetRegexes.ability({ id: '554D' }),
       mistake: (_e, _data, matches) => {
         return { type: 'fail', fullText: `${matches.source}: ${matches.ability}` };
       },
